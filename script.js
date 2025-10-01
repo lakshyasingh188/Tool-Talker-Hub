@@ -38,29 +38,4 @@ function downloadPDF() {
   };
   html2pdf().from(element).set(opt).save();
 }
-<script>
-function generateResume() {
-  const name = document.getElementById("name").value;
-  const email = document.getElementById("email").value;
-  const phone = document.getElementById("phone").value;
-  const education = document.getElementById("education").value;
-  const skills = document.getElementById("skills").value;
-  const experience = document.getElementById("experience").value;
-
-  document.getElementById("resumeOutput").innerHTML = `
-    <div style="background:#fff; padding:20px; border-radius:10px; margin-top:20px; box-shadow:0px 4px 10px rgba(0,0,0,0.1)">
-      <h1>${name}</h1>
-      <p>Email: ${email} | Phone: ${phone}</p>
-      <hr>
-      <h2>Education</h2>
-      <p>${education}</p>
-      <h2>Skills</h2>
-      <p>${skills}</p>
-      <h2>Experience</h2>
-      <p>${experience}</p>
-      <button onclick="downloadPDF()">Download as PDF</button>
-    </div>
-  `;
-}
-</script>
 
