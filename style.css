@@ -1,0 +1,41 @@
+body {
+  font-family: Arial, sans-serif;
+  text-align: center;
+  background: linear-gradient(120deg, #2980b9, #6dd5fa);
+  margin: 0; padding: 0;
+  color: white;
+}
+header, footer {
+  padding: 20px;
+  background: rgba(0,0,0,0.5);
+}
+form {
+  margin: 20px auto;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+input, textarea, button {
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+}
+button {
+  background: white;
+  color: #2980b9;
+  font-weight: bold;
+  cursor: pointer;
+}
+button:hover {
+  background: #f1f1f1;
+}
+#resumeContent {
+  background: white;
+  color: black;
+  padding: 20px;
+  margin: 20px auto;
+  max-width: 500px;
+  border-radius: 10px;
+  text-align: left;
+}
