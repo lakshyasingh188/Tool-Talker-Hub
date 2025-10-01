@@ -38,4 +38,10 @@ function downloadPDF() {
   };
   html2pdf().from(element).set(opt).save();
 }
+<script>
+function downloadPDF() {
+  const element = document.getElementById("resumeOutput");
+  html2pdf().from(element).save("Resume.pdf");
+}
+</script>
 
