@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Resume</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h2>Fill Your Details</h2>
+  <form id="resumeForm">
+    <input type="text" placeholder="Full Name" id="name" required>
+    <input type="email" placeholder="Email" id="email" required>
+    <input type="text" placeholder="Phone" id="phone" required>
+    <textarea placeholder="Education" id="education" required></textarea>
+    <textarea placeholder="Skills" id="skills" required></textarea>
+    <textarea placeholder="Experience" id="experience" required></textarea>
+    <button type="submit">Generate Resume</button>
+  </form>
+
+  <div id="output" style="display:none;">
+    <h2>Your Resume</h2>
+    <div id="resumeContent"></div>
+    <button onclick="downloadPDF()">Download PDF</button>
+  </div>
+
+  <!-- PDF Library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
