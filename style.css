@@ -1,61 +1,82 @@
-body {
-  font-family: Arial, sans-serif;
-  margin: 0;
-  padding: 0;
-  background: linear-gradient(to right, #4facfe, #00f2fe);
-  color: #fff;
-  text-align: center;
+:root{
+  --primary:#0d6efd;
+  --muted:#6c757d;
+  --bg1: linear-gradient(90deg,#4facfe,#00f2fe);
+  --card-bg: #ffffff;
 }
 
-header {
-  background: #003c64;
-  padding: 20px;
+/* General page */
+body{
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  background: var(--bg1);
+  color: #111;
+  min-height: 100vh;
 }
 
-h1, h2, h3 {
-  margin: 10px 0;
+/* Header / nav */
+.navbar { box-shadow: 0 2px 6px rgba(0,0,0,0.08); }
+
+/* Left form card */
+.card { border-radius: 10px; }
+
+/* Buttons spacing */
+.btn { border-radius: 6px; }
+
+/* Preview wrapper and templates base */
+#resumePreview {
+  background: var(--card-bg);
+  color: #111;
+  min-height: 220px;
+  border-radius: 8px;
+  padding: 18px;
 }
 
-main {
-  padding: 20px;
-}
+/* Common resume styles - tweak per template */
+.resume-header { display:flex; gap:16px; align-items:center; }
+.resume-photo { width:110px; height:110px; object-fit:cover; border-radius:50%; border:3px solid var(--primary); }
+.resume-name { font-size:1.6rem; font-weight:700; }
+.resume-contact { color:var(--muted); margin-top:6px; }
 
-form {
-  background: #fff;
-  color: #000;
-  padding: 20px;
-  border-radius: 10px;
-  display: inline-block;
-  text-align: left;
-}
+.section-title { color:var(--primary); margin-top:12px; font-weight:600; }
 
-input, textarea {
-  width: 100%;
-  padding: 8px;
-  margin-top: 5px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-}
+/* Template variations */
+/* Template 1 - Modern */
+.template-modern { font-family: 'Segoe UI', Roboto, sans-serif; }
+.template-modern .resume-header { padding-bottom:8px; border-bottom:1px solid #e9ecef; }
 
-.btn {
-  background: #007bff;
-  color: white;
-  padding: 10px 15px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  text-decoration: none;
-}
+/* Template 2 - Professional */
+.template-professional { font-family: Georgia, serif; }
+.template-professional .resume-name { color:#0b3d91; }
 
-.btn:hover {
-  background: #0056b3;
-}
+/* Template 3 - Minimal */
+.template-minimal { font-family: Arial, sans-serif; }
+.template-minimal .resume-photo{ display:none; }
 
-.output {
-  margin-top: 20px;
-  text-align: left;
-  background: #fff;
-  color: #000;
-  padding: 20px;
-  border-radius: 10px;
+/* Template 4 - Clean */
+.template-clean { font-family: 'Helvetica Neue', Arial; }
+
+/* Template 5 - Creative */
+.template-creative { background:linear-gradient(180deg,#fff,#f5f9ff); padding:12px; }
+
+/* Template 6 - Classic */
+.template-classic { font-family: 'Times New Roman', Times, serif; }
+
+/* Template 7 - Elegant */
+.template-elegant { border-left:4px solid #0d6efd; padding-left:12px; }
+
+/* Template 8 - One-column */
+.template-onecol { display:block; }
+
+/* Template 9 - Two-column */
+.template-twocol{ display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+.template-twocol .left-col{ border-right:1px dashed #e9ecef; padding-right:12px; }
+
+/* Template 10 - Sidebar */
+.template-sidebar{ display:grid; grid-template-columns:200px 1fr; gap:16px; }
+.template-sidebar .sidebar{ background:#f8f9fa; padding:12px; border-radius:8px; }
+
+/* Small screens fix */
+@media (max-width: 767px){
+  .template-twocol, .template-sidebar { grid-template-columns: 1fr; }
+  .resume-photo { width:90px; height:90px; }
 }
