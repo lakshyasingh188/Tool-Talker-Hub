@@ -1,37 +1,104 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Resume Builder</title>
+
+  <!-- Bootstrap (layout) -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- html2pdf (for PDF download) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
+
+  <!-- Custom CSS -->
   <link rel="stylesheet" href="style.css">
-  <script src="script.js" defer></script>
 </head>
 <body>
-  <header>
-    <h1>📝 Resume Builder</h1>
-  </header>
+  <nav class="navbar bg-dark text-white p-2">
+    <div class="container">
+      <a class="navbar-brand text-white" href="index.html">🏠 Home</a>
+      <div>
+        <a class="btn btn-sm btn-light" href="#">Help</a>
+      </div>
+    </div>
+  </nav>
 
-  <main>
-    <section>
-      <form id="resumeForm">
-        <label>Full Name:</label>
-        <input type="text" id="name" required><br><br>
+  <main class="container my-4">
+    <div class="row gx-4">
+      <!-- Left: Form -->
+      <div class="col-lg-5">
+        <div class="card p-3">
+          <h4>Build your resume</h4>
 
-        <label>Email:</label>
-        <input type="email" id="email" required><br><br>
+          <label class="form-label mt-2">Choose Template</label>
+          <select id="templateSelect" class="form-select">
+            <option value="template1">1 — Modern</option>
+            <option value="template2">2 — Professional</option>
+            <option value="template3">3 — Minimal</option>
+            <option value="template4">4 — Clean</option>
+            <option value="template5">5 — Creative</option>
+            <option value="template6">6 — Classic</option>
+            <option value="template7">7 — Elegant</option>
+            <option value="template8">8 — One-column</option>
+            <option value="template9">9 — Two-column</option>
+            <option value="template10">10 — Sidebar</option>
+          </select>
 
-        <label>Phone:</label>
-        <input type="text" id="phone" required><br><br>
+          <label class="form-label mt-3">Profile Photo</label>
+          <input id="photoInput" type="file" accept="image/*" class="form-control">
 
-        <label>Skills:</label>
-        <textarea id="skills"></textarea><br><br>
+          <label class="form-label mt-3">Full Name</label>
+          <input id="name" class="form-control" placeholder="Your full name">
 
-        <button type="submit" class="btn">Generate Resume</button>
-      </form>
-    </section>
+          <label class="form-label mt-2">Email</label>
+          <input id="email" type="email" class="form-control" placeholder="you@example.com">
 
-    <section id="resumeOutput" class="output"></section>
+          <label class="form-label mt-2">Phone</label>
+          <input id="phone" class="form-control" placeholder="Phone number">
+
+          <label class="form-label mt-2">Class 10 (Board / Year / % or GPA)</label>
+          <input id="class10" class="form-control" placeholder="Class 10 - e.g. CBSE, 2018, 85%">
+
+          <label class="form-label mt-2">Class 12 (Board / Year / % or GPA)</label>
+          <input id="class12" class="form-control" placeholder="Class 12 - e.g. CBSE, 2020, 88%">
+
+          <label class="form-label mt-2">College / Degree</label>
+          <input id="college" class="form-control" placeholder="B.Sc Computer Science - 2025">
+
+          <label class="form-label mt-2">Skills (comma separated)</label>
+          <input id="skills" class="form-control" placeholder="HTML, CSS, JavaScript">
+
+          <label class="form-label mt-2">Experience (short lines)</label>
+          <textarea id="experience" class="form-control" rows="3" placeholder="Company - role - 2023-24"></textarea>
+
+          <div class="d-grid gap-2 mt-3">
+            <button id="generateBtn" class="btn btn-primary">Generate Resume Preview</button>
+            <button id="saveBtn" class="btn btn-outline-secondary">Save to browser</button>
+            <button id="downloadPdfBtn" class="btn btn-success">Download as PDF</button>
+            <button id="clearBtn" class="btn btn-danger">Clear Saved Data</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: Preview area -->
+      <div class="col-lg-7">
+        <div id="previewWrapper" class="card p-3">
+          <h5 class="text-muted">Live Preview (choose template + click Generate)</h5>
+          <div id="resumePreview" class="mt-3">
+            <!-- Template HTML injected here by JS -->
+          </div>
+        </div>
+      </div>
+    </div>
   </main>
+
+  <footer class="text-center p-3">© 2025 Lakshya</footer>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- App script -->
+  <script src="script.js"></script>
 </body>
 </html>
