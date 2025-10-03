@@ -1,72 +1,38 @@
-function generateResume(data) {
-  return `
-    <h1>${data.name}</h1>
-    <p><b>Email:</b> ${data.email}</p>
-    <p><b>Phone:</b> ${data.phone}</p>
-    <h3>Education</h3>
-    <p>${data.education}</p>
-    <h3>Skills</h3>
-    <p>${data.skills}</p>
-    <h3>Experience</h3>
-    <p>${data.experience}</p>
-  `;
-}
+// Resume Form Handling
+document.addEventListener("DOMContentLoaded", () => {
+  const form = document.getElementById("resumeForm");
+  const output = document.getElementById("resumeOutput");
 
-document.getElementById("resumeForm").addEventListener("submit", function(e) {
-  e.preventDefault();
-  
-  const data = {
-    name: document.getElementById("name").value,
-    email: document.getElementById("email").value,
-    phone: document.getElementById("phone").value,
-    education: document.getElementById("education").value,
-    skills: document.getElementById("skills").value,
-    experience: document.getElementById("experience").value
-  };
+  // Load saved data (LocalStorage)
+  let savedData = JSON.parse(localStorage.getItem("resumeData"));
+  if (savedData) {
+    document.getElementById("name").value = savedData.name;
+    document.getElementById("email").value = savedData.email;
+    document.getElementById("phone").value = savedData.phone;
+    document.getElementById("skills").value = savedData.skills;
+  }
 
-  document.getElementById("resumeContent").innerHTML = generateResume(data);
-  document.getElementById("output").style.display = "block";
+  // On form submit
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    let name = document.getElementById("name").value;
+    let email = document.getElementById("email").value;
+    let phone = document.getElementById("phone").value;
+    let skills = document.getElementById("skills").value;
+
+    // Show Resume Output
+    output.innerHTML = `
+      <div class="resume">
+        <h2>${name}</h2>
+        <p><strong>Email:</strong> ${email}</p>
+        <p><strong>Phone:</strong> ${phone}</p>
+        <h3>Skills</h3>
+        <p>${skills}</p>
+      </div>
+    `;
+
+    // Save data to LocalStorage
+    localStorage.setItem("resumeData", JSON.stringify({ name, email, phone, skills }));
+  });
 });
-
-function downloadPDF() {
-  let element = document.getElementById("resumeContent");
-  let opt = {
-    margin: 0.5,
-    filename: 'resume.pdf',
-    html2canvas: { scale: 2 },
-    jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
-  };
-  html2pdf().from(element).set(opt).save();
-}
-<script>
-function downloadPDF() {
-  const element = document.getElementById("resumeOutput");
-  html2pdf().from(element).save("Resume.pdf");
-}
-</script>
-<script>
-function generateResume() {
-  const name = document.getElementById("name").value;
-  const email = document.getElementById("email").value;
-  const phone = document.getElementById("phone").value;
-  const education = document.getElementById("education").value;
-  const skills = document.getElementById("skills").value;
-  const experience = document.getElementById("experience").value;
-
-  document.getElementById("resumeOutput").innerHTML = `
-    <div style="background:#fff; padding:20px; border-radius:10px; margin-top:20px; box-shadow:0px 4px 10px rgba(0,0,0,0.1)">
-      <h1>${name}</h1>
-      <p>Email: ${email} | Phone: ${phone}</p>
-      <hr>
-      <h2>Education</h2>
-      <p>${education}</p>
-      <h2>Skills</h2>
-      <p>${skills}</p>
-      <h2>Experience</h2>
-      <p>${experience}</p>
-      <button onclick="downloadPDF()">Download as PDF</button>
-    </div>
-  `;
-}
-</script>
-
