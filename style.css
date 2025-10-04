@@ -5,91 +5,64 @@ body {
   padding: 0;
 }
 
-/* Home Page */
-.home-container {
-  text-align: center;
-  margin-top: 100px;
+.container {
+  display: flex;
+  justify-content: center;
+  margin: 20px;
 }
+
+.form-section {
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  width: 300px;
+  margin-right: 20px;
+  box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
+  overflow-y: auto;
+  max-height: 95vh;
+}
+
+.preview-section {
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  width: 800px;
+  min-height: 1120px; /* A4 size height */
+  box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
+}
+
+.section {
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin-top: 15px;
+  border-radius: 6px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+table td {
+  padding: 6px;
+  border-bottom: 1px solid #ddd;
+}
+
 .btn {
-  display: inline-block;
-  padding: 10px 20px;
-  margin-top: 20px;
+  display: block;
+  margin-top: 10px;
+  padding: 8px;
+  width: 100%;
   background: #2193b0;
   color: #fff;
-  border-radius: 8px;
-  text-decoration: none;
-  font-weight: bold;
+  border: none;
+  border-radius: 6px;
   cursor: pointer;
 }
 .btn:hover {
   background: #176d82;
 }
 
-/* Resume Page */
-.container {
-  display: flex;
-  justify-content: center;
-  margin: 20px;
-}
-.form-section {
-  background: #fff;
-  padding: 20px;
-  border-radius: 10px;
-  width: 350px;
-  margin-right: 20px;
-  box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
-  overflow-y: auto;
-  max-height: 95vh;
-}
-.preview-section {
-  background: #fff;
-  padding: 20px;
-  border-radius: 10px;
-  width: 800px;
-  min-height: 1120px; /* A4 height approx */
-  border-left: 6px solid #2193b0;
-  box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
-}
-h2, h3 {
-  color: #333;
-}
-label {
-  display: block;
-  margin-top: 10px;
-  font-weight: bold;
-}
-input, textarea {
-  width: 100%;
-  padding: 8px;
-  margin-top: 5px;
-  border-radius: 6px;
-  border: 1px solid #aaa;
-}
-.template-preview img {
-  width: 80px;
-  height: 100px;
-  margin: 5px;
-  cursor: pointer;
-  border: 2px solid transparent;
-  border-radius: 5px;
-}
-.template-preview img:hover {
-  border: 2px solid #2193b0;
-}
-.section-title {
-  color: #2193b0;
-  font-size: 20px;
-  margin-top: 15px;
-  border-bottom: 2px solid #eee;
-  padding-bottom: 5px;
-}
-.highlight {
-  color: #ff5722;
-  font-weight: bold;
-}
-.edu-box {
-  border: 1px solid #ccc;
-  padding: 10px;
-  border-radius: 8px;
-  margin-top: 10px;
-}
+/* Template Variations */
+.modern h1 { color: #2193b0; }
+.classic h1 { color: #000; font-family: Georgia; }
+.creative h1 { color: #ff5722; font-family: "Comic Sans MS"; }
