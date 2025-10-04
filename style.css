@@ -4,7 +4,7 @@
 ====================================
 */
 :root {
-    --primary-color: #A52A2A; /* Dark Maroon/Reddish-Brown */
+    --primary-color: #A52A2A; 
     --secondary-color: #f4f4f9; 
     --text-color: #333;
     --light-text-color: #fff;
@@ -42,6 +42,7 @@ body {
     top: 20px;
 }
 
+/* ... (Input form styles remain largely the same) ... */
 .input-form h1, .input-form h2 {
     color: var(--primary-color);
     border-bottom: 2px solid var(--primary-color);
@@ -102,13 +103,19 @@ body {
     border-radius: 4px;
 }
 
+/* CV Border Style (New Requirement) */
+.bordered-cv {
+    border: 3px solid black; /* मोटा काला बॉर्डर */
+    box-shadow: none; /* Shadow हटा दें ताकि बॉर्डर साफ़ दिखे */
+}
+
 .cv-grid {
     display: grid;
     grid-template-columns: 35% 65%; 
-    min-height: 1123px;
+    min-height: 1117px; /* 1123px - 2*3px border */
 }
 
-/* Left Column Styling */
+/* ... (Left and Right Column Styles remain largely the same) ... */
 .left-column {
     background-color: var(--primary-color);
     color: var(--light-text-color);
@@ -154,25 +161,12 @@ body {
     margin: 0 0 5px 0;
     color: #fff;
 }
-/* .title-display हटा दिया गया है */
 
-.contact-section p {
-    margin: 5px 0;
-    font-size: 0.9em;
-    display: flex; 
-    align-items: center;
-}
-.contact-section i {
-    margin-right: 10px;
-    color: var(--accent-color);
-}
-
-/* Skills Style */
+/* Skills/Languages Output Style */
 .skills-section ul, .extra-section ul {
     list-style: none;
     padding: 0;
 }
-
 .skills-section li {
     margin: 10px 0;
     display: flex;
@@ -184,24 +178,7 @@ body {
     margin-bottom: 5px;
     font-size: 0.9em;
 }
-
-.rating {
-    display: flex;
-    gap: 3px;
-}
-.rating::before {
-    content: '● ● ● ● ●'; 
-    color: #ccc;
-    font-size: 0.7em;
-}
-.rating::after {
-    content: '● ● ● ● ●'; 
-    position: absolute;
-    overflow: hidden;
-    width: calc(var(--rating) / 5 * 100%); 
-    color: var(--accent-color); 
-    font-size: 0.7em;
-}
+/* Rating style is now unnecessary as we output text, but keeping it for fixed skills if needed */
 
 /* Right Column Styling */
 .right-column {
@@ -217,37 +194,31 @@ body {
     margin-bottom: 15px;
 }
 
-/* Work History, Education, Projects - Generic Styles */
-.job-item, .edu-item, .project-item {
+/* Education and Declaration Section */
+.edu-item {
     margin-bottom: 20px;
-    padding-bottom: 10px;
-    /* This line is key for the look */
-    border-bottom: 1px dashed #eee; 
+    padding-bottom: 5px;
+    border-bottom: 1px dashed #eee;
 }
-.job-item:last-child, .edu-item:last-child, .project-item:last-child {
+.edu-item:last-child {
     border-bottom: none;
 }
-.job-duration, .edu-duration {
-    font-size: 0.8em;
-    font-style: italic;
-    color: #888;
-    margin: 0;
+.edu-line {
+    font-size: 0.9em;
+    margin: 5px 0;
+    /* Education ko lamba karne ke liye */
+    line-height: 1.4; 
 }
-.job-title, .edu-title, .project-title {
+.edu-title {
     font-size: 1.1em;
     color: var(--primary-color);
     margin: 5px 0;
 }
-.job-company, .edu-institution, .project-details {
-    font-size: 0.9em;
-    margin: 0 0 5px 0;
+.summary-section p, .filler-content p {
+    font-size: 0.95em;
+    line-height: 1.6;
+    margin-bottom: 15px;
 }
-.job-tasks {
-    padding-left: 20px;
-    margin-top: 5px;
-    font-size: 0.9em;
-}
-
 
 /*
 ====================================
@@ -271,5 +242,7 @@ body {
         box-shadow: none;
         width: 100%;
         min-height: auto;
+        /* Print me border */
+        border: 3px solid black; 
     }
 }
