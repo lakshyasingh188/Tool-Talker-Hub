@@ -1,44 +1,57 @@
-function generateResume() {
-  // Photo upload
-  const photo = document.getElementById("photo").files[0];
-  if (photo) {
-    const reader = new FileReader();
-    reader.onload = function(e) {
-      document.getElementById("previewPhoto").src = e.target.result;
-    }
-    reader.readAsDataURL(photo);
-  }
+/**
+ * 1. डेटा अपडेट फ़ंक्शन (Updates CV from form inputs)
+ */
+function updateCV() {
+    // व्यक्तिगत विवरण अपडेट करें
+    document.getElementById('cv-name').innerText = 
+        document.getElementById('nameInput').value || 'Anika Kumar';
+    
+    document.getElementById('cv-title').innerText = 
+        document.getElementById('titleInput').value || 'Teacher';
 
-  // Text fields
-  document.getElementById("previewName").innerText = document.getElementById("name").value || "Your Name";
-  document.getElementById("previewJob").innerText = document.getElementById("job").value || "Your Job Title";
-  document.getElementById("previewEmail").innerText = document.getElementById("email").value || "";
-  document.getElementById("previewPhone").innerText = document.getElementById("phone").value || "";
-  document.getElementById("previewAddress").innerText = document.getElementById("address").value || "";
-  document.getElementById("previewProfile").innerText = document.getElementById("profile").value || "";
-  document.getElementById("previewExperience").innerText = document.getElementById("experience").value || "";
-  document.getElementById("previewEducation").innerText = document.getElementById("education").value || "";
+    document.getElementById('cv-phone').innerText = 
+        document.getElementById('phoneInput').value || '+91 11 5555 5555';
+    
+    document.getElementById('cv-email').innerText = 
+        document.getElementById('emailInput').value || 'anika@example.com';
+    
+    document.getElementById('cv-summary').innerText = 
+        document.getElementById('summaryInput').value || 'Passionate teacher with experience developing and implementing diverse curriculum. Strong grasp of curriculum design and instructional strategies.';
 
-  // Skills
-  let skillsInput = document.getElementById("skills").value;
-  let skillsArray = skillsInput.split(",");
-  let skillsList = "";
-  skillsArray.forEach(skill => {
-    if(skill.trim() !== "") {
-      skillsList += "<li>" + skill.trim() + "</li>";
+    // नाम के पहले अक्षर (initials) अपडेट करें
+    const name = document.getElementById('nameInput').value;
+    let initials = 'AK';
+    if (name) {
+        const parts = name.split(' ');
+        initials = parts.map(p => p.charAt(0).toUpperCase()).join('');
     }
-  });
-  document.getElementById("previewSkills").innerHTML = skillsList;
+    document.getElementById('initials-display').innerText = initials;
+
+
+    // नोट: आपको कार्य अनुभव, शिक्षा और कौशल को डायनामिक बनाने के लिए
+    // और ज़्यादा JavaScript कोड जोड़ना होगा, जिसमें आप Arrays का उपयोग करके
+    // नए सेक्शन जोड़ सकते हैं (Advanced Task)।
 }
 
-function downloadPDF() {
-  const element = document.getElementById("resumeContent");
-  const opt = {
-    margin: 10,
-    filename: 'resume.pdf',
-    image: { type: 'jpeg', quality: 1 },
-    html2canvas: { scale: 2 },
-    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-  };
-  html2pdf().set(opt).from(element).save();
+// पेज लोड होने पर एक बार CV को सेट कर दें (फ़ॉर्म खाली होने पर भी डिफ़ॉल्ट डेटा दिखे)
+document.addEventListener('DOMContentLoaded', updateCV);
+
+
+/**
+ * 2. PDF जनरेशन फ़ंक्शन
+ */
+function generatePDF() {
+    const element = document.getElementById('cv-output-area'); // CV एरिया की ID
+
+    // PDF सेटिंग्स (A4 साइज़, मार्जिन आदि)
+    const opt = {
+        margin:       0.5, // 0.5 इंच का मार्जिन
+        filename:     'My_Professional_CV.pdf',
+        image:        { type: 'jpeg', quality: 0.98 },
+        html2canvas:  { scale: 2 }, // उच्च रिज़ॉल्यूशन के लिए स्केल
+        jsPDF:        { unit: 'in', format: 'A4', orientation: 'portrait' }
+    };
+
+    // html2pdf लाइब्रेरी का उपयोग करके PDF बनाएँ और डाउनलोड करें
+    html2pdf().from(element).set(opt).save();
 }
