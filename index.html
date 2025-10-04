@@ -21,18 +21,18 @@
             <input type="email" id="emailInput" placeholder="Email Address (e.g., example@email.com)" onkeyup="updateCV()">
             <input type="text" id="addressInput" placeholder="Address (e.g., City, Country)" onkeyup="updateCV()">
             
-            <h2>Professional Summary</h2>
-            <textarea id="summaryInput" rows="4" placeholder="Write your professional summary here..." onkeyup="updateCV()"></textarea>
-
             <h2>Education</h2>
             <div id="educationInputs">
                 
                 <p><strong>Bachelor's Degree</strong></p>
                 <input type="text" id="bachelorDegree" placeholder="Degree Name (e.g., B.Tech Computer Science)" onkeyup="updateCV()">
                 <input type="text" id="bachelorCollege" placeholder="College/University Name" onkeyup="updateCV()">
-                <input type="text" id="bachelorDuration" placeholder="Duration (e.g., 2018-2021)" onkeyup="updateCV()">
+                <input type="text" id="bachelorBoard" placeholder="Board/Examining Authority" onkeyup="updateCV()">
+                <input type="text" id="bachelorPercentage" placeholder="Percentage/CGPA (e.g., 8.5 CGPA)" onkeyup="updateCV()">
+                <input type="text" id="bachelorDuration" placeholder="Duration (e.g., 2018-2022)" onkeyup="updateCV()">
                 
                 <p><strong>12th / Intermediate</strong></p>
+                <input type="text" id="interSubjects" placeholder="Subjects (e.g., PCM/PCB/Arts)" onkeyup="updateCV()">
                 <input type="text" id="interBoard" placeholder="Board/School Name" onkeyup="updateCV()">
                 <input type="text" id="interPercentage" placeholder="Percentage/CGPA (e.g., 90%)" onkeyup="updateCV()">
                 
@@ -40,15 +40,18 @@
                 <input type="text" id="hscBoard" placeholder="Board/School Name" onkeyup="updateCV()">
                 <input type="text" id="hscPercentage" placeholder="Percentage/CGPA (e.g., 9.5 CGPA)" onkeyup="updateCV()">
             </div>
-
+            
             <h2>Skills</h2>
-            <p class="note">Skills are fixed for demonstration. For dynamic skills, you need advanced logic.</p>
+            <textarea id="skillsInput" rows="3" placeholder="Enter skills separated by commas (e.g., Java, Python, HTML, Teamwork)" onkeyup="updateCV()"></textarea>
+
+            <h2>Languages</h2>
+            <textarea id="languagesInput" rows="2" placeholder="Enter languages and proficiency (e.g., Hindi (Native), English (Fluent))" onkeyup="updateCV()"></textarea>
             
             <button id="downloadBtn" onclick="prepareAndDownloadPDF()">📥 Download PDF</button>
             <p class="note">Your CV updates live. Click 'Download PDF' to save your final document.</p>
         </div>
 
-        <div id="cv-output-area" class="cv-paper">
+        <div id="cv-output-area" class="cv-paper bordered-cv">
             <div class="cv-grid">
                 
                 <div class="left-column">
@@ -58,7 +61,7 @@
                             <span id="initials-display" style="display: none;"></span>
                         </div>
                         <h2 class="name-display" id="cv-name"></h2>
-                        </div>
+                    </div>
 
                     <div class="contact-section">
                         <h3>Contact</h3>
@@ -69,33 +72,22 @@
 
                     <div class="skills-section">
                         <h3>Skills</h3>
-                        <ul id="cv-skills">
-                            <li>Software Development <span class="rating" style="--rating: 5;"></span></li>
-                            <li>Data Analysis <span class="rating" style="--rating: 4;"></span></li>
-                            <li>Team Collaboration <span class="rating" style="--rating: 5;"></span></li>
-                            <li>Project Management <span class="rating" style="--rating: 4;"></span></li>
-                        </ul>
+                        <ul id="cv-skills-output">
+                            </ul>
                     </div>
 
                     <div class="extra-section">
                         <h3>Languages</h3>
-                        <ul id="cv-languages">
-                            <li>Hindi (Native)</li>
-                            <li>English (Fluent)</li>
-                        </ul>
-                        <h3>Interests</h3>
-                        <ul id="cv-interests">
-                            <li>Reading</li>
-                            <li>Coding</li>
-                        </ul>
-                    </div>
+                        <ul id="cv-languages-output">
+                            </ul>
+                        </div>
                 </div>
 
                 <div class="right-column">
                     
                     <div class="summary-section">
                         <h3>Profile Summary</h3>
-                        <p id="cv-summary"></p>
+                        <p id="cv-summary-para1">An enthusiastic and hardworking individual with the ability to adapt to new situations quickly. Interested in learning new skills, improving existing knowledge, and working with dedication to achieve both personal and organizational goals.</p>
                     </div>
                     
                     <div class="work-history-section">
@@ -113,9 +105,9 @@
                     </div>
                     
                     <div class="filler-content">
-                         <h3>Projects & Achievements</h3>
-                         <div id="cv-projects-output">
-                             <p style="font-style: italic; color: #888; font-size:0.9em;">No projects or achievements added yet.</p>
+                         <h3>Declaration</h3>
+                         <div id="cv-declaration-output">
+                             <p id="cv-summary-para2">I look forward to being a part of a progressive organization where I can utilize my skills, learn continuously, and contribute to the overall growth and success of the company.</p>
                          </div>
                     </div>
 
