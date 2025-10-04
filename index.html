@@ -1,79 +1,99 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Resume Builder</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professional CV Maker</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-  <div class="container">
 
-    <!-- LEFT FORM -->
-    <div class="form-section">
-      <h2>Enter Your Details</h2>
+    <div class="container">
+        
+        <div class="input-form">
+            <h1>अपना CV बनाएँ</h1>
+            
+            <h2>व्यक्तिगत विवरण (Personal Details)</h2>
+            <input type="text" id="nameInput" placeholder="नाम (Anika Kumar)" onkeyup="updateCV()">
+            <input type="text" id="titleInput" placeholder="पद (Teacher)" onkeyup="updateCV()">
+            <input type="text" id="phoneInput" placeholder="फ़ोन नंबर" onkeyup="updateCV()">
+            <input type="text" id="emailInput" placeholder="ईमेल" onkeyup="updateCV()">
+            
+            <h2>पेशेवर सारांश (Summary)</h2>
+            <textarea id="summaryInput" rows="4" placeholder="यहाँ अपना सारांश लिखें..." onkeyup="updateCV()"></textarea>
 
-      <label>Profile Photo</label>
-      <input type="file" id="photo" accept="image/*">
-
-      <label>Full Name</label>
-      <input type="text" id="name">
-
-      <label>Job Title</label>
-      <input type="text" id="job">
-
-      <label>Email</label>
-      <input type="text" id="email">
-
-      <label>Phone</label>
-      <input type="text" id="phone">
-
-      <label>Address</label>
-      <input type="text" id="address">
-
-      <label>Profile</label>
-      <textarea id="profile"></textarea>
-
-      <label>Skills</label>
-      <textarea id="skills" placeholder="comma separated"></textarea>
-
-      <label>Work Experience</label>
-      <textarea id="experience"></textarea>
-
-      <label>Education</label>
-      <textarea id="education"></textarea>
-
-      <button onclick="generateResume()">Generate Resume</button>
-      <button onclick="downloadPDF()">Download PDF</button>
-    </div>
-
-    <!-- RIGHT RESUME TEMPLATE -->
-    <div class="resume-section" id="resumeContent">
-      <div class="header">
-        <img id="previewPhoto" src="" alt="Profile Photo">
-        <div>
-          <h1 id="previewName">Your Name</h1>
-          <h3 id="previewJob">Your Job Title</h3>
-          <p id="previewEmail"></p>
-          <p id="previewPhone"></p>
-          <p id="previewAddress"></p>
+            <button onclick="generatePDF()">📥 PDF डाउनलोड करें</button>
+            <p class="note">PDF डाउनलोड के लिए, CV एरिया पर क्लिक न करें, सिर्फ़ बटन दबाएँ।</p>
         </div>
-      </div>
 
-      <h2>Profile</h2>
-      <p id="previewProfile"></p>
+        <div id="cv-output-area" class="cv-paper">
+            <div class="cv-grid">
+                
+                <div class="left-column">
+                    <div class="profile-section">
+                        <div class="profile-image">
+                            <span id="initials-display">AK</span>
+                            </div>
+                        <h2 class="name-display" id="cv-name">Anika Kumar</h2>
+                        <p class="title-display" id="cv-title">Teacher</p>
+                    </div>
 
-      <h2>Skills</h2>
-      <ul id="previewSkills"></ul>
+                    <div class="contact-section">
+                        <h3>संपर्क (Contact)</h3>
+                        <p><i class="fas fa-map-marker-alt"></i> <span id="cv-address">New Delhi, India</span></p>
+                        <p><i class="fas fa-phone"></i> <span id="cv-phone">+91 11 5555 5555</span></p>
+                        <p><i class="fas fa-envelope"></i> <span id="cv-email">anika@example.com</span></p>
+                    </div>
 
-      <h2>Work Experience</h2>
-      <p id="previewExperience"></p>
+                    <div class="skills-section">
+                        <h3>कौशल (Skills)</h3>
+                        <ul id="cv-skills">
+                            <li>Group learning mechanics <span class="rating" style="--rating: 5;"></span></li>
+                            <li>Differentiated Instruction <span class="rating" style="--rating: 4;"></span></li>
+                            <li>Lesson planning <span class="rating" style="--rating: 5;"></span></li>
+                            </ul>
+                    </div>
 
-      <h2>Education</h2>
-      <p id="previewEducation"></p>
+                </div>
+
+                <div class="right-column">
+                    
+                    <div class="summary-section">
+                        <h3>प्रोफ़ाइल सारांश (Profile Summary)</h3>
+                        <p id="cv-summary">Passionate teacher with experience developing and implementing diverse curriculum. Proven ability to create engaging, learner-centric environments. Strong grasp of curriculum design and instructional strategies.</p>
+                    </div>
+                    
+                    <div class="work-history-section">
+                        <h3>कार्य अनुभव (Work History)</h3>
+                        <div class="job-item">
+                            <p class="job-duration">2018-07 - Current</p>
+                            <h4 class="job-title">Teacher</h4>
+                            <p class="job-company">Delhi Public School, New Delhi, India</p>
+                            <ul class="job-tasks">
+                                <li>Developed and delivered lessons resulting in 20% improvement in student test scores.</li>
+                                <li>Implemented reading and writing workshops.</li>
+                            </ul>
+                        </div>
+                        </div>
+
+                    <div class="education-section">
+                        <h3>शिक्षा (Education)</h3>
+                        <div class="edu-item">
+                            <p class="edu-duration">2013-06 - 2015-06</p>
+                            <h4 class="edu-degree">M.A. Education</h4>
+                            <p class="edu-institution">Delhi University, Delhi</p>
+                        </div>
+                        </div>
+
+                </div>
+
+            </div>
+        </div>
     </div>
-  </div>
 
-  <script src="script.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
+    <script src="script.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
 </body>
+</html>
 </html>
