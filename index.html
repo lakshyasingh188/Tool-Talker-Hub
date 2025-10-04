@@ -6,10 +6,58 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="home-container">
-    <h1>Welcome to Tool Talker Hub</h1>
-    <p>High-Quality Resume Generator</p>
-    <a href="resume.html" class="btn">Build Your Resume</a>
+  <div class="container">
+
+    <!-- LEFT FORM -->
+    <div class="form-section">
+      <h2>Enter Your Details</h2>
+      <label>Full Name</label>
+      <input type="text" id="name" placeholder="Enter your name">
+
+      <label>Email</label>
+      <input type="text" id="email" placeholder="Enter email">
+
+      <label>Phone</label>
+      <input type="text" id="phone" placeholder="Enter phone">
+
+      <label>Education</label>
+      <textarea id="education" placeholder="Your education..."></textarea>
+
+      <label>Skills</label>
+      <textarea id="skills" placeholder="Your skills..."></textarea>
+
+      <label>Languages</label>
+      <textarea id="languages" placeholder="Languages you know..."></textarea>
+
+      <label>Objective</label>
+      <textarea id="objective" placeholder="Career objective..."></textarea>
+
+      <button onclick="generateResume()">Generate Resume</button>
+      <button onclick="downloadPDF()">Download PDF</button>
+    </div>
+
+    <!-- RIGHT PREVIEW -->
+    <div class="preview-section" id="resumeContent">
+      <h1 id="previewName">Your Name</h1>
+      <p><b>Email:</b> <span id="previewEmail"></span></p>
+      <p><b>Phone:</b> <span id="previewPhone"></span></p>
+      
+      <h2>Education</h2>
+      <p id="previewEducation"></p>
+      
+      <h2>Skills</h2>
+      <p id="previewSkills"></p>
+      
+      <h2>Languages</h2>
+      <p id="previewLanguages"></p>
+      
+      <h2>Objective</h2>
+      <p id="previewObjective"></p>
+    </div>
   </div>
+
+  <!-- JS -->
+  <script src="script.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
 </body>
 </html>
