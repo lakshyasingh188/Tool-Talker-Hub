@@ -8,7 +8,7 @@
     --secondary-color: #f4f4f9; 
     --text-color: #333;
     --light-text-color: #fff;
-    --accent-color: #FF5733; /* For skill dots and icons */
+    --accent-color: #FF5733; 
 }
 
 body {
@@ -97,7 +97,6 @@ body {
     flex: 2;
     background-color: #fff;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    /* A4 Size (important for download) */
     width: 794px; 
     min-height: 1123px; 
     border-radius: 4px;
@@ -106,7 +105,7 @@ body {
 .cv-grid {
     display: grid;
     grid-template-columns: 35% 65%; 
-    min-height: 1123px; /* Ensure grid is at least A4 height */
+    min-height: 1123px;
 }
 
 /* Left Column Styling */
@@ -114,12 +113,11 @@ body {
     background-color: var(--primary-color);
     color: var(--light-text-color);
     padding: 20px;
-    /* This makes the background fill the whole column */
     display: flex;
     flex-direction: column; 
 }
 .extra-section {
-    margin-top: auto; /* Pushes content to the bottom of the left column */
+    margin-top: auto; 
     padding-bottom: 20px;
 }
 
@@ -156,18 +154,12 @@ body {
     margin: 0 0 5px 0;
     color: #fff;
 }
-
-.title-display {
-    font-size: 1.1em;
-    margin: 0;
-    color: #fff;
-    font-weight: 300;
-}
+/* .title-display हटा दिया गया है */
 
 .contact-section p {
     margin: 5px 0;
     font-size: 0.9em;
-    display: flex; /* For icon alignment */
+    display: flex; 
     align-items: center;
 }
 .contact-section i {
@@ -225,24 +217,30 @@ body {
     margin-bottom: 15px;
 }
 
-/* Work History */
-.job-item {
-    margin-bottom: 25px;
+/* Work History, Education, Projects - Generic Styles */
+.job-item, .edu-item, .project-item {
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    /* This line is key for the look */
+    border-bottom: 1px dashed #eee; 
 }
-.job-duration {
+.job-item:last-child, .edu-item:last-child, .project-item:last-child {
+    border-bottom: none;
+}
+.job-duration, .edu-duration {
     font-size: 0.8em;
     font-style: italic;
     color: #888;
     margin: 0;
 }
-.job-title {
+.job-title, .edu-title, .project-title {
     font-size: 1.1em;
     color: var(--primary-color);
     margin: 5px 0;
 }
-.job-company {
+.job-company, .edu-institution, .project-details {
     font-size: 0.9em;
-    margin: 0 0 10px 0;
+    margin: 0 0 5px 0;
 }
 .job-tasks {
     padding-left: 20px;
@@ -250,44 +248,6 @@ body {
     font-size: 0.9em;
 }
 
-/* Education */
-.edu-item {
-    margin-bottom: 15px;
-    padding-bottom: 10px;
-    border-bottom: 1px dashed #eee;
-}
-.edu-item:last-child {
-    border-bottom: none;
-}
-.edu-duration {
-    font-size: 0.8em;
-    font-style: italic;
-    color: #888;
-    margin: 0;
-}
-.edu-title {
-    font-size: 1.1em;
-    color: var(--primary-color);
-    margin: 5px 0;
-}
-.edu-institution {
-    font-size: 0.9em;
-    margin: 0 0 5px 0;
-}
-
-/* Filler Content Styling */
-.project-item {
-    margin-bottom: 15px;
-}
-.project-title {
-    font-size: 1em;
-    color: var(--primary-color);
-    margin: 5px 0;
-}
-.project-details {
-    font-size: 0.9em;
-    margin: 0;
-}
 
 /*
 ====================================
