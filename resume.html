@@ -13,9 +13,9 @@
       
       <label>Choose Template</label>
       <div class="template-preview">
-        <img src="https://via.placeholder.com/80x100?text=Modern" onclick="setTemplate('Modern')">
-        <img src="https://via.placeholder.com/80x100?text=Classic" onclick="setTemplate('Classic')">
-        <img src="https://via.placeholder.com/80x100?text=Creative" onclick="setTemplate('Creative')">
+        <img src="https://dummyimage.com/80x100/2193b0/ffffff&text=Modern" onclick="setTemplate('Modern')">
+        <img src="https://dummyimage.com/80x100/ff5722/ffffff&text=Classic" onclick="setTemplate('Classic')">
+        <img src="https://dummyimage.com/80x100/4caf50/ffffff&text=Creative" onclick="setTemplate('Creative')">
       </div>
 
       <label>Profile Photo</label>
@@ -30,14 +30,27 @@
       <label>Phone</label>
       <input type="text" id="phone">
 
-      <label>Class 10</label>
-      <input type="text" id="class10" placeholder="Board / Year / %">
+      <!-- Education Section -->
+      <div class="edu-box">
+        <h3>Class 10</h3>
+        <input type="text" id="class10Board" placeholder="Board">
+        <input type="text" id="class10Year" placeholder="Year">
+        <input type="text" id="class10Marks" placeholder="Percentage/CGPA">
+      </div>
 
-      <label>Class 12</label>
-      <input type="text" id="class12" placeholder="Board / Year / %">
+      <div class="edu-box">
+        <h3>Class 12</h3>
+        <input type="text" id="class12Board" placeholder="Board">
+        <input type="text" id="class12Year" placeholder="Year">
+        <input type="text" id="class12Marks" placeholder="Percentage/CGPA">
+      </div>
 
-      <label>Bachelor</label>
-      <input type="text" id="bachelor" placeholder="College / Year / %">
+      <div class="edu-box">
+        <h3>Bachelor</h3>
+        <input type="text" id="bachelorCollege" placeholder="College Name">
+        <input type="text" id="bachelorYear" placeholder="Year">
+        <input type="text" id="bachelorMarks" placeholder="Percentage/CGPA">
+      </div>
 
       <label>Skills</label>
       <textarea id="skills" placeholder="Write skills separated by commas"></textarea>
@@ -53,14 +66,16 @@
 
     <!-- Preview Section -->
     <div class="preview-section" id="resumePreview">
-      <h2 id="previewName">Your Name</h2>
+      <h1 id="previewName">Your Name</h1>
       <p><span class="highlight">Email:</span> <span id="previewEmail"></span></p>
       <p><span class="highlight">Phone:</span> <span id="previewPhone"></span></p>
 
       <div class="section-title">Education</div>
-      <p id="previewClass10"></p>
-      <p id="previewClass12"></p>
-      <p id="previewBachelor"></p>
+      <ul>
+        <li id="previewClass10"></li>
+        <li id="previewClass12"></li>
+        <li id="previewBachelor"></li>
+      </ul>
 
       <div class="section-title">Skills</div>
       <p id="previewSkills"></p>
@@ -72,7 +87,6 @@
       <p id="previewObjective"></p>
     </div>
   </div>
-
   <script src="script.js"></script>
 </body>
 </html>
