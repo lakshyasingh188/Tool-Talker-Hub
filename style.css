@@ -27,7 +27,7 @@ body {
   padding: 20px;
   border-radius: 10px;
   width: 800px;
-  min-height: 1120px; /* A4 size height */
+  min-height: 1120px; /* A4 height */
   box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
 }
 
@@ -38,19 +38,10 @@ body {
   border-radius: 6px;
 }
 
-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-table td {
-  padding: 6px;
-  border-bottom: 1px solid #ddd;
-}
-
 .btn {
   display: block;
   margin-top: 10px;
-  padding: 8px;
+  padding: 10px;
   width: 100%;
   background: #2193b0;
   color: #fff;
@@ -61,8 +52,3 @@ table td {
 .btn:hover {
   background: #176d82;
 }
-
-/* Template Variations */
-.modern h1 { color: #2193b0; }
-.classic h1 { color: #000; font-family: Georgia; }
-.creative h1 { color: #ff5722; font-family: "Comic Sans MS"; }
