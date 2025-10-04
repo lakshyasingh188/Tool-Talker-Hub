@@ -11,46 +11,59 @@
     <!-- LEFT FORM -->
     <div class="form-section">
       <h2>Enter Your Details</h2>
+      
       <label>Full Name</label>
       <input type="text" id="name" placeholder="Enter your name">
 
       <label>Email</label>
-      <input type="text" id="email" placeholder="Enter email">
+      <input type="text" id="email" placeholder="Enter your email">
 
       <label>Phone</label>
-      <input type="text" id="phone" placeholder="Enter phone">
+      <input type="text" id="phone" placeholder="Enter your phone number">
+
+      <label>Address</label>
+      <input type="text" id="address" placeholder="Enter your address">
 
       <label>Education</label>
-      <textarea id="education" placeholder="Your education..."></textarea>
+      <textarea id="education" placeholder="Your education details"></textarea>
+
+      <label>Experience</label>
+      <textarea id="experience" placeholder="Your work experience"></textarea>
 
       <label>Skills</label>
-      <textarea id="skills" placeholder="Your skills..."></textarea>
+      <textarea id="skills" placeholder="Your skills (comma separated)"></textarea>
 
       <label>Languages</label>
-      <textarea id="languages" placeholder="Languages you know..."></textarea>
+      <textarea id="languages" placeholder="Languages you know"></textarea>
 
       <label>Objective</label>
-      <textarea id="objective" placeholder="Career objective..."></textarea>
+      <textarea id="objective" placeholder="Write your career objective"></textarea>
 
       <button onclick="generateResume()">Generate Resume</button>
       <button onclick="downloadPDF()">Download PDF</button>
     </div>
 
-    <!-- RIGHT PREVIEW -->
-    <div class="preview-section" id="resumeContent">
-      <h1 id="previewName">Your Name</h1>
-      <p><b>Email:</b> <span id="previewEmail"></span></p>
-      <p><b>Phone:</b> <span id="previewPhone"></span></p>
+    <!-- RIGHT RESUME PREVIEW -->
+    <div class="resume-section" id="resumeContent">
+      <div class="header">
+        <h1 id="previewName">Your Name</h1>
+        <p id="previewEmail"></p>
+        <p id="previewPhone"></p>
+        <p id="previewAddress"></p>
+      </div>
       
       <h2>Education</h2>
       <p id="previewEducation"></p>
-      
+
+      <h2>Experience</h2>
+      <p id="previewExperience"></p>
+
       <h2>Skills</h2>
-      <p id="previewSkills"></p>
-      
+      <ul id="previewSkills"></ul>
+
       <h2>Languages</h2>
       <p id="previewLanguages"></p>
-      
+
       <h2>Objective</h2>
       <p id="previewObjective"></p>
     </div>
