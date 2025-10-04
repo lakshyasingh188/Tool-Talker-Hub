@@ -1,19 +1,16 @@
 /**
  * यह फ़ंक्शन फ़ॉर्म से डेटा लेता है और CV को लाइव अपडेट करता है।
- * इसमें अब कोई फिक्स्ड डेटा नहीं है।
  */
 function updateCV() {
     // 1. व्यक्तिगत विवरण
     const name = document.getElementById('nameInput').value.trim();
-    // const title = document.getElementById('titleInput').value.trim(); // हटा दिया गया
     const phone = document.getElementById('phoneInput').value.trim();
     const email = document.getElementById('emailInput').value.trim();
     const address = document.getElementById('addressInput').value.trim();
     const summary = document.getElementById('summaryInput').value.trim();
 
-    // नाम, पद, और सारांश
+    // नाम और सारांश
     document.getElementById('cv-name').innerText = name;
-    // document.getElementById('cv-title').innerText = title; // हटा दिया गया
     document.getElementById('cv-summary').innerText = summary;
     
     // 2. प्रोफ़ाइल फ़ोटो और इनिशियल्स
@@ -39,13 +36,11 @@ function updateCV() {
         }
         reader.readAsDataURL(photoInput.files[0]);
     } else if (name) {
-        // अगर फोटो नहीं है, लेकिन नाम है, तो इनिशियल्स दिखाएँ
         photoDisplay.style.display = 'none';
-        initialsDisplay.style.display = 'flex';
+        initialsDisplay.style.display = 'flex'; // इनिशियल्स दिखें
     } else {
-        // अगर नाम और फोटो दोनों खाली हैं, तो कुछ भी न दिखाएँ
         photoDisplay.style.display = 'none';
-        initialsDisplay.style.display = 'none';
+        initialsDisplay.style.display = 'none'; // कुछ न दिखे
     }
 
     // 3. संपर्क विवरण (Contact Details)
@@ -116,6 +111,7 @@ function updateCV() {
         hasEducation = true;
     }
 
+    // अगर शिक्षा का कोई विवरण नहीं है, तो प्लेसहोल्डर दिखाएँ
     if (!hasEducation) {
         eduOutput.innerHTML = '<p style="font-style: italic; color: #888; font-size:0.9em;">No education details added yet. Please fill the form.</p>';
     }
@@ -126,6 +122,7 @@ document.addEventListener('DOMContentLoaded', updateCV);
 
 /**
  * PDF जनरेशन फ़ंक्शन
+ * यह सुनिश्चित करता है कि डेटा अपडेट होने के बाद ही PDF बने।
  */
 function prepareAndDownloadPDF() {
     // 1. सुनिश्चित करें कि CV सबसे पहले अपडेट हो जाए
@@ -135,8 +132,9 @@ function prepareAndDownloadPDF() {
     const name = document.getElementById('nameInput').value.trim() || 'My_Resume';
     
     // बटन को डिसेबल करें और स्टेट बदलें
-    document.getElementById('downloadBtn').innerText = "Generating PDF...";
-    document.getElementById('downloadBtn').disabled = true;
+    const downloadBtn = document.getElementById('downloadBtn');
+    downloadBtn.innerText = "Generating PDF...";
+    downloadBtn.disabled = true;
 
     // 2. PDF सेटिंग्स
     const opt = {
@@ -148,10 +146,17 @@ function prepareAndDownloadPDF() {
     };
 
     // 3. जनरेट और डाउनलोड करें
-    html2pdf().from(element).set(opt).save().then(() => {
-        // डाउनलोड पूरा होने के बाद बटन को रीसेट करें
-        document.getElementById('downloadBtn').innerText = "📥 Download PDF";
-        document.getElementById('downloadBtn').disabled = false;
-        // alert("Your CV has been successfully generated and downloaded!"); // अलर्ट हटा दिया गया है
-    });
+    // setTimeout का उपयोग करें ताकि CV को पूरी तरह से रेंडर होने का समय मिल सके
+    setTimeout(() => {
+        html2pdf().from(element).set(opt).save().then(() => {
+            // डाउनलोड पूरा होने के बाद बटन को रीसेट करें
+            downloadBtn.innerText = "📥 Download PDF";
+            downloadBtn.disabled = false;
+        }).catch(error => {
+            console.error("PDF generation failed:", error);
+            alert("Error: PDF could not be generated. Please check console for details.");
+            downloadBtn.innerText = "📥 Download PDF";
+            downloadBtn.disabled = false;
+        });
+    }, 50); // 50 मिलीसेकंड का विलंब (delay)
 }
