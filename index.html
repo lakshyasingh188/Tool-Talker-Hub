@@ -16,33 +16,37 @@
             
             <h2>Personal Details</h2>
             <input type="file" id="photoInput" accept="image/*" onchange="updateCV()" aria-label="Upload Photo">
-            <input type="text" id="nameInput" placeholder="Full Name (e.g., John Doe)" onkeyup="updateCV()">
-            <input type="text" id="titleInput" placeholder="Job Title (e.g., Teacher)" onkeyup="updateCV()">
-            <input type="text" id="phoneInput" placeholder="Phone Number" onkeyup="updateCV()">
-            <input type="email" id="emailInput" placeholder="Email Address" onkeyup="updateCV()">
-            <input type="text" id="addressInput" placeholder="Address (e.g., City, Country)" onkeyup="updateCV()">
+            <input type="text" id="nameInput" placeholder="Full Name (e.g., Anika Kumar)" onkeyup="updateCV()">
+            <input type="text" id="titleInput" placeholder="Job Title (e.g., Senior Teacher)" onkeyup="updateCV()">
+            <input type="text" id="phoneInput" placeholder="Phone Number (e.g., +91 9876543210)" onkeyup="updateCV()">
+            <input type="email" id="emailInput" placeholder="Email Address (e.g., anika@example.com)" onkeyup="updateCV()">
+            <input type="text" id="addressInput" placeholder="Address (e.g., New Delhi, India)" onkeyup="updateCV()">
             
             <h2>Professional Summary</h2>
             <textarea id="summaryInput" rows="4" placeholder="Write your professional summary here..." onkeyup="updateCV()"></textarea>
 
             <h2>Education</h2>
             <div id="educationInputs">
-                <p><strong>10th / Matriculation</strong></p>
-                <input type="text" id="hscBoard" placeholder="Board/University" onkeyup="updateCV()">
-                <input type="text" id="hscPercentage" placeholder="Percentage/CGPA" onkeyup="updateCV()">
-                
-                <p><strong>12th / Intermediate</strong></p>
-                <input type="text" id="interBoard" placeholder="Board/University" onkeyup="updateCV()">
-                <input type="text" id="interPercentage" placeholder="Percentage/CGPA" onkeyup="updateCV()">
                 
                 <p><strong>Bachelor's Degree</strong></p>
                 <input type="text" id="bachelorDegree" placeholder="Degree Name (e.g., B.A. Education)" onkeyup="updateCV()">
                 <input type="text" id="bachelorCollege" placeholder="College/University Name" onkeyup="updateCV()">
                 <input type="text" id="bachelorDuration" placeholder="Duration (e.g., 2018-2021)" onkeyup="updateCV()">
+                
+                <p><strong>12th / Intermediate</strong></p>
+                <input type="text" id="interBoard" placeholder="Board/School Name" onkeyup="updateCV()">
+                <input type="text" id="interPercentage" placeholder="Percentage/CGPA (e.g., 90%)" onkeyup="updateCV()">
+                
+                <p><strong>10th / Matriculation</strong></p>
+                <input type="text" id="hscBoard" placeholder="Board/School Name" onkeyup="updateCV()">
+                <input type="text" id="hscPercentage" placeholder="Percentage/CGPA (e.g., 9.5 CGPA)" onkeyup="updateCV()">
             </div>
+
+            <h2>Skills</h2>
+            <p class="note">Skills are currently fixed. For a dynamic list, you need advanced JS.</p>
             
-            <button onclick="generatePDF()">📥 Download PDF</button>
-            <p class="note">After generating, the PDF will download automatically.</p>
+            <button id="downloadBtn" onclick="prepareAndDownloadPDF()">📥 Download PDF</button>
+            <p class="note">Your CV is generated live. Click 'Download PDF' to save it.</p>
         </div>
 
         <div id="cv-output-area" class="cv-paper">
@@ -71,9 +75,23 @@
                             <li>Group learning mechanics <span class="rating" style="--rating: 5;"></span></li>
                             <li>Differentiated Instruction <span class="rating" style="--rating: 4;"></span></li>
                             <li>Lesson planning <span class="rating" style="--rating: 5;"></span></li>
+                            <li>Team Collaboration <span class="rating" style="--rating: 4;"></span></li>
+                            <li>Public Speaking <span class="rating" style="--rating: 3;"></span></li>
                         </ul>
                     </div>
 
+                    <div class="extra-section">
+                        <h3>Languages</h3>
+                        <ul id="cv-languages">
+                            <li>Hindi (Native)</li>
+                            <li>English (Fluent)</li>
+                        </ul>
+                        <h3>Interests</h3>
+                        <ul id="cv-interests">
+                            <li>Reading</li>
+                            <li>Photography</li>
+                        </ul>
+                    </div>
                 </div>
 
                 <div class="right-column">
@@ -85,13 +103,39 @@
                     
                     <div class="work-history-section">
                         <h3>Work History</h3>
-                        <p>No work experience added yet.</p>
+                        <div class="job-item">
+                            <p class="job-duration">2021 - Present</p>
+                            <h4 class="job-title">Senior Teacher</h4>
+                            <p class="job-company">Delhi Public School, New Delhi</p>
+                            <ul class="job-tasks">
+                                <li>Developed and delivered lessons resulting in a 20% improvement in student test scores across all subjects.</li>
+                                <li>Implemented reading and writing workshops tailored to individual student needs.</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="job-item">
+                            <p class="job-duration">2018 - 2021</p>
+                            <h4 class="job-title">Junior Teacher</h4>
+                            <p class="job-company">Modern School, Gurgaon</p>
+                            <ul class="job-tasks">
+                                <li>Managed classroom activities for over 30 students, focusing on primary education methodologies.</li>
+                                <li>Collaborated with parents and staff to track student progress effectively.</li>
+                            </ul>
+                        </div>
                     </div>
 
                     <div class="education-section">
                         <h3>Education</h3>
                         <div id="cv-education-output">
                             </div>
+                    </div>
+                    
+                    <div class="filler-content">
+                         <h3>Projects & Achievements</h3>
+                         <div class="project-item">
+                             <h4 class="project-title">Curriculum Development Initiative (2023)</h4>
+                             <p class="project-details">Led a team to redesign the science curriculum for grades 6-8, focusing on project-based learning. Resulted in a 15% increase in student engagement.</p>
+                         </div>
                     </div>
 
                 </div>
