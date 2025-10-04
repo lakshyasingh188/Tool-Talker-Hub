@@ -199,117 +199,163 @@ body {
 }
 .rating::before {
     content: '● ● ● ● ●'; 
-    color: #ccc;
-    font-size: 0.7em;
-}
-.rating::after {
-    content: '● ● ● ● ●'; 
-    position: absolute;
-    overflow: hidden;
-    width: calc(var(--rating) / 5 * 100%); 
-    color: var(--accent-color); 
-    font-size: 0.7em;
-}
+    color: #ccc;/**
+ * यह फ़ंक्शन फ़ॉर्म से डेटा लेता है और CV को लाइव अपडेट करता है।
+ */
+function updateCV() {
+    // 1. व्यक्तिगत विवरण
+    const name = document.getElementById('nameInput').value.trim();
+    const title = document.getElementById('titleInput').value.trim();
+    const phone = document.getElementById('phoneInput').value.trim();
+    const email = document.getElementById('emailInput').value.trim();
+    const address = document.getElementById('addressInput').value.trim();
+    const summary = document.getElementById('summaryInput').value.trim();
 
-/* Right Column Styling */
-.right-column {
-    padding: 40px;
-}
+    // नाम, पद, और सारांश
+    document.getElementById('cv-name').innerText = name;
+    document.getElementById('cv-title').innerText = title;
+    document.getElementById('cv-summary').innerText = summary;
+    
+    // 2. प्रोफ़ाइल फ़ोटो और इनिशियल्स
+    const photoDisplay = document.getElementById('photo-display');
+    const initialsDisplay = document.getElementById('initials-display');
 
-.right-column h3 {
-    color: var(--primary-color);
-    font-size: 1.5em;
-    border-bottom: 2px solid #ddd;
-    padding-bottom: 5px;
-    margin-top: 0;
-    margin-bottom: 15px;
-}
+    let initials = '';
+    if (name) {
+        const parts = name.split(' ');
+        initials = parts.map(p => p.charAt(0).toUpperCase()).join('');
+    }
+    initialsDisplay.innerText = initials;
 
-/* Work History */
-.job-item {
-    margin-bottom: 25px;
-}
-.job-duration {
-    font-size: 0.8em;
-    font-style: italic;
-    color: #888;
-    margin: 0;
-}
-.job-title {
-    font-size: 1.1em;
-    color: var(--primary-color);
-    margin: 5px 0;
-}
-.job-company {
-    font-size: 0.9em;
-    margin: 0 0 10px 0;
-}
-.job-tasks {
-    padding-left: 20px;
-    margin-top: 5px;
-    font-size: 0.9em;
-}
+    const photoInput = document.getElementById('photoInput');
+    const hasPhoto = photoInput.files && photoInput.files[0];
 
-/* Education */
-.edu-item {
-    margin-bottom: 15px;
-    padding-bottom: 10px;
-    border-bottom: 1px dashed #eee;
-}
-.edu-item:last-child {
-    border-bottom: none;
-}
-.edu-duration {
-    font-size: 0.8em;
-    font-style: italic;
-    color: #888;
-    margin: 0;
-}
-.edu-title {
-    font-size: 1.1em;
-    color: var(--primary-color);
-    margin: 5px 0;
-}
-.edu-institution {
-    font-size: 0.9em;
-    margin: 0 0 5px 0;
-}
-
-/* Filler Content Styling */
-.project-item {
-    margin-bottom: 15px;
-}
-.project-title {
-    font-size: 1em;
-    color: var(--primary-color);
-    margin: 5px 0;
-}
-.project-details {
-    font-size: 0.9em;
-    margin: 0;
-}
-
-/*
-====================================
-  3. PDF Print Styles
-====================================
-*/
-@media print {
-    body {
-        padding: 0;
-        margin: 0;
-        background: none;
-        display: block;
+    if (hasPhoto) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            photoDisplay.src = e.target.result;
+            photoDisplay.style.display = 'block';
+            initialsDisplay.style.display = 'none';
+        }
+        reader.readAsDataURL(photoInput.files[0]);
+    } else if (name) {
+        photoDisplay.style.display = 'none';
+        initialsDisplay.style.display = 'flex';
+    } else {
+        photoDisplay.style.display = 'none';
+        initialsDisplay.style.display = 'none';
     }
 
-    .container, .input-form {
-        display: none;
+    // 3. संपर्क विवरण
+    const updateContactLine = (input, displayId, lineId) => {
+        const value = input.trim();
+        const lineElement = document.getElementById(lineId);
+        
+        if (value) {
+            document.getElementById(displayId).innerText = value;
+            lineElement.style.display = 'flex';
+        } else {
+            lineElement.style.display = 'none';
+        }
+    };
+
+    updateContactLine(address, 'cv-address', 'cv-address-line');
+    updateContactLine(phone, 'cv-phone', 'cv-phone-line');
+    updateContactLine(email, 'cv-email', 'cv-email-line');
+
+    
+    // 4. शिक्षा विवरण (Education Details)
+    const hscBoard = document.getElementById('hscBoard').value.trim();
+    const hscPercentage = document.getElementById('hscPercentage').value.trim();
+    const interBoard = document.getElementById('interBoard').value.trim();
+    const interPercentage = document.getElementById('interPercentage').value.trim();
+    const bachelorDegree = document.getElementById('bachelorDegree').value.trim();
+    const bachelorCollege = document.getElementById('bachelorCollege').value.trim();
+    const bachelorDuration = document.getElementById('bachelorDuration').value.trim();
+
+    const eduOutput = document.getElementById('cv-education-output');
+    eduOutput.innerHTML = ''; 
+
+    // एक फ़ंक्शन जो एजुकेशन आइटम बनाता है
+    const createEduItem = (title, institution, duration) => {
+        const item = document.createElement('div');
+        item.classList.add('edu-item');
+        
+        // Duration/Year (Optional)
+        if (duration) item.innerHTML += `<p class="edu-duration">${duration}</p>`;
+        
+        // Degree/Class Title
+        const finalTitle = title.replace(/\(([^()]*)\)/g, (match, p1) => {
+            return p1 ? ` (${p1})` : ''; // अगर परसेंटेज है तो दिखाओ
+        });
+        if (finalTitle) item.innerHTML += `<h4 class="edu-title">${finalTitle}</h4>`;
+        
+        // Institution/Board
+        if (institution) item.innerHTML += `<p class="edu-institution">${institution}</p>`;
+
+        eduOutput.appendChild(item);
+    };
+
+    // 5. एजुकेशन डेटा को CV में जोड़ना (Higher to Lower)
+    let hasEducation = false;
+
+    // 1. Bachelor's Degree
+    if (bachelorDegree || bachelorCollege || bachelorDuration) {
+        const degreeTitle = bachelorDegree || 'Bachelor\'s Degree';
+        createEduItem(degreeTitle, bachelorCollege, bachelorDuration);
+        hasEducation = true;
     }
     
-    .cv-paper {
-        margin: 0;
-        box-shadow: none;
-        width: 100%;
-        min-height: auto;
+    // 2. 12th / Intermediate
+    if (interBoard || interPercentage) {
+        const title = `12th / Intermediate (${interPercentage})`;
+        createEduItem(title, interBoard, ''); 
+        hasEducation = true;
     }
+
+    // 3. 10th / Matriculation
+    if (hscBoard || hscPercentage) {
+        const title = `10th / Matriculation (${hscPercentage})`;
+        createEduItem(title, hscBoard, ''); 
+        hasEducation = true;
+    }
+
+    if (!hasEducation) {
+        eduOutput.innerHTML = '<p style="font-style: italic; color: #888; font-size:0.9em;">No education details added yet. Please fill the form.</p>';
+    }
+}
+
+// पेज लोड होने पर CV को एक बार अपडेट करें
+document.addEventListener('DOMContentLoaded', updateCV);
+
+/**
+ * PDF जनरेशन फ़ंक्शन
+ * यह सुनिश्चित करता है कि डेटा अपडेट होने के बाद ही PDF बने।
+ */
+function prepareAndDownloadPDF() {
+    // 1. सुनिश्चित करें कि CV सबसे पहले अपडेट हो जाए
+    updateCV(); 
+
+    const element = document.getElementById('cv-output-area');
+    const name = document.getElementById('nameInput').value.trim() || 'My_Resume';
+    
+    document.getElementById('downloadBtn').innerText = "Generating PDF...";
+    document.getElementById('downloadBtn').disabled = true;
+
+    // 2. PDF सेटिंग्स
+    const opt = {
+        margin:       0.5, 
+        filename:     `${name.replace(/\s/g, '_')}_CV.pdf`, 
+        image:        { type: 'jpeg', quality: 0.98 },
+        html2canvas:  { scale: 2 }, // High resolution
+        jsPDF:        { unit: 'in', format: 'A4', orientation: 'portrait' }
+    };
+
+    // 3. जनरेट और डाउनलोड करें
+    html2pdf().from(element).set(opt).save().then(() => {
+        // डाउनलोड पूरा होने के बाद बटन को रीसेट करें
+        document.getElementById('downloadBtn').innerText = "📥 Download PDF";
+        document.getElementById('downloadBtn').disabled = false;
+        alert("Your CV has been successfully generated and downloaded!");
+    });
 }
