@@ -4,11 +4,11 @@
 ====================================
 */
 :root {
-    --primary-color: #A52A2A; /* गहरा मरून/लाल रंग */
-    --secondary-color: #f4f4f9; /* हल्के ग्रे के लिए */
+    --primary-color: #A52A2A; /* गहरा मरून/लाल रंग (Anika Kumar CV जैसा) */
+    --secondary-color: #f4f4f9; 
     --text-color: #333;
     --light-text-color: #fff;
-    --accent-color: #FF5733; /* स्किल्स रेटिंग के लिए एक अलग रंग */
+    --accent-color: #FF5733; /* स्किल्स रेटिंग के लिए */
 }
 
 body {
@@ -49,7 +49,10 @@ body {
     margin-top: 20px;
 }
 
-.input-form input[type="text"], .input-form textarea {
+.input-form input[type="text"], 
+.input-form input[type="email"],
+.input-form input[type="file"],
+.input-form textarea {
     width: 100%;
     padding: 10px;
     margin-bottom: 10px;
@@ -58,8 +61,14 @@ body {
     box-sizing: border-box;
     font-size: 14px;
 }
+.input-form p {
+    margin: 10px 0 5px 0;
+    font-size: 0.9em;
+    font-weight: bold;
+}
 
 .input-form button {
+    /* (कोड वही रखें) */
     width: 100%;
     padding: 15px;
     background-color: var(--primary-color);
@@ -92,15 +101,14 @@ body {
     flex: 2;
     background-color: #fff;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    /* A4 साइज़ के लगभग (प्रिंट के लिए महत्वपूर्ण) */
-    width: 794px; /* A4 width @ 96dpi */
-    min-height: 1123px; /* A4 height @ 96dpi */
+    width: 794px; /* A4 width */
+    min-height: 1123px; /* A4 height */
     border-radius: 4px;
 }
 
 .cv-grid {
     display: grid;
-    grid-template-columns: 35% 65%; /* 35% बाईं ओर, 65% दाईं ओर */
+    grid-template-columns: 35% 65%; /* 35% left, 65% right */
     height: 100%;
 }
 
@@ -158,10 +166,10 @@ body {
 }
 .contact-section i {
     margin-right: 10px;
-    color: var(--accent-color); /* आइकन के लिए रंग */
+    color: var(--accent-color);
 }
 
-/* स्किल्स स्टाइल */
+/* स्किल्स स्टाइल (कोड वही रहेगा) */
 .skills-section ul {
     list-style: none;
     padding: 0;
@@ -180,17 +188,16 @@ body {
     gap: 3px;
 }
 .rating::before {
-    content: '● ● ● ● ●'; /* 5 डॉट्स */
+    content: '● ● ● ● ●'; 
     color: #ccc;
     font-size: 0.7em;
 }
-/* भरे हुए डॉट्स के लिए */
 .rating::after {
     content: '● ● ● ● ●'; 
     position: absolute;
     overflow: hidden;
-    width: calc(var(--rating) / 5 * 100%); /* रेटिंग के आधार पर चौड़ाई सेट करें */
-    color: var(--accent-color); /* रेटिंग डॉट्स का रंग */
+    width: calc(var(--rating) / 5 * 100%); 
+    color: var(--accent-color); 
     font-size: 0.7em;
 }
 
@@ -208,35 +215,33 @@ body {
     margin-bottom: 15px;
 }
 
-/* कार्य अनुभव और शिक्षा स्टाइल */
-.job-item, .edu-item {
-    margin-bottom: 25px;
+.edu-item {
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px dashed #eee;
 }
-.job-duration, .edu-duration {
+.edu-item:last-child {
+    border-bottom: none;
+}
+.edu-duration {
     font-size: 0.8em;
     font-style: italic;
     color: #888;
     margin: 0;
 }
-.job-title, .edu-degree {
+.edu-title {
     font-size: 1.1em;
     color: var(--primary-color);
     margin: 5px 0;
 }
-.job-company, .edu-institution {
+.edu-institution {
     font-size: 0.9em;
-    margin: 0 0 10px 0;
-}
-
-.job-tasks {
-    padding-left: 20px;
-    margin-top: 5px;
-    font-size: 0.9em;
+    margin: 0 0 5px 0;
 }
 
 /*
 ====================================
-  3. PDF Print Styles
+  3. PDF Print Styles (कोड वही रहेगा)
 ====================================
 */
 @media print {
@@ -244,11 +249,11 @@ body {
         padding: 0;
         margin: 0;
         background: none;
-        display: block; /* प्रिंट में Flexbox लेआउट हटाएँ */
+        display: block;
     }
 
     .container, .input-form {
-        display: none; /* इनपुट फॉर्म को प्रिंट न करें */
+        display: none;
     }
     
     .cv-paper {
