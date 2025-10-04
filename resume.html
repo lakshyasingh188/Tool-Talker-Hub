@@ -2,89 +2,81 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Resume Builder</title>
+  <title>Modern Resume Template</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="container">
-    <!-- Form Section -->
-    <div class="form-section">
-      <h2>Build Your Resume</h2>
-
-      <label>Full Name</label>
-      <input type="text" id="name">
-
-      <label>Email</label>
-      <input type="text" id="email">
-
-      <label>Phone</label>
-      <input type="text" id="phone">
-
-      <!-- Education -->
-      <h3>Class 10</h3>
-      <input type="text" id="class10Board" placeholder="Board">
-      <input type="text" id="class10Year" placeholder="Year">
-      <input type="text" id="class10Marks" placeholder="Marks/Percentage">
-
-      <h3>Class 12</h3>
-      <input type="text" id="class12Board" placeholder="Board">
-      <input type="text" id="class12Year" placeholder="Year">
-      <input type="text" id="class12Marks" placeholder="Marks/Percentage">
-
-      <h3>Bachelor</h3>
-      <input type="text" id="bachelorCollege" placeholder="College">
-      <input type="text" id="bachelorYear" placeholder="Year">
-      <input type="text" id="bachelorMarks" placeholder="Marks/Percentage">
-
-      <label>Skills</label>
-      <textarea id="skills"></textarea>
-
-      <label>Languages</label>
-      <textarea id="languages"></textarea>
-
-      <label>Objective</label>
-      <textarea id="objective"></textarea>
-
-      <button onclick="generateResume()" class="btn">Preview Resume</button>
-      <button onclick="downloadPDF()" class="btn">Download PDF</button>
+  <div class="resume-container" id="resumeContent">
+    
+    <!-- LEFT SIDE -->
+    <div class="left-section">
+      <div class="profile-pic">
+        <img src="https://i.ibb.co/4fH5Z0t/profile.png" alt="Profile Picture">
+      </div>
+      <h1 class="name">Anika Kumar</h1>
+      <h3 class="role">Teacher</h3>
+      <p class="address">New Delhi, India 110001</p>
+      <p class="contact">📞 +91 11 5555 5555</p>
+      <p class="contact">📧 example@example.com</p>
     </div>
 
-    <!-- Preview Section -->
-    <div class="preview-section" id="resumePreview">
-      <div id="resumeContent">
-        <h1 id="previewName">Your Name</h1>
-        <p><b>Email:</b> <span id="previewEmail"></span></p>
-        <p><b>Phone:</b> <span id="previewPhone"></span></p>
+    <!-- RIGHT SIDE -->
+    <div class="right-section">
+      <div class="about">
+        <h2>Profile</h2>
+        <p>
+          Passionate Teacher with experience developing and implementing diverse curriculums covering a wide range of subjects. Highly skilled at motivating students through positive encouragement and reinforcement of concepts via interactive classroom instruction and observation.
+        </p>
+      </div>
 
-        <div class="section">
-          <h2>Education</h2>
+      <div class="skills">
+        <h2>Skills</h2>
+        <ul>
+          <li>Group learning mechanics <span class="level">Excellent</span></li>
+          <li>Differentiated instruction <span class="level">Excellent</span></li>
+          <li>Lesson planning <span class="level">Excellent</span></li>
+        </ul>
+      </div>
+
+      <div class="experience">
+        <h2>Work History</h2>
+        <div class="job">
+          <h3>Teacher</h3>
+          <p><b>Delhi Public School, New Delhi</b> | 2018 - Current</p>
           <ul>
-            <li id="previewClass10"></li>
-            <li id="previewClass12"></li>
-            <li id="previewBachelor"></li>
+            <li>Implemented reading & writing workshops resulting in a 30% improvement.</li>
+            <li>Developed curricula for students to increase academic proficiency.</li>
           </ul>
         </div>
-
-        <div class="section">
-          <h2>Skills</h2>
-          <p id="previewSkills"></p>
-        </div>
-
-        <div class="section">
-          <h2>Languages</h2>
-          <p id="previewLanguages"></p>
-        </div>
-
-        <div class="section">
-          <h2>Objective</h2>
-          <p id="previewObjective"></p>
+        <div class="job">
+          <h3>Teacher</h3>
+          <p><b>PP International School, New Delhi</b> | 2016 - 2018</p>
+          <ul>
+            <li>Planned integrated lessons to meet standards.</li>
+            <li>Conducted evaluations to measure performance.</li>
+          </ul>
         </div>
       </div>
     </div>
   </div>
-  
+
+  <!-- PDF Button -->
+  <button onclick="downloadPDF()" class="btn">Download PDF</button>
+
   <!-- PDF Library -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
-  <script src="script.js"></script>
+  <script>
+    function downloadPDF() {
+      const element = document.getElementById("resumeContent");
+      const opt = {
+        margin: 0,
+        filename: 'resume.pdf',
+        image: { type: 'jpeg', quality: 1 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      };
+      html2pdf().set(opt).from(element).save();
+    }
+  </script>
 </body>
 </html>
