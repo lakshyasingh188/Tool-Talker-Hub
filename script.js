@@ -1,13 +1,25 @@
 function generateResume() {
+  // Photo upload
+  const photo = document.getElementById("photo").files[0];
+  if (photo) {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      document.getElementById("previewPhoto").src = e.target.result;
+    }
+    reader.readAsDataURL(photo);
+  }
+
+  // Text fields
   document.getElementById("previewName").innerText = document.getElementById("name").value || "Your Name";
-  document.getElementById("previewEmail").innerText = document.getElementById("email").value ? "📧 " + document.getElementById("email").value : "";
-  document.getElementById("previewPhone").innerText = document.getElementById("phone").value ? "📞 " + document.getElementById("phone").value : "";
-  document.getElementById("previewAddress").innerText = document.getElementById("address").value ? "📍 " + document.getElementById("address").value : "";
+  document.getElementById("previewJob").innerText = document.getElementById("job").value || "Your Job Title";
+  document.getElementById("previewEmail").innerText = document.getElementById("email").value || "";
+  document.getElementById("previewPhone").innerText = document.getElementById("phone").value || "";
+  document.getElementById("previewAddress").innerText = document.getElementById("address").value || "";
+  document.getElementById("previewProfile").innerText = document.getElementById("profile").value || "";
+  document.getElementById("previewExperience").innerText = document.getElementById("experience").value || "";
+  document.getElementById("previewEducation").innerText = document.getElementById("education").value || "";
 
-  document.getElementById("previewEducation").innerText = document.getElementById("education").value;
-  document.getElementById("previewExperience").innerText = document.getElementById("experience").value;
-
-  // Skills list bana dena
+  // Skills
   let skillsInput = document.getElementById("skills").value;
   let skillsArray = skillsInput.split(",");
   let skillsList = "";
@@ -17,9 +29,6 @@ function generateResume() {
     }
   });
   document.getElementById("previewSkills").innerHTML = skillsList;
-
-  document.getElementById("previewLanguages").innerText = document.getElementById("languages").value;
-  document.getElementById("previewObjective").innerText = document.getElementById("objective").value;
 }
 
 function downloadPDF() {
