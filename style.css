@@ -1,82 +1,86 @@
-:root{
-  --primary:#0d6efd;
-  --muted:#6c757d;
-  --bg1: linear-gradient(90deg,#4facfe,#00f2fe);
-  --card-bg: #ffffff;
+body {
+  font-family: Arial, sans-serif;
+  background: linear-gradient(to right, #6dd5ed, #2193b0);
+  margin: 0;
+  padding: 0;
 }
 
-/* General page */
-body{
-  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-  background: var(--bg1);
-  color: #111;
-  min-height: 100vh;
+/* Home page */
+.home-container {
+  text-align: center;
+  margin-top: 100px;
 }
-
-/* Header / nav */
-.navbar { box-shadow: 0 2px 6px rgba(0,0,0,0.08); }
-
-/* Left form card */
-.card { border-radius: 10px; }
-
-/* Buttons spacing */
-.btn { border-radius: 6px; }
-
-/* Preview wrapper and templates base */
-#resumePreview {
-  background: var(--card-bg);
-  color: #111;
-  min-height: 220px;
+.btn {
+  display: inline-block;
+  padding: 10px 20px;
+  margin-top: 20px;
+  background: #2193b0;
+  color: #fff;
   border-radius: 8px;
-  padding: 18px;
+  text-decoration: none;
+  font-weight: bold;
+}
+.btn:hover {
+  background: #176d82;
 }
 
-/* Common resume styles - tweak per template */
-.resume-header { display:flex; gap:16px; align-items:center; }
-.resume-photo { width:110px; height:110px; object-fit:cover; border-radius:50%; border:3px solid var(--primary); }
-.resume-name { font-size:1.6rem; font-weight:700; }
-.resume-contact { color:var(--muted); margin-top:6px; }
-
-.section-title { color:var(--primary); margin-top:12px; font-weight:600; }
-
-/* Template variations */
-/* Template 1 - Modern */
-.template-modern { font-family: 'Segoe UI', Roboto, sans-serif; }
-.template-modern .resume-header { padding-bottom:8px; border-bottom:1px solid #e9ecef; }
-
-/* Template 2 - Professional */
-.template-professional { font-family: Georgia, serif; }
-.template-professional .resume-name { color:#0b3d91; }
-
-/* Template 3 - Minimal */
-.template-minimal { font-family: Arial, sans-serif; }
-.template-minimal .resume-photo{ display:none; }
-
-/* Template 4 - Clean */
-.template-clean { font-family: 'Helvetica Neue', Arial; }
-
-/* Template 5 - Creative */
-.template-creative { background:linear-gradient(180deg,#fff,#f5f9ff); padding:12px; }
-
-/* Template 6 - Classic */
-.template-classic { font-family: 'Times New Roman', Times, serif; }
-
-/* Template 7 - Elegant */
-.template-elegant { border-left:4px solid #0d6efd; padding-left:12px; }
-
-/* Template 8 - One-column */
-.template-onecol { display:block; }
-
-/* Template 9 - Two-column */
-.template-twocol{ display:grid; grid-template-columns:1fr 1fr; gap:16px; }
-.template-twocol .left-col{ border-right:1px dashed #e9ecef; padding-right:12px; }
-
-/* Template 10 - Sidebar */
-.template-sidebar{ display:grid; grid-template-columns:200px 1fr; gap:16px; }
-.template-sidebar .sidebar{ background:#f8f9fa; padding:12px; border-radius:8px; }
-
-/* Small screens fix */
-@media (max-width: 767px){
-  .template-twocol, .template-sidebar { grid-template-columns: 1fr; }
-  .resume-photo { width:90px; height:90px; }
+/* Resume Page */
+.container {
+  display: flex;
+  justify-content: center;
+  margin: 20px;
+}
+.form-section {
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  width: 350px;
+  margin-right: 20px;
+  box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
+}
+.preview-section {
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  width: 400px;
+  border-left: 6px solid #2193b0;
+  box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
+}
+h2 {
+  text-align: center;
+  color: #333;
+}
+label {
+  display: block;
+  margin-top: 10px;
+  font-weight: bold;
+}
+input, textarea, select {
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+  border-radius: 6px;
+  border: 1px solid #aaa;
+}
+.template-preview img {
+  width: 80px;
+  height: 80px;
+  margin: 5px;
+  cursor: pointer;
+  border: 2px solid transparent;
+  border-radius: 5px;
+}
+.template-preview img:hover {
+  border: 2px solid #2193b0;
+}
+.section-title {
+  color: #2193b0;
+  font-size: 18px;
+  margin-top: 15px;
+  border-bottom: 2px solid #eee;
+  padding-bottom: 5px;
+}
+.highlight {
+  color: #ff5722;
+  font-weight: bold;
 }
