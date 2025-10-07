@@ -100,10 +100,11 @@ body {
     background-color: #fff;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
     width: 794px; /* A4 width in pixels */
-    /* Dynamic Height Fix: हाइट कंटेंट के हिसाब से एडजस्ट होगी */
+    /* REMOVED: min-height: 1000px; - इसकी ऊँचाई अब JS द्वारा सेट की जाएगी */
     height: auto; 
-    min-height: 1000px; /* एक न्यूनतम ऊंचाई सुनिश्चित करने के लिए */
     border-radius: 4px;
+    /* overflow hidden ताकि ग्रिड के बाहर कुछ न जाए */
+    overflow: hidden; 
 }
 
 /* CV Border Style */
@@ -115,16 +116,18 @@ body {
 .cv-grid {
     display: grid;
     grid-template-columns: 35% 65%; 
+    /* row-gap: 0; column-gap: 0; */
     height: 100%; 
 }
 
 /* Left Column Styling */
 .left-column {
-    background-color: var(--primary-color); /* The dynamic color */
+    background-color: var(--primary-color); 
     color: var(--light-text-color);
     padding: 20px;
     display: flex;
     flex-direction: column; 
+    /* min-height JS द्वारा सेट किया जाएगा ताकि वह right-column जितना लंबा हो */
 }
 
 /* Languages section (extra-section) */
@@ -154,6 +157,7 @@ body {
     font-size: 3em;
     color: var(--primary-color); /* Use the dynamic color for initials */
     font-weight: bold;
+    flex-shrink: 0; /* सुनिश्चित करें कि यह छोटा न हो */
 }
 .profile-image img {
     width: 100%;
@@ -230,6 +234,11 @@ body {
     color: var(--primary-color); /* The dynamic color */
     margin: 5px 0;
 }
+.edu-status {
+    font-size: 0.8em;
+    font-weight: normal;
+    color: #555; /* स्टेटस के लिए हल्का रंग */
+}
 .summary-section p, .filler-content p {
     font-size: 0.95em;
     line-height: 1.6;
@@ -257,7 +266,12 @@ body {
         margin: 0;
         box-shadow: none;
         width: 100%;
-        min-height: auto;
+        min-height: auto; /* प्रिंट करते समय भी डायनामिक हाइट रहे */
         border: 3px solid black; 
+    }
+    
+    .cv-grid {
+        /* प्रिंट के दौरान flex-box को पूरी हाइट लेने दें */
+        align-items: stretch;
     }
 }
