@@ -65,20 +65,19 @@ function updateCV() {
     if (skillsInput) {
         const skillList = skillsInput.split(',').map(s => s.trim()).filter(s => s.length > 0);
         skillList.forEach(skill => {
-            // रेटिंग स्टाइल हटा दी गई, साधारण लिस्ट आइटम दिखाएँ
             skillsOutput.innerHTML += `<li>${skill}</li>`; 
         });
     } else {
         skillsOutput.innerHTML = '<li style="font-size:0.9em; font-style: italic;">No skills added.</li>';
     }
 
-    // 4. भाषाएँ (Languages) को लिस्ट में दिखाना (NEW: Line by Line)
+    // 4. भाषाएँ (Languages) को लिस्ट में दिखाना (Line by Line)
     const languagesInput = document.getElementById('languagesInput').value.trim();
     const languagesOutput = document.getElementById('cv-languages-output');
     languagesOutput.innerHTML = '';
     
     if (languagesInput) {
-        // कॉमा या नई लाइन से तोड़ना (split by comma, then split by new line)
+        // कॉमा या नई लाइन से तोड़ना
         const langList = languagesInput
             .split(/,|\n/)
             .map(l => l.trim())
@@ -116,10 +115,9 @@ function updateCV() {
     }
 
 
-    // 6. शिक्षा विवरण (Education Details) - Optimized
+    // 6. शिक्षा विवरण (Education Details) - Optimized (Board removed for Bachelor)
     const bachelorDegree = document.getElementById('bachelorDegree').value.trim();
     const bachelorCollege = document.getElementById('bachelorCollege').value.trim();
-    // const bachelorBoard = document.getElementById('bachelorBoard').value.trim(); // Removed
     const bachelorPercentage = document.getElementById('bachelorPercentage').value.trim();
     const bachelorDuration = document.getElementById('bachelorDuration').value.trim();
     
@@ -153,7 +151,7 @@ function updateCV() {
         const title = bachelorDegree || "Bachelor's Degree";
         createDetailedEduItem(title, [
             { label: "University/College", value: bachelorCollege },
-            // Board removed from here
+            // Board removed
             { label: "Percentage/CGPA", value: bachelorPercentage },
             { label: "Duration", value: bachelorDuration }
         ]);
