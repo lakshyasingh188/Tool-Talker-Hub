@@ -242,11 +242,10 @@ function updateCV() {
     }
 
     // Dynamic Height Adjustment (खाली स्पेस हटाने वाला लॉजिक)
-    // setTimeout का उपयोग इसलिए ताकि DOM अपडेट होने के बाद हाइट एडजस्ट हो।
     setTimeout(adjustCVHeight, 100); 
 }
 
-// Debounced version of updateCV (300ms delay to prevent jumping while typing)
+// Debounced version of updateCV (300ms delay to prevent jumping while typing/selecting)
 const debouncedUpdateCV = debounce(updateCV, 300);
 
 // पेज लोड होने पर CV को एक बार अपडेट करें
