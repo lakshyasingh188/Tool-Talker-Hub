@@ -15,16 +15,19 @@ function adjustCVHeight() {
     const rightCol = cvOutput.querySelector('.right-column');
     
     // दोनों कॉलम की ऊँचाई को मापता है
+    // .scrollHeight सही content height देता है, padding margin को ध्यान में रखते हुए
     const leftHeight = leftCol.scrollHeight;
     const rightHeight = rightCol.scrollHeight;
     
     // सबसे बड़ी ऊँचाई को CV आउटपुट की ऊँचाई के रूप में सेट करता है
+    // + 50px का बफर (buffer) जोड़ते हैं ताकि पैडिंग के लिए जगह रहे
     const newHeight = Math.max(leftHeight, rightHeight);
     
-    // 50px का बफर (buffer) जोड़ते हैं ताकि पैडिंग के लिए जगह रहे
-    cvOutput.style.height = `${newHeight + 50}px`;
+    // CV कंटेनर की हाइट सेट करें
+    cvOutput.style.height = `${newHeight + 50}px`; 
     
-    // left-column की min-height को भी right-column की height के बराबर सेट करता है
+    // Left column की min-height को Right column की height के बराबर सेट करता है 
+    // ताकि background color पूरी तरह से भरा रहे
     leftCol.style.minHeight = `${rightHeight}px`; 
 }
 
@@ -229,7 +232,7 @@ function updateCV() {
     // ************************************************
     // **** Dynamic Height Adjustment (Most Important Fix) ****
     // ************************************************
-    setTimeout(adjustCVHeight, 100); // 100ms का छोटा डिले ताकि रेंडरिंग पूरी हो जाए
+    setTimeout(adjustCVHeight, 100); 
 }
 
 // पेज लोड होने पर CV को एक बार अपडेट करें
@@ -258,7 +261,6 @@ function prepareAndDownloadPDF() {
     };
 
     // Generate and Download
-    // यह html2pdf() सुनिश्चित करता है कि यह सही हाइट पर PDF बनाएगा
     setTimeout(() => {
         html2pdf().from(element).set(opt).save().then(() => {
             downloadBtn.innerText = "📥 Download PDF";
