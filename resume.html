@@ -49,4 +49,75 @@
                 <input type="text" id="hscPercentage" placeholder="Percentage/CGPA (e.g., 9.5 CGPA)" onkeyup="updateCV()">
             </div>
             
-            <button id="downloadBtn" onclick="prepareAndDownloadPDF()">📥 Download PDF</button
+            <button id="downloadBtn" onclick="prepareAndDownloadPDF()">📥 Download PDF</button>
+            <p class="note">Your CV updates live. Click 'Download PDF' to save your final document.</p>
+        </div>
+
+        <div id="cv-output-area" class="cv-paper bordered-cv">
+            <div class="cv-grid">
+                
+                <div class="left-column">
+                    <div class="profile-section">
+                        <div class="profile-image">
+                            <img id="photo-display" src="" alt="Profile Photo" style="display: none;">
+                            <span id="initials-display" style="display: none;"></span>
+                        </div>
+                        <h2 class="name-display" id="cv-name"></h2>
+                    </div>
+
+                    <div class="contact-section">
+                        <h3>Contact</h3>
+                        <p id="cv-address-line" style="display:none;"><i class="fas fa-map-marker-alt"></i> <span id="cv-address"></span></p>
+                        <p id="cv-phone-line" style="display:none;"><i class="fas fa-phone"></i> <span id="cv-phone"></span></p>
+                        <p id="cv-email-line" style="display:none;"><i class="fas fa-envelope"></i> <span id="cv-email"></span></p>
+                    </div>
+
+                    <div class="skills-section">
+                        <h3>Skills</h3>
+                        <ul id="cv-skills-output">
+                            </ul>
+                    </div>
+
+                    <div class="extra-section">
+                        <h3>Languages</h3>
+                        <ul id="cv-languages-output">
+                            </ul>
+                    </div>
+                </div>
+
+                <div class="right-column">
+                    
+                    <div class="summary-section">
+                        <h3>Profile Summary</h3>
+                        <p id="cv-summary-para1">An enthusiastic and hardworking individual with the ability to adapt to new situations quickly. Interested in learning new skills, improving existing knowledge, and working with dedication to achieve both personal and organizational goals. My commitment is driven by a passion for continuous learning and achieving excellence in every task assigned.</p>
+                    </div>
+                    
+                    <div id="work-history-main-container" class="work-history-section">
+                        <h3>Work History</h3>
+                        <div id="cv-work-history-output">
+                            </div>
+                    </div>
+
+                    <div class="education-section">
+                        <h3>Education</h3>
+                        <div id="cv-education-output">
+                            </div>
+                    </div>
+                    
+                    <div class="filler-content">
+                         <h3>Declaration</h3>
+                         <div id="cv-declaration-output">
+                             <p id="cv-summary-para2">I look forward to being a part of a progressive organization where I can utilize my skills, learn continuously, and contribute to the overall growth and success of the company. I am confident in my ability to bring a positive impact and grow alongside the organization.</p>
+                         </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
+</body>
+</html>
