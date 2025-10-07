@@ -100,7 +100,7 @@ body {
     background-color: #fff;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
     width: 794px; /* A4 width in pixels */
-    /* Dynamic Height Fix */
+    /* Dynamic Height Fix: हाइट कंटेंट के हिसाब से एडजस्ट होगी */
     height: auto; 
     min-height: 1000px; /* एक न्यूनतम ऊंचाई सुनिश्चित करने के लिए */
     border-radius: 4px;
@@ -115,6 +115,7 @@ body {
 .cv-grid {
     display: grid;
     grid-template-columns: 35% 65%; 
+    /* grid-template-rows हटा दिया गया है ताकि यह सामग्री के अनुकूल हो जाए */
     height: 100%; 
 }
 
@@ -125,6 +126,7 @@ body {
     padding: 20px;
     display: flex;
     flex-direction: column; 
+    /* यह महत्वपूर्ण है ताकि यह दाईं ओर के कॉलम की हाइट तक खींच सके */
 }
 
 /* Languages section (extra-section) */
