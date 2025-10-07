@@ -115,7 +115,6 @@ body {
 .cv-grid {
     display: grid;
     grid-template-columns: 35% 65%; 
-    /* grid-template-rows हटा दिया गया है ताकि यह सामग्री के अनुकूल हो जाए */
     height: 100%; 
 }
 
@@ -126,7 +125,6 @@ body {
     padding: 20px;
     display: flex;
     flex-direction: column; 
-    /* यह महत्वपूर्ण है ताकि यह दाईं ओर के कॉलम की हाइट तक खींच सके */
 }
 
 /* Languages section (extra-section) */
@@ -142,7 +140,7 @@ body {
     font-size: 1.1em;
 }
 
-/* Profile Image */
+/* Profile Image (फोटो कंटेनर) */
 .profile-image {
     width: 100px;
     height: 100px;
@@ -154,7 +152,7 @@ body {
     justify-content: center;
     align-items: center;
     font-size: 3em;
-    color: var(--primary-color); /* Use the dynamic color */
+    color: var(--primary-color); /* Use the dynamic color for initials */
     font-weight: bold;
 }
 .profile-image img {
