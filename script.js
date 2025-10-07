@@ -5,10 +5,11 @@
 function changeThemeColor(colorCode) {
     document.documentElement.style.setProperty('--primary-color', colorCode);
     
-    // इमेज इनिशियल्स का रंग भी अपडेट करें
+    // इमेज इनिशियल्स का रंग भी अपडेट करें (यह 'profile-image' क्लास पर CSS से रंग लेता है)
     const initialsDisplay = document.getElementById('initials-display');
     if (initialsDisplay) {
-        initialsDisplay.style.color = colorCode;
+        // हम इसे CSS वेरिएबल पर छोड़ देंगे, ताकि .profile-image क्लास का स्टाइल काम करे।
+        // initialsDisplay.style.color = colorCode; // इसे हटा दिया गया है
     }
 }
 
@@ -17,7 +18,8 @@ function changeThemeColor(colorCode) {
  */
 function updateCV() {
     // 0. थीम रंग अपडेट करें
-    const selectedColor = document.getElementById('colorPicker').value;
+    const colorPicker = document.getElementById('colorPicker');
+    const selectedColor = colorPicker ? colorPicker.value : '#A52A2A'; // सुरक्षित चेक
     changeThemeColor(selectedColor);
     
     // 1. व्यक्तिगत विवरण
@@ -28,9 +30,10 @@ function updateCV() {
     
     document.getElementById('cv-name').innerText = name;
     
-    // 2. प्रोफ़ाइल फ़ोटो और संपर्क विवरण
+    // 2. प्रोफ़ाइल फ़ोटो और संपर्क विवरण (सबसे महत्वपूर्ण फिक्स यहाँ है)
     const photoDisplay = document.getElementById('photo-display');
     const initialsDisplay = document.getElementById('initials-display');
+    const photoInput = document.getElementById('photoInput');
 
     let initials = '';
     if (name) {
@@ -39,7 +42,6 @@ function updateCV() {
     }
     initialsDisplay.innerText = initials;
 
-    const photoInput = document.getElementById('photoInput');
     const hasPhoto = photoInput.files && photoInput.files[0];
 
     if (hasPhoto) {
@@ -51,11 +53,11 @@ function updateCV() {
         }
         reader.readAsDataURL(photoInput.files[0]);
     } else if (name) {
+        // अगर फ़ोटो नहीं है लेकिन नाम है, तो इनिशियल्स दिखाएं
         photoDisplay.style.display = 'none';
         initialsDisplay.style.display = 'flex';
-        // सुनिश्चित करें कि इनिशियल्स का रंग थीम से मेल खाता है
-        initialsDisplay.style.color = selectedColor; 
     } else {
+        // अगर कुछ भी नहीं है, तो सब छुपाएं
         photoDisplay.style.display = 'none';
         initialsDisplay.style.display = 'none';
     }
