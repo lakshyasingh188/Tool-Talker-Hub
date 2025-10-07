@@ -4,14 +4,30 @@
  */
 function changeThemeColor(colorCode) {
     document.documentElement.style.setProperty('--primary-color', colorCode);
-    
-    // इनिशियल्स के रंग को भी डायनामिक थीम कलर पर सेट करें
-    const initialsDisplay = document.getElementById('initials-display');
-    if (initialsDisplay) {
-        // यह CSS के माध्यम से काम करता है
-        // .profile-image { color: var(--primary-color); }
-    }
 }
+
+/**
+ * CV पेज की ऊँचाई को सामग्री (content) के हिसाब से गतिशील रूप से (dynamically) समायोजित करता है।
+ */
+function adjustCVHeight() {
+    const cvOutput = document.getElementById('cv-output-area');
+    const leftCol = cvOutput.querySelector('.left-column');
+    const rightCol = cvOutput.querySelector('.right-column');
+    
+    // दोनों कॉलम की ऊँचाई को मापता है
+    const leftHeight = leftCol.scrollHeight;
+    const rightHeight = rightCol.scrollHeight;
+    
+    // सबसे बड़ी ऊँचाई को CV आउटपुट की ऊँचाई के रूप में सेट करता है
+    const newHeight = Math.max(leftHeight, rightHeight);
+    
+    // 50px का बफर (buffer) जोड़ते हैं ताकि पैडिंग के लिए जगह रहे
+    cvOutput.style.height = `${newHeight + 50}px`;
+    
+    // left-column की min-height को भी right-column की height के बराबर सेट करता है
+    leftCol.style.minHeight = `${rightHeight}px`; 
+}
+
 
 /**
  * यह फ़ंक्शन फ़ॉर्म से डेटा लेता है और CV को लाइव अपडेट करता है।
@@ -38,7 +54,6 @@ function updateCV() {
     let initials = '';
     if (name) {
         const parts = name.split(' ');
-        // केवल पहले दो शब्दों के पहले अक्षर लें
         initials = parts.slice(0, 2).map(p => p.charAt(0).toUpperCase()).join('');
     }
     initialsDisplay.innerText = initials;
@@ -54,11 +69,9 @@ function updateCV() {
         }
         reader.readAsDataURL(photoInput.files[0]);
     } else if (name) {
-        // अगर फ़ोटो नहीं है लेकिन नाम है, तो इनिशियल्स दिखाएं
         photoDisplay.style.display = 'none';
         initialsDisplay.style.display = 'flex';
     } else {
-        // अगर कुछ भी नहीं है, तो सब छुपाएं
         photoDisplay.style.display = 'none';
         initialsDisplay.style.display = 'none';
     }
@@ -130,7 +143,6 @@ function updateCV() {
     if (workHistoryInput) {
         workHistoryContainer.style.display = 'block';
         
-        // कार्य अनुभव को लिस्ट फॉर्मेट में दिखाएं
         workHistoryOutput.innerHTML = `
             <div class="job-item">
                 <ul class="job-tasks">
@@ -140,33 +152,35 @@ function updateCV() {
         `;
         
     } else {
-        // अगर डेटा खाली है, तो पूरा सेक्शन (हेडिंग सहित) गायब कर दें
         workHistoryContainer.style.display = 'none';
     }
 
 
-    // 7. शिक्षा विवरण (Education Details)
+    // 7. शिक्षा विवरण (Education Details) - Passed/Appearing लॉजिक के साथ
     const bachelorDegree = document.getElementById('bachelorDegree').value.trim();
     const bachelorCollege = document.getElementById('bachelorCollege').value.trim();
     const bachelorPercentage = document.getElementById('bachelorPercentage').value.trim();
     const bachelorDuration = document.getElementById('bachelorDuration').value.trim();
-    
+    const bachelorStatus = document.getElementById('bachelorStatus').value; // New
+
     const interSubjects = document.getElementById('interSubjects').value.trim();
     const interBoard = document.getElementById('interBoard').value.trim();
     const interPercentage = document.getElementById('interPercentage').value.trim();
+    const interStatus = document.getElementById('interStatus').value; // New
 
     const hscBoard = document.getElementById('hscBoard').value.trim();
     const hscPercentage = document.getElementById('hscPercentage').value.trim();
+    const hscStatus = document.getElementById('hscStatus').value; // New
 
     const eduOutput = document.getElementById('cv-education-output');
     eduOutput.innerHTML = ''; 
     let hasEducation = false;
 
     // विस्तृत शिक्षा आइटम बनाने के लिए फ़ंक्शन
-    const createDetailedEduItem = (title, lines) => {
+    const createDetailedEduItem = (title, status, lines) => {
         const item = document.createElement('div');
         item.classList.add('edu-item');
-        item.innerHTML += `<h4 class="edu-title">${title}</h4>`;
+        item.innerHTML += `<h4 class="edu-title">${title} <span class="edu-status">(${status})</span></h4>`;
         
         lines.forEach(line => {
             if (line.value) {
@@ -179,7 +193,7 @@ function updateCV() {
     // 1. Bachelor's Degree
     if (bachelorDegree || bachelorCollege || bachelorPercentage) {
         const title = bachelorDegree || "Bachelor's Degree";
-        createDetailedEduItem(title, [
+        createDetailedEduItem(title, bachelorStatus, [
             { label: "University/College", value: bachelorCollege },
             { label: "Percentage/CGPA", value: bachelorPercentage },
             { label: "Duration", value: bachelorDuration }
@@ -190,7 +204,7 @@ function updateCV() {
     // 2. 12th / Intermediate
     if (interBoard || interPercentage || interSubjects) {
         const title = "12th / Intermediate";
-        createDetailedEduItem(title, [
+        createDetailedEduItem(title, interStatus, [
             { label: "Subjects", value: interSubjects },
             { label: "Board/School", value: interBoard },
             { label: "Percentage/CGPA", value: interPercentage }
@@ -201,7 +215,7 @@ function updateCV() {
     // 3. 10th / Matriculation
     if (hscBoard || hscPercentage) {
         const title = "10th / Matriculation";
-        createDetailedEduItem(title, [
+        createDetailedEduItem(title, hscStatus, [
             { label: "Board/School", value: hscBoard },
             { label: "Percentage/CGPA", value: hscPercentage }
         ]);
@@ -211,6 +225,11 @@ function updateCV() {
     if (!hasEducation) {
         eduOutput.innerHTML = '<p style="font-style: italic; color: #888; font-size:0.9em;">No education details added yet. Please fill the form.</p>';
     }
+
+    // ************************************************
+    // **** Dynamic Height Adjustment (Most Important Fix) ****
+    // ************************************************
+    setTimeout(adjustCVHeight, 100); // 100ms का छोटा डिले ताकि रेंडरिंग पूरी हो जाए
 }
 
 // पेज लोड होने पर CV को एक बार अपडेट करें
@@ -239,6 +258,7 @@ function prepareAndDownloadPDF() {
     };
 
     // Generate and Download
+    // यह html2pdf() सुनिश्चित करता है कि यह सही हाइट पर PDF बनाएगा
     setTimeout(() => {
         html2pdf().from(element).set(opt).save().then(() => {
             downloadBtn.innerText = "📥 Download PDF";
