@@ -17,7 +17,7 @@ body {
     font-family: 'Arial', sans-serif;
     background-color: var(--secondary-color);
     margin: 0;
-    padding: 0; /* पूरे बॉडी से पैडिंग हटाई */
+    padding: 0; 
     color: var(--text-color);
     
     /* Global Scrolling Fixes: पूरे पेज की स्क्रॉलिंग हटाने के लिए */
@@ -36,10 +36,10 @@ body {
     gap: 20px;
     padding: 20px 0; /* Padding को container पर लगाया गया */
     height: 100%; /* container को भी 100% हाइट दी */
-    box-sizing: border-box; /* Padding को हाइट में शामिल करें */
+    box-sizing: border-box; 
 }
 
-/* इनपुट फॉर्म स्टाइलिंग (बायाँ कॉलम - स्क्रॉलिंग फिक्स) */
+/* इनपुट फॉर्म स्टाइलिंग (बायाँ कॉलम - स्वतंत्र स्क्रॉल) */
 .input-form {
     flex: 1;
     background-color: #fff;
@@ -55,7 +55,7 @@ body {
     top: 0; 
 }
 
-/* CV पेपर स्टाइलिंग (दायाँ कॉलम - स्क्रॉलिंग फिक्स) */
+/* CV पेपर स्टाइलिंग (दायाँ कॉलम - स्वतंत्र स्क्रॉल, डायनामिक हाइट सपोर्ट) */
 .cv-paper {
     flex: 2;
     background-color: #fff;
@@ -67,7 +67,7 @@ body {
     /* Dynamic Height Logic से संघर्ष न हो, इसलिए max-height दी गई */
     max-height: calc(100vh - 40px); /* Viewport height - container's top/bottom padding */
     overflow-y: auto; /* अगर कंटेंट लंबा हो तो CV खुद स्क्रॉल करेगा */
-    overflow-x: hidden; /* हॉरिजॉन्टल स्क्रॉलिंग हटा दी गई */
+    overflow-x: hidden; 
 }
 
 
@@ -142,7 +142,6 @@ body {
     padding: 20px;
     display: flex;
     flex-direction: column; 
-    /* min-height JS द्वारा सेट किया जाएगा */
 }
 
 /* Languages section (extra-section) */
@@ -205,7 +204,6 @@ body {
 .skills-section li, .extra-section li {
     margin: 5px 0;
     font-size: 0.9em;
-    /* FIX: लंबा कौशल का नाम रैप हो जाए */
     word-break: break-word; 
 }
 
@@ -213,7 +211,6 @@ body {
 /* Right Column Styling */
 .right-column {
     padding: 40px;
-    /* FIX: लंबा टेक्स्ट मैनेज करने के लिए */
     word-wrap: break-word; 
     overflow-wrap: break-word; 
 }
@@ -274,7 +271,7 @@ body {
     font-size: 0.95em;
     line-height: 1.6;
     margin-bottom: 15px;
-    word-break: break-word; /* सुनिश्चित करता है कि डिक्लेरेशन भी रैप हो */
+    word-break: break-word; 
 }
 
 /*
@@ -300,7 +297,6 @@ body {
         width: 100%;
         min-height: auto; 
         border: 3px solid black; 
-        /* PDF में स्क्रॉलिंग हटाएँ */
         overflow: hidden; 
     }
     
