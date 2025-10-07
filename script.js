@@ -5,11 +5,11 @@
 function changeThemeColor(colorCode) {
     document.documentElement.style.setProperty('--primary-color', colorCode);
     
-    // इमेज इनिशियल्स का रंग भी अपडेट करें (यह 'profile-image' क्लास पर CSS से रंग लेता है)
+    // इनिशियल्स के रंग को भी डायनामिक थीम कलर पर सेट करें
     const initialsDisplay = document.getElementById('initials-display');
     if (initialsDisplay) {
-        // हम इसे CSS वेरिएबल पर छोड़ देंगे, ताकि .profile-image क्लास का स्टाइल काम करे।
-        // initialsDisplay.style.color = colorCode; // इसे हटा दिया गया है
+        // यह CSS के माध्यम से काम करता है
+        // .profile-image { color: var(--primary-color); }
     }
 }
 
@@ -19,7 +19,7 @@ function changeThemeColor(colorCode) {
 function updateCV() {
     // 0. थीम रंग अपडेट करें
     const colorPicker = document.getElementById('colorPicker');
-    const selectedColor = colorPicker ? colorPicker.value : '#A52A2A'; // सुरक्षित चेक
+    const selectedColor = colorPicker ? colorPicker.value : '#A52A2A'; 
     changeThemeColor(selectedColor);
     
     // 1. व्यक्तिगत विवरण
@@ -30,7 +30,7 @@ function updateCV() {
     
     document.getElementById('cv-name').innerText = name;
     
-    // 2. प्रोफ़ाइल फ़ोटो और संपर्क विवरण (सबसे महत्वपूर्ण फिक्स यहाँ है)
+    // 2. प्रोफ़ाइल फ़ोटो और संपर्क विवरण (Photo Logic Fix)
     const photoDisplay = document.getElementById('photo-display');
     const initialsDisplay = document.getElementById('initials-display');
     const photoInput = document.getElementById('photoInput');
@@ -38,7 +38,8 @@ function updateCV() {
     let initials = '';
     if (name) {
         const parts = name.split(' ');
-        initials = parts.map(p => p.charAt(0).toUpperCase()).join('');
+        // केवल पहले दो शब्दों के पहले अक्षर लें
+        initials = parts.slice(0, 2).map(p => p.charAt(0).toUpperCase()).join('');
     }
     initialsDisplay.innerText = initials;
 
@@ -129,6 +130,7 @@ function updateCV() {
     if (workHistoryInput) {
         workHistoryContainer.style.display = 'block';
         
+        // कार्य अनुभव को लिस्ट फॉर्मेट में दिखाएं
         workHistoryOutput.innerHTML = `
             <div class="job-item">
                 <ul class="job-tasks">
