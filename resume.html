@@ -26,22 +26,22 @@
             
             <h2>Personal Details</h2>
             <input type="file" id="photoInput" accept="image/*" onchange="updateCV()" aria-label="Upload Photo">
-            <input type="text" id="nameInput" placeholder="Full Name (e.g., John Doe)" onkeyup="updateCV()">
-            <input type="text" id="phoneInput" placeholder="Phone Number (e.g., +91 9876543210)" onkeyup="updateCV()">
-            <input type="email" id="emailInput" placeholder="Email Address (e.g., example@email.com)" onkeyup="updateCV()">
-            <input type="text" id="addressInput" placeholder="Address (e.g., City, Country)" onkeyup="updateCV()">
+            <input type="text" id="nameInput" placeholder="Full Name (e.g., John Doe)" onkeyup="debouncedUpdateCV()">
+            <input type="text" id="phoneInput" placeholder="Phone Number (e.g., +91 9876543210)" onkeyup="debouncedUpdateCV()">
+            <input type="email" id="emailInput" placeholder="Email Address (e.g., example@email.com)" onkeyup="debouncedUpdateCV()">
+            <input type="text" id="addressInput" placeholder="Address (e.g., City, Country)" onkeyup="debouncedUpdateCV()">
             
             <h2>Career Objective</h2>
-            <textarea id="objectiveInput" rows="3" placeholder="Enter your Career Objective or Professional Summary here." onkeyup="updateCV()"></textarea>
+            <textarea id="objectiveInput" rows="3" placeholder="Enter your Career Objective or Professional Summary here." onkeyup="debouncedUpdateCV()"></textarea>
 
             <h2>Skills</h2>
-            <textarea id="skillsInput" rows="3" placeholder="Enter skills separated by commas (e.g., Java, Python, HTML, Teamwork)" onkeyup="updateCV()"></textarea>
+            <textarea id="skillsInput" rows="3" placeholder="Enter skills separated by commas (e.g., Java, Python, HTML, Teamwork)" onkeyup="debouncedUpdateCV()"></textarea>
 
             <h2>Languages</h2>
-            <textarea id="languagesInput" rows="2" placeholder="Enter languages and proficiency (e.g., Hindi (Native), English (Fluent))" onkeyup="updateCV()"></textarea>
+            <textarea id="languagesInput" rows="2" placeholder="Enter languages and proficiency (e.g., Hindi (Native), English (Fluent))" onkeyup="debouncedUpdateCV()"></textarea>
 
             <h2>Work History</h2>
-            <textarea id="workHistoryInput" rows="4" placeholder="Enter job details (e.g., Role, Company, 2020-2022, Responsibility 1, Responsibility 2)" onkeyup="updateCV()"></textarea>
+            <textarea id="workHistoryInput" rows="4" placeholder="Enter job details (e.g., Role, Company, 2020-2022, Responsibility 1, Responsibility 2)" onkeyup="debouncedUpdateCV()"></textarea>
 
             <h2>Education</h2>
             <div id="educationInputs">
@@ -51,27 +51,27 @@
                     <option value="Passed">Passed</option>
                     <option value="Appearing">Appearing</option>
                 </select>
-                <input type="text" id="bachelorDegree" placeholder="Degree Name (e.g., B.Tech Computer Science)" onkeyup="updateCV()">
-                <input type="text" id="bachelorCollege" placeholder="College/University Name" onkeyup="updateCV()">
-                <input type="text" id="bachelorPercentage" placeholder="Percentage/CGPA (e.g., 8.5 CGPA)" onkeyup="updateCV()">
-                <input type="text" id="bachelorDuration" placeholder="Duration (e.g., 2018-2022)" onkeyup="updateCV()">
+                <input type="text" id="bachelorDegree" placeholder="Degree Name (e.g., B.Tech Computer Science)" onkeyup="debouncedUpdateCV()">
+                <input type="text" id="bachelorCollege" placeholder="College/University Name" onkeyup="debouncedUpdateCV()">
+                <input type="text" id="bachelorPercentage" placeholder="Percentage/CGPA (e.g., 8.5 CGPA)" onkeyup="debouncedUpdateCV()">
+                <input type="text" id="bachelorDuration" placeholder="Duration (e.g., 2018-2022)" onkeyup="debouncedUpdateCV()">
                 
                 <p><strong>12th / Intermediate</strong></p>
                 <select id="interStatus" onchange="updateCV()">
                     <option value="Passed">Passed</option>
                     <option value="Appearing">Appearing</option>
                 </select>
-                <input type="text" id="interSubjects" placeholder="Subjects (e.g., PCM/PCB/Arts)" onkeyup="updateCV()">
-                <input type="text" id="interBoard" placeholder="Board/School Name" onkeyup="updateCV()">
-                <input type="text" id="interPercentage" placeholder="Percentage/CGPA (e.g., 90%)" onkeyup="updateCV()">
+                <input type="text" id="interSubjects" placeholder="Subjects (e.g., PCM/PCB/Arts)" onkeyup="debouncedUpdateCV()">
+                <input type="text" id="interBoard" placeholder="Board/School Name" onkeyup="debouncedUpdateCV()">
+                <input type="text" id="interPercentage" placeholder="Percentage/CGPA (e.g., 90%)" onkeyup="debouncedUpdateCV()">
                 
                 <p><strong>10th / Matriculation</strong></p>
                 <select id="hscStatus" onchange="updateCV()">
                     <option value="Passed">Passed</option>
                     <option value="Appearing">Appearing</option>
                 </select>
-                <input type="text" id="hscBoard" placeholder="Board/School Name" onkeyup="updateCV()">
-                <input type="text" id="hscPercentage" placeholder="Percentage/CGPA (e.g., 9.5 CGPA)" onkeyup="updateCV()">
+                <input type="text" id="hscBoard" placeholder="Board/School Name" onkeyup="debouncedUpdateCV()">
+                <input type="text" id="hscPercentage" placeholder="Percentage/CGPA (e.g., 9.5 CGPA)" onkeyup="debouncedUpdateCV()">
             </div>
             
             <button id="downloadBtn" onclick="prepareAndDownloadPDF()">📥 Download PDF</button>
