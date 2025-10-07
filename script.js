@@ -16,7 +16,7 @@ function changeThemeColor(colorCode) {
  * यह फ़ंक्शन फ़ॉर्म से डेटा लेता है और CV को लाइव अपडेट करता है।
  */
 function updateCV() {
-    // 0. थीम रंग अपडेट करें (NEW)
+    // 0. थीम रंग अपडेट करें
     const selectedColor = document.getElementById('colorPicker').value;
     changeThemeColor(selectedColor);
     
@@ -28,7 +28,7 @@ function updateCV() {
     
     document.getElementById('cv-name').innerText = name;
     
-    // 2. प्रोफ़ाइल फ़ोटो और संपर्क विवरण (Logic remains the same)
+    // 2. प्रोफ़ाइल फ़ोटो और संपर्क विवरण
     const photoDisplay = document.getElementById('photo-display');
     const initialsDisplay = document.getElementById('initials-display');
 
