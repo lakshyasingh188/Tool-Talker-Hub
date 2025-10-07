@@ -195,4 +195,65 @@ body {
     font-size: 1.5em;
     border-bottom: 2px solid #ddd;
     padding-bottom: 5px;
-    margin-top:
+    margin-top: 0;
+    margin-bottom: 15px;
+}
+
+/* Work History */
+.job-tasks {
+    list-style: disc;
+    padding-left: 20px;
+    margin-top: 5px;
+    font-size: 0.9em;
+}
+
+/* Education and Declaration Section */
+.edu-item {
+    margin-bottom: 20px;
+    padding-bottom: 5px;
+    border-bottom: 1px dashed #eee;
+}
+.edu-item:last-child {
+    border-bottom: none;
+}
+.edu-line {
+    font-size: 0.9em;
+    margin: 5px 0;
+    line-height: 1.4; 
+}
+.edu-title {
+    font-size: 1.1em;
+    color: var(--primary-color);
+    margin: 5px 0;
+}
+.summary-section p, .filler-content p {
+    font-size: 0.95em;
+    line-height: 1.6;
+    margin-bottom: 15px;
+}
+
+/*
+====================================
+  3. PDF Print Styles
+====================================
+*/
+@media print {
+    body {
+        padding: 0;
+        margin: 0;
+        background: none;
+        display: block;
+    }
+
+    .container, .input-form {
+        display: none;
+    }
+    
+    .cv-paper {
+        margin: 0;
+        box-shadow: none;
+        width: 100%;
+        min-height: auto;
+        border: 3px solid black; 
+    }
+}
