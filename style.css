@@ -1,10 +1,12 @@
 /*
 ====================================
-  1. Base Styles and Layout (Scrolling Fixes Applied Here)
+  1. Base Styles and Layout (Scrolling and Layout Fixes)
 ====================================
 */
 :root {
+    /* PRIMARY COLOR VARIABLE (Default Maroon) */
     --primary-color: #A52A2A; 
+    
     --secondary-color: #f4f4f9; 
     --text-color: #333;
     --light-text-color: #fff;
@@ -15,12 +17,12 @@ body {
     font-family: 'Arial', sans-serif;
     background-color: var(--secondary-color);
     margin: 0;
-    padding: 0; /* Padding removed from body */
+    padding: 0; /* पूरे बॉडी से पैडिंग हटाई */
     color: var(--text-color);
     
-    /* Global Scrolling Fixes: Viewport को 100% भरने के लिए */
+    /* Global Scrolling Fixes: पूरे पेज की स्क्रॉलिंग हटाने के लिए */
     height: 100vh; /* Viewport की पूरी ऊंचाई */
-    overflow: hidden; /* पूरे पेज की स्क्रॉलिंग हटा दी गई */
+    overflow: hidden; /* पूरे पेज की वर्टिकल स्क्रॉलिंग हटाई गई */
     
     display: flex;
     justify-content: center;
@@ -32,12 +34,12 @@ body {
     width: 95%;
     max-width: 1300px;
     gap: 20px;
-    padding: 20px 0; /* Padding applied to container instead of body */
-    height: 100%; /* container को भी 100% हाइट दें */
+    padding: 20px 0; /* Padding को container पर लगाया गया */
+    height: 100%; /* container को भी 100% हाइट दी */
     box-sizing: border-box; /* Padding को हाइट में शामिल करें */
 }
 
-/* इनपुट फॉर्म स्टाइलिंग (खुद स्क्रॉल करेगा) */
+/* इनपुट फॉर्म स्टाइलिंग (बायाँ कॉलम - स्क्रॉलिंग फिक्स) */
 .input-form {
     flex: 1;
     background-color: #fff;
@@ -45,31 +47,30 @@ body {
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     
-    /* Input Form Scrolling Fixes */
-    height: 100%; /* container के अंदर पूरी ऊंचाई लेगा */
-    overflow-y: auto; /* वर्टिकल स्क्रॉलिंग सिर्फ इसी फॉर्म में होगी */
+    /* Input Form Scrolling Fixes: यह कंटेनर अब स्वतंत्र रूप से स्क्रॉल करेगा */
+    height: 100%; 
+    overflow-y: auto; 
     
-    position: relative; /* Sticky हटा दिया गया */
+    position: relative; 
     top: 0; 
 }
 
-/* CV पेपर स्टाइलिंग (स्थिर रहेगा) */
+/* CV पेपर स्टाइलिंग (दायाँ कॉलम - स्क्रॉलिंग फिक्स) */
 .cv-paper {
     flex: 2;
     background-color: #fff;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    width: 794px; /* A4 width in pixels */
+    width: 794px; /* A4 width */
     height: auto; 
     border-radius: 4px;
-    overflow: hidden; 
     
-    /* CV Scrolling Fix: CV को स्थिर रखें */
+    /* Dynamic Height Logic से संघर्ष न हो, इसलिए max-height दी गई */
     max-height: calc(100vh - 40px); /* Viewport height - container's top/bottom padding */
-    overflow-y: auto; /* अगर CV लंबा हो तो यह खुद स्क्रॉल करेगा */
+    overflow-y: auto; /* अगर कंटेंट लंबा हो तो CV खुद स्क्रॉल करेगा */
+    overflow-x: hidden; /* हॉरिजॉन्टल स्क्रॉलिंग हटा दी गई */
 }
 
 
-/* Input Fields */
 .input-form h1, .input-form h2 {
     color: var(--primary-color);
     border-bottom: 2px solid var(--primary-color);
@@ -118,7 +119,7 @@ body {
 
 /*
 ====================================
-  2. CV Layout and Styling
+  2. CV Layout and Styling (Text Wrapping Fixes)
 ====================================
 */
 
@@ -141,7 +142,7 @@ body {
     padding: 20px;
     display: flex;
     flex-direction: column; 
-    /* min-height JS द्वारा सेट किया जाएगा ताकि वह right-column जितना लंबा हो */
+    /* min-height JS द्वारा सेट किया जाएगा */
 }
 
 /* Languages section (extra-section) */
@@ -157,7 +158,7 @@ body {
     font-size: 1.1em;
 }
 
-/* Profile Image (फोटो कंटेनर) */
+/* Profile Image */
 .profile-image {
     width: 100px;
     height: 100px;
@@ -204,12 +205,17 @@ body {
 .skills-section li, .extra-section li {
     margin: 5px 0;
     font-size: 0.9em;
+    /* FIX: लंबा कौशल का नाम रैप हो जाए */
+    word-break: break-word; 
 }
 
 
 /* Right Column Styling */
 .right-column {
     padding: 40px;
+    /* FIX: लंबा टेक्स्ट मैनेज करने के लिए */
+    word-wrap: break-word; 
+    overflow-wrap: break-word; 
 }
 
 .right-column h3 {
@@ -229,7 +235,7 @@ body {
     font-size: 0.9em;
 }
 
-/* Education and Declaration Section */
+/* Education and Declaration Section (Long Text Fixes) */
 .edu-item {
     margin-bottom: 20px;
     padding-bottom: 5px;
@@ -238,25 +244,37 @@ body {
 .edu-item:last-child {
     border-bottom: none;
 }
-.edu-line {
-    font-size: 0.9em;
-    margin: 5px 0;
-    line-height: 1.4; 
-}
+
 .edu-title {
     font-size: 1.1em;
     color: var(--primary-color); 
     margin: 5px 0;
+    
+    /* FIX: लंबा डिग्री का नाम रैप हो जाए */
+    word-break: break-word; 
+    line-height: 1.3;
 }
 .edu-status {
     font-size: 0.8em;
     font-weight: normal;
     color: #555; 
+    word-break: break-word; 
 }
+
+.edu-line {
+    font-size: 0.9em;
+    margin: 5px 0;
+    line-height: 1.4; 
+    
+    /* FIX: यूनिवर्सिटी या कॉलेज का लंबा नाम रैप हो जाए */
+    word-break: break-word; 
+}
+
 .summary-section p, .filler-content p {
     font-size: 0.95em;
     line-height: 1.6;
     margin-bottom: 15px;
+    word-break: break-word; /* सुनिश्चित करता है कि डिक्लेरेशन भी रैप हो */
 }
 
 /*
@@ -282,6 +300,8 @@ body {
         width: 100%;
         min-height: auto; 
         border: 3px solid black; 
+        /* PDF में स्क्रॉलिंग हटाएँ */
+        overflow: hidden; 
     }
     
     .cv-grid {
