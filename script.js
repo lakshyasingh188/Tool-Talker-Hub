@@ -7,7 +7,7 @@ function updateCV() {
     const phone = document.getElementById('phoneInput').value.trim();
     const email = document.getElementById('emailInput').value.trim();
     const address = document.getElementById('addressInput').value.trim();
-
+    
     document.getElementById('cv-name').innerText = name;
     
     // 2. प्रोफ़ाइल फ़ोटो और संपर्क विवरण (Logic remains the same)
@@ -57,7 +57,7 @@ function updateCV() {
     updateContactLine(email, 'cv-email', 'cv-email-line');
 
     
-    // 3. कौशल (Skills) को लिस्ट में दिखाना (NEW)
+    // 3. कौशल (Skills) को लिस्ट में दिखाना
     const skillsInput = document.getElementById('skillsInput').value.trim();
     const skillsOutput = document.getElementById('cv-skills-output');
     skillsOutput.innerHTML = '';
@@ -71,7 +71,7 @@ function updateCV() {
         skillsOutput.innerHTML = '<li style="font-size:0.9em; font-style: italic;">No skills added.</li>';
     }
 
-    // 4. भाषाएँ (Languages) को लिस्ट में दिखाना (NEW)
+    // 4. भाषाएँ (Languages) को लिस्ट में दिखाना
     const languagesInput = document.getElementById('languagesInput').value.trim();
     const languagesOutput = document.getElementById('cv-languages-output');
     languagesOutput.innerHTML = '';
@@ -86,7 +86,34 @@ function updateCV() {
     }
 
 
-    // 5. शिक्षा विवरण (Education Details) - DETAILED OUTPUT (NEW)
+    // 5. कार्य अनुभव (Work History) - HEADING REMOVAL LOGIC (NEW)
+    const workHistoryInput = document.getElementById('workHistoryInput').value.trim();
+    const workHistoryContainer = document.getElementById('work-history-main-container');
+    const workHistoryOutput = document.getElementById('cv-work-history-output');
+
+    if (workHistoryInput) {
+        // अगर डेटा है, तो सेक्शन दिखाएं और डेटा आउटपुट करें
+        workHistoryContainer.style.display = 'block';
+        
+        // अस्थायी रूप से डेटा को पैरा या लिस्ट में दिखाएं (इसे और बेहतर किया जा सकता है)
+        // यहां आप अपने Work History डेटा को ठीक से पार्स और फॉर्मेट कर सकते हैं।
+        // अभी के लिए:
+        workHistoryOutput.innerHTML = `
+            <div class="job-item">
+                <p class="job-duration">Details provided:</p>
+                <ul class="job-tasks">
+                    ${workHistoryInput.split('\n').map(line => `<li>${line.trim()}</li>`).join('')}
+                </ul>
+            </div>
+        `;
+        
+    } else {
+        // अगर डेटा खाली है, तो पूरा सेक्शन (हेडिंग सहित) गायब कर दें
+        workHistoryContainer.style.display = 'none';
+    }
+
+
+    // 6. शिक्षा विवरण (Education Details) - (Logic remains the same)
     const bachelorDegree = document.getElementById('bachelorDegree').value.trim();
     const bachelorCollege = document.getElementById('bachelorCollege').value.trim();
     const bachelorBoard = document.getElementById('bachelorBoard').value.trim();
@@ -160,7 +187,7 @@ function updateCV() {
 document.addEventListener('DOMContentLoaded', updateCV);
 
 /**
- * PDF जनरेशन फ़ंक्शन
+ * PDF जनरेशन फ़ंक्शन (Logic remains the same)
  */
 function prepareAndDownloadPDF() {
     updateCV(); 
