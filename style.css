@@ -100,10 +100,8 @@ body {
     background-color: #fff;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
     width: 794px; /* A4 width in pixels */
-    /* REMOVED: min-height: 1000px; - इसकी ऊँचाई अब JS द्वारा सेट की जाएगी */
     height: auto; 
     border-radius: 4px;
-    /* overflow hidden ताकि ग्रिड के बाहर कुछ न जाए */
     overflow: hidden; 
 }
 
@@ -116,7 +114,6 @@ body {
 .cv-grid {
     display: grid;
     grid-template-columns: 35% 65%; 
-    /* row-gap: 0; column-gap: 0; */
     height: 100%; 
 }
 
@@ -266,12 +263,11 @@ body {
         margin: 0;
         box-shadow: none;
         width: 100%;
-        min-height: auto; /* प्रिंट करते समय भी डायनामिक हाइट रहे */
+        min-height: auto; 
         border: 3px solid black; 
     }
     
     .cv-grid {
-        /* प्रिंट के दौरान flex-box को पूरी हाइट लेने दें */
         align-items: stretch;
     }
 }
