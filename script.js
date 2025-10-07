@@ -40,7 +40,7 @@ function updateCV() {
         initialsDisplay.style.display = 'none';
     }
 
-    // संपर्क विवरण
+    // संपर्क विवरण को अपडेट और शो/हाइड करें
     const updateContactLine = (input, displayId, lineId) => {
         const value = input.trim();
         const lineElement = document.getElementById(lineId);
@@ -71,13 +71,12 @@ function updateCV() {
         skillsOutput.innerHTML = '<li style="font-size:0.9em; font-style: italic;">No skills added.</li>';
     }
 
-    // 4. भाषाएँ (Languages) को लिस्ट में दिखाना (Line by Line)
+    // 4. भाषाएँ (Languages) को लिस्ट में दिखाना
     const languagesInput = document.getElementById('languagesInput').value.trim();
     const languagesOutput = document.getElementById('cv-languages-output');
     languagesOutput.innerHTML = '';
     
     if (languagesInput) {
-        // कॉमा या नई लाइन से तोड़ना
         const langList = languagesInput
             .split(/,|\n/)
             .map(l => l.trim())
@@ -91,16 +90,14 @@ function updateCV() {
     }
 
 
-    // 5. कार्य अनुभव (Work History) - HEADING REMOVAL LOGIC
+    // 5. कार्य अनुभव (Work History) - खाली होने पर छुपाना
     const workHistoryInput = document.getElementById('workHistoryInput').value.trim();
     const workHistoryContainer = document.getElementById('work-history-main-container');
     const workHistoryOutput = document.getElementById('cv-work-history-output');
 
     if (workHistoryInput) {
-        // अगर डेटा है, तो सेक्शन दिखाएं
         workHistoryContainer.style.display = 'block';
         
-        // डेटा को हर नई लाइन के साथ लिस्ट आइटम में दिखाएं
         workHistoryOutput.innerHTML = `
             <div class="job-item">
                 <ul class="job-tasks">
@@ -115,7 +112,7 @@ function updateCV() {
     }
 
 
-    // 6. शिक्षा विवरण (Education Details) - Optimized (Board removed for Bachelor)
+    // 6. शिक्षा विवरण (Education Details) - बैचलर से बोर्ड हटाकर
     const bachelorDegree = document.getElementById('bachelorDegree').value.trim();
     const bachelorCollege = document.getElementById('bachelorCollege').value.trim();
     const bachelorPercentage = document.getElementById('bachelorPercentage').value.trim();
@@ -132,7 +129,7 @@ function updateCV() {
     eduOutput.innerHTML = ''; 
     let hasEducation = false;
 
-    // A function to create detailed education item
+    // विस्तृत शिक्षा आइटम बनाने के लिए फ़ंक्शन
     const createDetailedEduItem = (title, lines) => {
         const item = document.createElement('div');
         item.classList.add('edu-item');
@@ -151,7 +148,6 @@ function updateCV() {
         const title = bachelorDegree || "Bachelor's Degree";
         createDetailedEduItem(title, [
             { label: "University/College", value: bachelorCollege },
-            // Board removed
             { label: "Percentage/CGPA", value: bachelorPercentage },
             { label: "Duration", value: bachelorDuration }
         ]);
