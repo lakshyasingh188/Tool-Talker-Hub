@@ -15,19 +15,16 @@ function adjustCVHeight() {
     const rightCol = cvOutput.querySelector('.right-column');
     
     // दोनों कॉलम की ऊँचाई को मापता है
-    // .scrollHeight सही content height देता है, padding margin को ध्यान में रखते हुए
     const leftHeight = leftCol.scrollHeight;
     const rightHeight = rightCol.scrollHeight;
     
     // सबसे बड़ी ऊँचाई को CV आउटपुट की ऊँचाई के रूप में सेट करता है
-    // + 50px का बफर (buffer) जोड़ते हैं ताकि पैडिंग के लिए जगह रहे
     const newHeight = Math.max(leftHeight, rightHeight);
     
-    // CV कंटेनर की हाइट सेट करें
+    // CV कंटेनर की हाइट सेट करें (50px का बफर पैडिंग के लिए)
     cvOutput.style.height = `${newHeight + 50}px`; 
     
     // Left column की min-height को Right column की height के बराबर सेट करता है 
-    // ताकि background color पूरी तरह से भरा रहे
     leftCol.style.minHeight = `${rightHeight}px`; 
 }
 
@@ -164,16 +161,16 @@ function updateCV() {
     const bachelorCollege = document.getElementById('bachelorCollege').value.trim();
     const bachelorPercentage = document.getElementById('bachelorPercentage').value.trim();
     const bachelorDuration = document.getElementById('bachelorDuration').value.trim();
-    const bachelorStatus = document.getElementById('bachelorStatus').value; // New
+    const bachelorStatus = document.getElementById('bachelorStatus').value; 
 
     const interSubjects = document.getElementById('interSubjects').value.trim();
     const interBoard = document.getElementById('interBoard').value.trim();
     const interPercentage = document.getElementById('interPercentage').value.trim();
-    const interStatus = document.getElementById('interStatus').value; // New
+    const interStatus = document.getElementById('interStatus').value; 
 
     const hscBoard = document.getElementById('hscBoard').value.trim();
     const hscPercentage = document.getElementById('hscPercentage').value.trim();
-    const hscStatus = document.getElementById('hscStatus').value; // New
+    const hscStatus = document.getElementById('hscStatus').value; 
 
     const eduOutput = document.getElementById('cv-education-output');
     eduOutput.innerHTML = ''; 
@@ -229,9 +226,7 @@ function updateCV() {
         eduOutput.innerHTML = '<p style="font-style: italic; color: #888; font-size:0.9em;">No education details added yet. Please fill the form.</p>';
     }
 
-    // ************************************************
-    // **** Dynamic Height Adjustment (Most Important Fix) ****
-    // ************************************************
+    // Dynamic Height Adjustment (खाली स्पेस हटाने वाला लॉजिक)
     setTimeout(adjustCVHeight, 100); 
 }
 
@@ -239,11 +234,15 @@ function updateCV() {
 document.addEventListener('DOMContentLoaded', updateCV);
 
 /**
- * PDF जनरेशन फ़ंक्शन
+ * PDF जनरेशन फ़ंक्शन - केवल CV आउटपुट को कैप्चर करने के लिए अपडेट किया गया
  */
 function prepareAndDownloadPDF() {
+    // पहले CV को नवीनतम डेटा से अपडेट करें
     updateCV(); 
 
+    // *******************************************************************
+    // **** सिर्फ़ CV आउटपुट एरिया को टारगेट करें (Fix for extra page content) ****
+    // *******************************************************************
     const element = document.getElementById('cv-output-area');
     const name = document.getElementById('nameInput').value.trim() || 'My_Resume';
     
@@ -262,6 +261,7 @@ function prepareAndDownloadPDF() {
 
     // Generate and Download
     setTimeout(() => {
+        // html2pdf().from(element) अब केवल #cv-output-area को PDF में बदलता है।
         html2pdf().from(element).set(opt).save().then(() => {
             downloadBtn.innerText = "📥 Download PDF";
             downloadBtn.disabled = false;
