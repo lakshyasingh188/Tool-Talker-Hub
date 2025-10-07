@@ -65,19 +65,25 @@ function updateCV() {
     if (skillsInput) {
         const skillList = skillsInput.split(',').map(s => s.trim()).filter(s => s.length > 0);
         skillList.forEach(skill => {
-            skillsOutput.innerHTML += `<li>${skill}</li>`;
+            // रेटिंग स्टाइल हटा दी गई, साधारण लिस्ट आइटम दिखाएँ
+            skillsOutput.innerHTML += `<li>${skill}</li>`; 
         });
     } else {
         skillsOutput.innerHTML = '<li style="font-size:0.9em; font-style: italic;">No skills added.</li>';
     }
 
-    // 4. भाषाएँ (Languages) को लिस्ट में दिखाना
+    // 4. भाषाएँ (Languages) को लिस्ट में दिखाना (NEW: Line by Line)
     const languagesInput = document.getElementById('languagesInput').value.trim();
     const languagesOutput = document.getElementById('cv-languages-output');
     languagesOutput.innerHTML = '';
     
     if (languagesInput) {
-        const langList = languagesInput.split(',').map(l => l.trim()).filter(l => l.length > 0);
+        // कॉमा या नई लाइन से तोड़ना (split by comma, then split by new line)
+        const langList = languagesInput
+            .split(/,|\n/)
+            .map(l => l.trim())
+            .filter(l => l.length > 0);
+            
         langList.forEach(lang => {
             languagesOutput.innerHTML += `<li>${lang}</li>`;
         });
@@ -86,7 +92,7 @@ function updateCV() {
     }
 
 
-    // 5. कार्य अनुभव (Work History) - HEADING REMOVAL LOGIC (NEW)
+    // 5. कार्य अनुभव (Work History) - HEADING REMOVAL LOGIC
     const workHistoryInput = document.getElementById('workHistoryInput').value.trim();
     const workHistoryContainer = document.getElementById('work-history-main-container');
     const workHistoryOutput = document.getElementById('cv-work-history-output');
@@ -95,14 +101,11 @@ function updateCV() {
         // अगर डेटा है, तो सेक्शन दिखाएं और डेटा आउटपुट करें
         workHistoryContainer.style.display = 'block';
         
-        // अस्थायी रूप से डेटा को पैरा या लिस्ट में दिखाएं (इसे और बेहतर किया जा सकता है)
-        // यहां आप अपने Work History डेटा को ठीक से पार्स और फॉर्मेट कर सकते हैं।
-        // अभी के लिए:
+        // डेटा को हर नई लाइन के साथ लिस्ट आइटम में दिखाएं
         workHistoryOutput.innerHTML = `
             <div class="job-item">
-                <p class="job-duration">Details provided:</p>
                 <ul class="job-tasks">
-                    ${workHistoryInput.split('\n').map(line => `<li>${line.trim()}</li>`).join('')}
+                    ${workHistoryInput.split('\n').map(line => line.trim()).filter(line => line.length > 0).map(line => `<li>${line}</li>`).join('')}
                 </ul>
             </div>
         `;
@@ -113,10 +116,10 @@ function updateCV() {
     }
 
 
-    // 6. शिक्षा विवरण (Education Details) - (Logic remains the same)
+    // 6. शिक्षा विवरण (Education Details) - Optimized
     const bachelorDegree = document.getElementById('bachelorDegree').value.trim();
     const bachelorCollege = document.getElementById('bachelorCollege').value.trim();
-    const bachelorBoard = document.getElementById('bachelorBoard').value.trim();
+    // const bachelorBoard = document.getElementById('bachelorBoard').value.trim(); // Removed
     const bachelorPercentage = document.getElementById('bachelorPercentage').value.trim();
     const bachelorDuration = document.getElementById('bachelorDuration').value.trim();
     
@@ -150,7 +153,7 @@ function updateCV() {
         const title = bachelorDegree || "Bachelor's Degree";
         createDetailedEduItem(title, [
             { label: "University/College", value: bachelorCollege },
-            { label: "Board/Authority", value: bachelorBoard },
+            // Board removed from here
             { label: "Percentage/CGPA", value: bachelorPercentage },
             { label: "Duration", value: bachelorDuration }
         ]);
