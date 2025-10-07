@@ -1,7 +1,25 @@
 /**
+ * CV का थीम रंग बदलता है।
+ * @param {string} colorCode - नया रंग कोड (e.g., '#004D40').
+ */
+function changeThemeColor(colorCode) {
+    document.documentElement.style.setProperty('--primary-color', colorCode);
+    
+    // इमेज इनिशियल्स का रंग भी अपडेट करें
+    const initialsDisplay = document.getElementById('initials-display');
+    if (initialsDisplay) {
+        initialsDisplay.style.color = colorCode;
+    }
+}
+
+/**
  * यह फ़ंक्शन फ़ॉर्म से डेटा लेता है और CV को लाइव अपडेट करता है।
  */
 function updateCV() {
+    // 0. थीम रंग अपडेट करें (NEW)
+    const selectedColor = document.getElementById('colorPicker').value;
+    changeThemeColor(selectedColor);
+    
     // 1. व्यक्तिगत विवरण
     const name = document.getElementById('nameInput').value.trim();
     const phone = document.getElementById('phoneInput').value.trim();
@@ -10,7 +28,7 @@ function updateCV() {
     
     document.getElementById('cv-name').innerText = name;
     
-    // 2. प्रोफ़ाइल फ़ोटो और संपर्क विवरण
+    // 2. प्रोफ़ाइल फ़ोटो और संपर्क विवरण (Logic remains the same)
     const photoDisplay = document.getElementById('photo-display');
     const initialsDisplay = document.getElementById('initials-display');
 
@@ -35,6 +53,8 @@ function updateCV() {
     } else if (name) {
         photoDisplay.style.display = 'none';
         initialsDisplay.style.display = 'flex';
+        // सुनिश्चित करें कि इनिशियल्स का रंग थीम से मेल खाता है
+        initialsDisplay.style.color = selectedColor; 
     } else {
         photoDisplay.style.display = 'none';
         initialsDisplay.style.display = 'none';
@@ -61,7 +81,7 @@ function updateCV() {
     const objectiveInput = document.getElementById('objectiveInput').value.trim();
     const objectiveOutput = document.getElementById('cv-objective-output');
     
-    const defaultObjective = "An enthusiastic and hardworking individual with the ability to adapt to new situations quickly. Interested in learning new skills, improving existing knowledge, and working with dedication to achieve both personal and organizational goals. My commitment is driven by a passion for continuous learning and achieving excellence in every task assigned.";
+    const defaultObjective = "An enthusiastic and hardworking individual with the ability to adapt to new situations quickly. Seeking a challenging position in a progressive organization to leverage acquired skills, contribute to company growth, and engage in continuous learning and professional development.";
 
     objectiveOutput.innerText = objectiveInput || defaultObjective;
     
@@ -121,7 +141,7 @@ function updateCV() {
     }
 
 
-    // 7. शिक्षा विवरण (Education Details) - बैचलर से बोर्ड हटाकर
+    // 7. शिक्षा विवरण (Education Details)
     const bachelorDegree = document.getElementById('bachelorDegree').value.trim();
     const bachelorCollege = document.getElementById('bachelorCollege').value.trim();
     const bachelorPercentage = document.getElementById('bachelorPercentage').value.trim();
