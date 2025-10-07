@@ -1,51 +1,127 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Create Your CV | Tool Talker Hub</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professional CV Maker</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-  <div class="container">
-    <div class="form-section">
-      <h2>Create Your CV</h2>
 
-      <h3>Personal Details</h3>
-      <input type="file" id="photoInput">
-      <input type="text" id="nameInput" placeholder="Full Name (e.g., John Doe)">
-      <input type="text" id="phoneInput" placeholder="Phone Number (+91 9876543210)">
-      <input type="email" id="emailInput" placeholder="Email Address (e.g., example@email.com)">
-      <input type="text" id="addressInput" placeholder="Address (City, Country)">
-      <input type="text" id="linkedinInput" placeholder="LinkedIn URL">
-      <input type="text" id="githubInput" placeholder="GitHub Profile">
+    <div class="container">
+        
+        <div class="input-form">
+            <h1>Create Your CV</h1>
+            
+            <h2>Personal Details</h2>
+            <input type="file" id="photoInput" accept="image/*" onchange="updateCV()" aria-label="Upload Photo">
+            <input type="text" id="nameInput" placeholder="Full Name (e.g., John Doe)" onkeyup="updateCV()">
+            <input type="text" id="phoneInput" placeholder="Phone Number (e.g., +91 9876543210)" onkeyup="updateCV()">
+            <input type="email" id="emailInput" placeholder="Email Address (e.g., example@email.com)" onkeyup="updateCV()">
+            <input type="text" id="addressInput" placeholder="Address (e.g., City, Country)" onkeyup="updateCV()">
+            
+            <h2>Education</h2>
+            <div id="educationInputs">
+                
+                <p><strong>Bachelor's Degree</strong></p>
+                <input type="text" id="bachelorDegree" placeholder="Degree Name (e.g., B.Tech Computer Science)" onkeyup="updateCV()">
+                <input type="text" id="bachelorCollege" placeholder="College/University Name" onkeyup="updateCV()">
+                <input type="text" id="bachelorBoard" placeholder="Board/Examining Authority" onkeyup="updateCV()">
+                <input type="text" id="bachelorPercentage" placeholder="Percentage/CGPA (e.g., 8.5 CGPA)" onkeyup="updateCV()">
+                <input type="text" id="bachelorDuration" placeholder="Duration (e.g., 2018-2022)" onkeyup="updateCV()">
+                
+                <p><strong>12th / Intermediate</strong></p>
+                <input type="text" id="interSubjects" placeholder="Subjects (e.g., PCM/PCB/Arts)" onkeyup="updateCV()">
+                <input type="text" id="interBoard" placeholder="Board/School Name" onkeyup="updateCV()">
+                <input type="text" id="interPercentage" placeholder="Percentage/CGPA (e.g., 90%)" onkeyup="updateCV()">
+                
+                <p><strong>10th / Matriculation</strong></p>
+                <input type="text" id="hscBoard" placeholder="Board/School Name" onkeyup="updateCV()">
+                <input type="text" id="hscPercentage" placeholder="Percentage/CGPA (e.g., 9.5 CGPA)" onkeyup="updateCV()">
+            </div>
+            
+            <h2>Skills</h2>
+            <textarea id="skillsInput" rows="3" placeholder="Enter skills separated by commas (e.g., Java, Python, HTML, Teamwork)" onkeyup="updateCV()"></textarea>
 
-      <h3>Education</h3>
-      <input type="text" id="degreeInput" placeholder="Degree (e.g., B.Tech in ECE)">
-      <input type="text" id="collegeInput" placeholder="College/University Name">
-      <input type="text" id="boardInput" placeholder="Board/Authority">
-      <input type="text" id="yearInput" placeholder="Passing Year">
-      <input type="text" id="percentInput" placeholder="Percentage/CGPA">
+            <h2>Languages</h2>
+            <textarea id="languagesInput" rows="2" placeholder="Enter languages and proficiency (e.g., Hindi (Native), English (Fluent))" onkeyup="updateCV()"></textarea>
+            
+            <button id="downloadBtn" onclick="prepareAndDownloadPDF()">📥 Download PDF</button>
+            <p class="note">Your CV updates live. Click 'Download PDF' to save your final document.</p>
+        </div>
 
-      <h3>Skills</h3>
-      <textarea id="skillsInput" placeholder="Add skills separated by commas (e.g., HTML, CSS, JS, Python)"></textarea>
+        <div id="cv-output-area" class="cv-paper bordered-cv">
+            <div class="cv-grid">
+                
+                <div class="left-column">
+                    <div class="profile-section">
+                        <div class="profile-image">
+                            <img id="photo-display" src="" alt="Profile Photo" style="display: none;">
+                            <span id="initials-display" style="display: none;"></span>
+                        </div>
+                        <h2 class="name-display" id="cv-name"></h2>
+                    </div>
 
-      <h3>Projects</h3>
-      <textarea id="projectsInput" placeholder="Write about your projects briefly"></textarea>
+                    <div class="contact-section">
+                        <h3>Contact</h3>
+                        <p id="cv-address-line" style="display:none;"><i class="fas fa-map-marker-alt"></i> <span id="cv-address"></span></p>
+                        <p id="cv-phone-line" style="display:none;"><i class="fas fa-phone"></i> <span id="cv-phone"></span></p>
+                        <p id="cv-email-line" style="display:none;"><i class="fas fa-envelope"></i> <span id="cv-email"></span></p>
+                    </div>
 
-      <h3>Achievements / Certifications</h3>
-      <textarea id="achievementsInput" placeholder="Add achievements separated by commas"></textarea>
+                    <div class="skills-section">
+                        <h3>Skills</h3>
+                        <ul id="cv-skills-output">
+                            </ul>
+                    </div>
 
-      <h3>Languages</h3>
-      <input type="text" id="languagesInput" placeholder="e.g., English, Hindi">
+                    <div class="extra-section">
+                        <h3>Languages</h3>
+                        <ul id="cv-languages-output">
+                            </ul>
+                    </div>
+                    
+                    <div class="work-input-area">
+                        <h2>Work History</h2>
+                        <textarea id="workHistoryInput" rows="4" placeholder="Enter job details (e.g., Role, Company, 2020-2022, Responsibility 1, Responsibility 2)" onkeyup="updateCV()"></textarea>
+                    </div>
 
-      <h3>Hobbies / Interests</h3>
-      <input type="text" id="hobbiesInput" placeholder="e.g., Reading, Coding, Music">
+                </div>
 
-      <button onclick="generateCV()">Generate CV</button>
+                <div class="right-column">
+                    
+                    <div class="summary-section">
+                        <h3>Profile Summary</h3>
+                        <p id="cv-summary-para1">An enthusiastic and hardworking individual with the ability to adapt to new situations quickly. Interested in learning new skills, improving existing knowledge, and working with dedication to achieve both personal and organizational goals.</p>
+                    </div>
+                    
+                    <div id="work-history-main-container" class="work-history-section">
+                        <h3>Work History</h3>
+                        <div id="cv-work-history-output">
+                            </div>
+                    </div>
+
+                    <div class="education-section">
+                        <h3>Education</h3>
+                        <div id="cv-education-output">
+                            </div>
+                    </div>
+                    
+                    <div class="filler-content">
+                         <h3>Declaration</h3>
+                         <div id="cv-declaration-output">
+                             <p id="cv-summary-para2">I look forward to being a part of a progressive organization where I can utilize my skills, learn continuously, and contribute to the overall growth and success of the company.</p>
+                         </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
     </div>
-  </div>
 
-  <script src="script.js"></script>
+    <script src="script.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
 </body>
 </html>
