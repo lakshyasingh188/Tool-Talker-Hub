@@ -13,6 +13,15 @@
         
         <div class="input-form">
             <h1>Create Your CV</h1>
+
+            <h2>Theme Color</h2>
+            <select id="colorPicker" onchange="updateCV()">
+                <option value="#A52A2A">Maroon (Default)</option>
+                <option value="#004D40">Teal Green</option>
+                <option value="#1565C0">Deep Blue</option>
+                <option value="#D84315">Orange Red</option>
+                <option value="#6A1B9A">Deep Purple</option>
+            </select>
             
             <h2>Personal Details</h2>
             <input type="file" id="photoInput" accept="image/*" onchange="updateCV()" aria-label="Upload Photo">
@@ -92,7 +101,7 @@
                     
                     <div class="summary-section">
                         <h3>Career Objective</h3>
-                        <p id="cv-objective-output">An enthusiastic and hardworking individual with the ability to adapt to new situations quickly. Interested in learning new skills, improving existing knowledge, and working with dedication to achieve both personal and organizational goals. My commitment is driven by a passion for continuous learning and achieving excellence in every task assigned.</p>
+                        <p id="cv-objective-output"></p>
                     </div>
                     
                     <div id="work-history-main-container" class="work-history-section">
