@@ -21,13 +21,21 @@
             <input type="email" id="emailInput" placeholder="Email Address (e.g., example@email.com)" onkeyup="updateCV()">
             <input type="text" id="addressInput" placeholder="Address (e.g., City, Country)" onkeyup="updateCV()">
             
+            <h2>Skills</h2>
+            <textarea id="skillsInput" rows="3" placeholder="Enter skills separated by commas (e.g., Java, Python, HTML, Teamwork)" onkeyup="updateCV()"></textarea>
+
+            <h2>Languages</h2>
+            <textarea id="languagesInput" rows="2" placeholder="Enter languages and proficiency (e.g., Hindi (Native), English (Fluent))" onkeyup="updateCV()"></textarea>
+
+            <h2>Work History</h2>
+            <textarea id="workHistoryInput" rows="4" placeholder="Enter job details (e.g., Role, Company, 2020-2022, Responsibility 1, Responsibility 2)" onkeyup="updateCV()"></textarea>
+
             <h2>Education</h2>
             <div id="educationInputs">
                 
                 <p><strong>Bachelor's Degree</strong></p>
                 <input type="text" id="bachelorDegree" placeholder="Degree Name (e.g., B.Tech Computer Science)" onkeyup="updateCV()">
                 <input type="text" id="bachelorCollege" placeholder="College/University Name" onkeyup="updateCV()">
-                <input type="text" id="bachelorBoard" placeholder="Board/Examining Authority" onkeyup="updateCV()">
                 <input type="text" id="bachelorPercentage" placeholder="Percentage/CGPA (e.g., 8.5 CGPA)" onkeyup="updateCV()">
                 <input type="text" id="bachelorDuration" placeholder="Duration (e.g., 2018-2022)" onkeyup="updateCV()">
                 
@@ -40,12 +48,6 @@
                 <input type="text" id="hscBoard" placeholder="Board/School Name" onkeyup="updateCV()">
                 <input type="text" id="hscPercentage" placeholder="Percentage/CGPA (e.g., 9.5 CGPA)" onkeyup="updateCV()">
             </div>
-            
-            <h2>Skills</h2>
-            <textarea id="skillsInput" rows="3" placeholder="Enter skills separated by commas (e.g., Java, Python, HTML, Teamwork)" onkeyup="updateCV()"></textarea>
-
-            <h2>Languages</h2>
-            <textarea id="languagesInput" rows="2" placeholder="Enter languages and proficiency (e.g., Hindi (Native), English (Fluent))" onkeyup="updateCV()"></textarea>
             
             <button id="downloadBtn" onclick="prepareAndDownloadPDF()">📥 Download PDF</button>
             <p class="note">Your CV updates live. Click 'Download PDF' to save your final document.</p>
@@ -81,19 +83,13 @@
                         <ul id="cv-languages-output">
                             </ul>
                     </div>
-                    
-                    <div class="work-input-area">
-                        <h2>Work History</h2>
-                        <textarea id="workHistoryInput" rows="4" placeholder="Enter job details (e.g., Role, Company, 2020-2022, Responsibility 1, Responsibility 2)" onkeyup="updateCV()"></textarea>
-                    </div>
-
                 </div>
 
                 <div class="right-column">
                     
                     <div class="summary-section">
                         <h3>Profile Summary</h3>
-                        <p id="cv-summary-para1">An enthusiastic and hardworking individual with the ability to adapt to new situations quickly. Interested in learning new skills, improving existing knowledge, and working with dedication to achieve both personal and organizational goals.</p>
+                        <p id="cv-summary-para1">An enthusiastic and hardworking individual with the ability to adapt to new situations quickly. Interested in learning new skills, improving existing knowledge, and working with dedication to achieve both personal and organizational goals. My commitment is driven by a passion for continuous learning and achieving excellence in every task assigned.</p>
                     </div>
                     
                     <div id="work-history-main-container" class="work-history-section">
@@ -111,7 +107,7 @@
                     <div class="filler-content">
                          <h3>Declaration</h3>
                          <div id="cv-declaration-output">
-                             <p id="cv-summary-para2">I look forward to being a part of a progressive organization where I can utilize my skills, learn continuously, and contribute to the overall growth and success of the company.</p>
+                             <p id="cv-summary-para2">I look forward to being a part of a progressive organization where I can utilize my skills, learn continuously, and contribute to the overall growth and success of the company. I am confident in my ability to bring a positive impact and grow alongside the organization.</p>
                          </div>
                     </div>
 
