@@ -10,7 +10,7 @@ function updateCV() {
     
     document.getElementById('cv-name').innerText = name;
     
-    // 2. प्रोफ़ाइल फ़ोटो और संपर्क विवरण (Logic remains the same)
+    // 2. प्रोफ़ाइल फ़ोटो और संपर्क विवरण
     const photoDisplay = document.getElementById('photo-display');
     const initialsDisplay = document.getElementById('initials-display');
 
@@ -97,7 +97,7 @@ function updateCV() {
     const workHistoryOutput = document.getElementById('cv-work-history-output');
 
     if (workHistoryInput) {
-        // अगर डेटा है, तो सेक्शन दिखाएं और डेटा आउटपुट करें
+        // अगर डेटा है, तो सेक्शन दिखाएं
         workHistoryContainer.style.display = 'block';
         
         // डेटा को हर नई लाइन के साथ लिस्ट आइटम में दिखाएं
@@ -188,7 +188,7 @@ function updateCV() {
 document.addEventListener('DOMContentLoaded', updateCV);
 
 /**
- * PDF जनरेशन फ़ंक्शन (Logic remains the same)
+ * PDF जनरेशन फ़ंक्शन
  */
 function prepareAndDownloadPDF() {
     updateCV(); 
