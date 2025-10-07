@@ -57,7 +57,16 @@ function updateCV() {
     updateContactLine(email, 'cv-email', 'cv-email-line');
 
     
-    // 3. कौशल (Skills) को लिस्ट में दिखाना
+    // 3. करियर ऑब्जेक्टिव (Career Objective)
+    const objectiveInput = document.getElementById('objectiveInput').value.trim();
+    const objectiveOutput = document.getElementById('cv-objective-output');
+    
+    const defaultObjective = "An enthusiastic and hardworking individual with the ability to adapt to new situations quickly. Interested in learning new skills, improving existing knowledge, and working with dedication to achieve both personal and organizational goals. My commitment is driven by a passion for continuous learning and achieving excellence in every task assigned.";
+
+    objectiveOutput.innerText = objectiveInput || defaultObjective;
+    
+    
+    // 4. कौशल (Skills) को लिस्ट में दिखाना
     const skillsInput = document.getElementById('skillsInput').value.trim();
     const skillsOutput = document.getElementById('cv-skills-output');
     skillsOutput.innerHTML = '';
@@ -71,7 +80,7 @@ function updateCV() {
         skillsOutput.innerHTML = '<li style="font-size:0.9em; font-style: italic;">No skills added.</li>';
     }
 
-    // 4. भाषाएँ (Languages) को लिस्ट में दिखाना
+    // 5. भाषाएँ (Languages) को लिस्ट में दिखाना
     const languagesInput = document.getElementById('languagesInput').value.trim();
     const languagesOutput = document.getElementById('cv-languages-output');
     languagesOutput.innerHTML = '';
@@ -90,7 +99,7 @@ function updateCV() {
     }
 
 
-    // 5. कार्य अनुभव (Work History) - खाली होने पर छुपाना
+    // 6. कार्य अनुभव (Work History) - खाली होने पर छुपाना
     const workHistoryInput = document.getElementById('workHistoryInput').value.trim();
     const workHistoryContainer = document.getElementById('work-history-main-container');
     const workHistoryOutput = document.getElementById('cv-work-history-output');
@@ -112,7 +121,7 @@ function updateCV() {
     }
 
 
-    // 6. शिक्षा विवरण (Education Details) - बैचलर से बोर्ड हटाकर
+    // 7. शिक्षा विवरण (Education Details) - बैचलर से बोर्ड हटाकर
     const bachelorDegree = document.getElementById('bachelorDegree').value.trim();
     const bachelorCollege = document.getElementById('bachelorCollege').value.trim();
     const bachelorPercentage = document.getElementById('bachelorPercentage').value.trim();
