@@ -1,4 +1,19 @@
 /**
+ * Debounce function: सुनिश्चित करता है कि function बार-बार कॉल न हो।
+ * @param {function} func - वह function जिसे debounce करना है।
+ * @param {number} delay - delay का समय (ms में)।
+ */
+function debounce(func, delay) {
+    let timeout;
+    return function() {
+        const context = this;
+        const args = arguments;
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func.apply(context, args), delay);
+    };
+}
+
+/**
  * CV का थीम रंग बदलता है।
  * @param {string} colorCode - नया रंग कोड (e.g., '#004D40').
  */
@@ -46,7 +61,7 @@ function updateCV() {
     
     document.getElementById('cv-name').innerText = name;
     
-    // 2. प्रोफ़ाइल फ़ोटो और संपर्क विवरण (Photo Logic Fix)
+    // 2. प्रोफ़ाइल फ़ोटो और संपर्क विवरण
     const photoDisplay = document.getElementById('photo-display');
     const initialsDisplay = document.getElementById('initials-display');
     const photoInput = document.getElementById('photoInput');
@@ -227,22 +242,24 @@ function updateCV() {
     }
 
     // Dynamic Height Adjustment (खाली स्पेस हटाने वाला लॉजिक)
+    // setTimeout का उपयोग इसलिए ताकि DOM अपडेट होने के बाद हाइट एडजस्ट हो।
     setTimeout(adjustCVHeight, 100); 
 }
+
+// Debounced version of updateCV (300ms delay to prevent jumping while typing)
+const debouncedUpdateCV = debounce(updateCV, 300);
 
 // पेज लोड होने पर CV को एक बार अपडेट करें
 document.addEventListener('DOMContentLoaded', updateCV);
 
 /**
- * PDF जनरेशन फ़ंक्शन - केवल CV आउटपुट को कैप्चर करने के लिए अपडेट किया गया
+ * PDF जनरेशन फ़ंक्शन - केवल CV आउटपुट को कैप्चर करने के लिए
  */
 function prepareAndDownloadPDF() {
     // पहले CV को नवीनतम डेटा से अपडेट करें
     updateCV(); 
 
-    // *******************************************************************
-    // **** सिर्फ़ CV आउटपुट एरिया को टारगेट करें (Fix for extra page content) ****
-    // *******************************************************************
+    // सिर्फ़ CV आउटपुट एरिया (#cv-output-area) को टारगेट करें 
     const element = document.getElementById('cv-output-area');
     const name = document.getElementById('nameInput').value.trim() || 'My_Resume';
     
@@ -252,16 +269,15 @@ function prepareAndDownloadPDF() {
 
     // PDF सेटिंग्स
     const opt = {
-        margin:       0.5, 
+        margin:       0.5, // 0.5 इंच का मार्जिन
         filename:     `${name.replace(/\s/g, '_')}_CV.pdf`, 
         image:        { type: 'jpeg', quality: 0.98 },
-        html2canvas:  { scale: 2 }, 
+        html2canvas:  { scale: 2 }, // उच्च गुणवत्ता के लिए स्केल 2
         jsPDF:        { unit: 'in', format: 'A4', orientation: 'portrait' }
     };
 
     // Generate and Download
     setTimeout(() => {
-        // html2pdf().from(element) अब केवल #cv-output-area को PDF में बदलता है।
         html2pdf().from(element).set(opt).save().then(() => {
             downloadBtn.innerText = "📥 Download PDF";
             downloadBtn.disabled = false;
