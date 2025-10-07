@@ -47,17 +47,29 @@
             <div id="educationInputs">
                 
                 <p><strong>Bachelor's Degree</strong></p>
+                <select id="bachelorStatus" onchange="updateCV()">
+                    <option value="Passed">Passed</option>
+                    <option value="Appearing">Appearing</option>
+                </select>
                 <input type="text" id="bachelorDegree" placeholder="Degree Name (e.g., B.Tech Computer Science)" onkeyup="updateCV()">
                 <input type="text" id="bachelorCollege" placeholder="College/University Name" onkeyup="updateCV()">
                 <input type="text" id="bachelorPercentage" placeholder="Percentage/CGPA (e.g., 8.5 CGPA)" onkeyup="updateCV()">
                 <input type="text" id="bachelorDuration" placeholder="Duration (e.g., 2018-2022)" onkeyup="updateCV()">
                 
                 <p><strong>12th / Intermediate</strong></p>
+                <select id="interStatus" onchange="updateCV()">
+                    <option value="Passed">Passed</option>
+                    <option value="Appearing">Appearing</option>
+                </select>
                 <input type="text" id="interSubjects" placeholder="Subjects (e.g., PCM/PCB/Arts)" onkeyup="updateCV()">
                 <input type="text" id="interBoard" placeholder="Board/School Name" onkeyup="updateCV()">
                 <input type="text" id="interPercentage" placeholder="Percentage/CGPA (e.g., 90%)" onkeyup="updateCV()">
                 
                 <p><strong>10th / Matriculation</strong></p>
+                <select id="hscStatus" onchange="updateCV()">
+                    <option value="Passed">Passed</option>
+                    <option value="Appearing">Appearing</option>
+                </select>
                 <input type="text" id="hscBoard" placeholder="Board/School Name" onkeyup="updateCV()">
                 <input type="text" id="hscPercentage" placeholder="Percentage/CGPA (e.g., 9.5 CGPA)" onkeyup="updateCV()">
             </div>
