@@ -284,7 +284,8 @@ function prepareAndDownloadPDF() {
             useCORS: true, 
             scrollY: 0,
             allowTaint: true,
-            width: 794,         // Explicit width setting (in px for A4 aspect ratio at 96 DPI)
+            // Explicitly set width matching A4 aspect ratio for better PDF rendering
+            width: 794,         
         },
         // A4 size, in millimeter unit (This is key for accurate A4)
         jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }, 
