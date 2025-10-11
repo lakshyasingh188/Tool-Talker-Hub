@@ -5,8 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Professional CV Maker</title>
     
- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4506455388257042"
-     crossorigin="anonymous"></script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4506455388257042"
+        crossorigin="anonymous"></script>
+        
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
@@ -28,7 +29,8 @@
             </select>
             
             <h2>Personal Details</h2>
-            <input type="file" id="photoInput" accept="image/*" onchange="updateCV()" aria-label="Upload Photo">
+            <input type="file" id="photoInput" accept="image/*" onchange="updateCV()" aria-label="Upload Photo" value="Upload/Select Photo">
+            
             <input type="text" id="nameInput" placeholder="Full Name (e.g., John Doe)" onkeyup="debouncedUpdateCV()">
             <input type="text" id="phoneInput" placeholder="Phone Number (e.g., +91 9876543210)" onkeyup="debouncedUpdateCV()">
             <input type="email" id="emailInput" placeholder="Email Address (e.g., example@email.com)" onkeyup="debouncedUpdateCV()">
