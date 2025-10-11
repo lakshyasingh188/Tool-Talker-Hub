@@ -198,6 +198,206 @@ body {
 
 /* Skills/Languages Output Style */
 .skills-section ul, .extra-section ul {
+    list-style: none/*
+====================================
+ 1. Base Styles and Layout (Scrolling and Layout Fixes)
+====================================
+*/
+:root {
+    /* PRIMARY COLOR VARIABLE (Default Maroon) */
+    --primary-color: #A52A2A; 
+    
+    --secondary-color: #f4f4f9; 
+    --text-color: #333;
+    --light-text-color: #fff;
+    --accent-color: #FF5733; 
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: var(--secondary-color);
+    margin: 0;
+    padding: 0; 
+    color: var(--text-color);
+    
+    /* Global Scrolling Fixes */
+    height: 100vh; 
+    overflow: hidden; 
+    
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.container {
+    display: flex;
+    width: 95%;
+    max-width: 1300px;
+    gap: 20px;
+    padding: 20px 0; 
+    height: 100%; 
+    box-sizing: border-box; 
+}
+
+/* Input Form Styling (Left Column - Independent Scroll) */
+.input-form {
+    flex: 1;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    
+    /* Input Form Scrolling Fixes: This container scrolls independently */
+    height: 100%; 
+    overflow-y: auto; 
+    
+    position: relative; 
+    top: 0; 
+}
+
+/* CV Paper Styling (Right Column - Independent Scroll, Dynamic Height Support) */
+.cv-paper {
+    flex: 2;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    width: 794px; /* A4 width */
+    height: auto; 
+    border-radius: 4px;
+    
+    /* max-height given to avoid conflict with Dynamic Height Logic */
+    max-height: calc(100vh - 40px); 
+    overflow-y: auto; /* CV itself scrolls if content is long */
+    overflow-x: hidden; 
+}
+
+
+.input-form h1, .input-form h2 {
+    color: var(--primary-color);
+    border-bottom: 2px solid var(--primary-color);
+    padding-bottom: 5px;
+    margin-top: 20px;
+}
+
+.input-form input, .input-form textarea, .input-form select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 14px;
+}
+.input-form p {
+    margin: 10px 0 5px 0;
+    font-size: 0.9em;
+    font-weight: bold;
+}
+
+.input-form button {
+    width: 100%;
+    padding: 15px;
+    background-color: var(--primary-color);
+    color: var(--light-text-color);
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 15px;
+    transition: background-color 0.3s;
+}
+
+.input-form button:hover {
+    background-color: #8B0000;
+}
+
+.note {
+    font-size: 12px;
+    color: #888;
+    margin-top: 10px;
+    text-align: center;
+}
+
+/*
+====================================
+ 2. CV Layout and Styling (Text Wrapping Fixes)
+====================================
+*/
+
+/* CV Border Style */
+.bordered-cv {
+    border: 3px solid black; 
+    box-shadow: none; 
+}
+
+.cv-grid {
+    display: grid;
+    grid-template-columns: 35% 65%; 
+    height: 100%; 
+}
+
+/* Left Column Styling */
+.left-column {
+    background-color: var(--primary-color); 
+    color: var(--light-text-color);
+    padding: 20px;
+    display: flex;
+    flex-direction: column; 
+}
+
+/* Languages section (extra-section) */
+.extra-section {
+    padding-bottom: 10px;
+}
+
+
+.left-column h3 {
+    border-bottom: 2px solid var(--light-text-color);
+    padding-bottom: 5px;
+    margin-top: 25px;
+    font-size: 1.1em;
+}
+
+/* Profile Image */
+.profile-image {
+    width: 100px;
+    height: 100px;
+    background-color: #fff;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-bottom: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 3em;
+    color: var(--primary-color); 
+    font-weight: bold;
+    flex-shrink: 0; 
+}
+.profile-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.name-display {
+    font-size: 1.8em;
+    margin: 0 0 5px 0;
+    color: #fff;
+}
+
+.contact-section p {
+    margin: 5px 0;
+    font-size: 0.9em;
+    display: flex; 
+    align-items: center;
+}
+.contact-section i {
+    margin-right: 10px;
+    color: var(--accent-color);
+}
+
+/* Skills/Languages Output Style */
+.skills-section ul, .extra-section ul {
     list-style: none;
     padding: 0;
 }
@@ -247,7 +447,7 @@ body {
     color: var(--primary-color); 
     margin: 5px 0;
     
-    /* FIX: लंबा डिग्री का नाम रैप हो जाए */
+    /* FIX: Long degree name wraps */
     word-break: break-word; 
     line-height: 1.3;
 }
@@ -263,7 +463,7 @@ body {
     margin: 5px 0;
     line-height: 1.4; 
     
-    /* FIX: यूनिवर्सिटी या कॉलेज का लंबा नाम रैप हो जाए */
+    /* FIX: Long university or college name wraps */
     word-break: break-word; 
 }
 
@@ -276,9 +476,44 @@ body {
 
 /*
 ====================================
-  3. PDF Print Styles
+ 3. PDF Print Styles (Updated for A4 Size, Border, and Page Break)
 ====================================
 */
+
+/* Styles applied during PDF generation (used by html2pdf - when .pdf-downloading class is present) */
+.cv-paper.pdf-downloading {
+    /* Ensure PDF is A4 size and has minimal margin/padding */
+    padding: 0;
+    margin: 0;
+    width: 210mm; /* A4 width */
+    min-height: 297mm; /* Maintain A4 size even with less content */
+    box-shadow: none; 
+    border: 1px solid #000 !important; /* Border in PDF */
+}
+
+.cv-paper.pdf-downloading .cv-grid {
+    /* Stretch grid to full A4 size */
+    height: auto; 
+    min-height: 297mm; 
+}
+
+/* Minimize unnecessary vertical gaps for PDF output */
+.cv-paper.pdf-downloading .right-column {
+    padding-top: 10mm; /* Adjust top padding for a cleaner look within A4 margins */
+    padding-bottom: 10mm;
+}
+.cv-paper.pdf-downloading .right-column h3 {
+    margin-top: 10px !important; 
+    margin-bottom: 10px;
+}
+
+.cv-paper.pdf-downloading p,
+.cv-paper.pdf-downloading ul,
+.cv-paper.pdf-downloading .edu-item {
+    margin-bottom: 5px !important; 
+}
+
+/* Print Media Styling (when user prints from browser) */
 @media print {
     body {
         padding: 0;
@@ -288,19 +523,29 @@ body {
     }
 
     .container, .input-form {
-        display: none;
+        display: none; /* Hide input form */
     }
     
     .cv-paper {
-        margin: 0;
-        box-shadow: none;
-        width: 100%;
-        min-height: auto; 
-        border: 3px solid black; 
-        overflow: hidden; 
+        /* Set A4 size and 10mm margin (to respect standard print margin) */
+        width: 210mm !important; 
+        min-height: 297mm !important;
+        margin: 0 !important;
+        padding: 10mm !important; 
+        box-shadow: none !important;
+        /* Line for the border */
+        border: 1px solid #000 !important; 
     }
     
     .cv-grid {
+        /* Ensure sections don't cut in the middle */
+        page-break-inside: avoid;
+        height: auto !important; 
         align-items: stretch;
+    }
+    
+    /* Ensure specific sections avoid page breaks */
+    .summary-section, .work-history-section, .education-section, .filler-content {
+        page-break-inside: avoid;
     }
 }
