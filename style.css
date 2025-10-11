@@ -288,7 +288,8 @@ body {
     width: 210mm; /* A4 width */
     min-height: 297mm; /* Maintain A4 size even with less content */
     box-shadow: none; 
-    border: 1px solid #000 !important; /* Border in PDF */
+    /* IMPORTANT FIX for Border */
+    border: 1px solid #000 !important; 
 }
 
 .cv-paper.pdf-downloading .cv-grid {
