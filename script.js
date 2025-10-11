@@ -1,7 +1,7 @@
 /**
- * Debounce function: सुनिश्चित करता है कि function बार-बार कॉल न हो।
- * @param {function} func - वह function जिसे debounce करना है।
- * @param {number} delay - delay का समय (ms में)।
+ * Debounce function: Ensures function isn't called too frequently.
+ * @param {function} func - The function to debounce.
+ * @param {number} delay - The delay time (in ms).
  */
 function debounce(func, delay) {
     let timeout;
@@ -14,46 +14,46 @@ function debounce(func, delay) {
 }
 
 /**
- * CV का थीम रंग बदलता है।
- * @param {string} colorCode - नया रंग कोड (e.g., '#004D40').
+ * Changes the theme color of the CV.
+ * @param {string} colorCode - The new color code (e.g., '#004D40').
  */
 function changeThemeColor(colorCode) {
     document.documentElement.style.setProperty('--primary-color', colorCode);
 }
 
 /**
- * CV पेज की ऊँचाई को सामग्री (content) के हिसाब से गतिशील रूप से (dynamically) समायोजित करता है।
+ * Dynamically adjusts the height of the CV page based on content to minimize gaps.
  */
 function adjustCVHeight() {
     const cvOutput = document.getElementById('cv-output-area');
     const leftCol = cvOutput.querySelector('.left-column');
     const rightCol = cvOutput.querySelector('.right-column');
     
-    // दोनों कॉलम की ऊँचाई को मापता है
+    // Measures the height of both columns
     const leftHeight = leftCol.scrollHeight;
     const rightHeight = rightCol.scrollHeight;
     
-    // सबसे बड़ी ऊँचाई को CV आउटपुट की ऊँचाई के रूप में सेट करता है
+    // Sets the height of the CV output as the maximum height
     const newHeight = Math.max(leftHeight, rightHeight);
     
-    // CV कंटेनर की हाइट सेट करें (50px का बफर पैडिंग के लिए)
+    // Set CV container height (50px buffer for padding)
     cvOutput.style.height = `${newHeight + 50}px`; 
     
-    // Left column की min-height को Right column की height के बराबर सेट करता है 
+    // Set Left column's min-height to equal the Right column's height 
     leftCol.style.minHeight = `${rightHeight}px`; 
 }
 
 
 /**
- * यह फ़ंक्शन फ़ॉर्म से डेटा लेता है और CV को लाइव अपडेट करता है।
+ * Fetches data from the form and updates the CV live.
  */
 function updateCV() {
-    // 0. थीम रंग अपडेट करें
+    // 0. Update theme color
     const colorPicker = document.getElementById('colorPicker');
     const selectedColor = colorPicker ? colorPicker.value : '#A52A2A'; 
     changeThemeColor(selectedColor);
     
-    // 1. व्यक्तिगत विवरण
+    // 1. Personal Details
     const name = document.getElementById('nameInput').value.trim();
     const phone = document.getElementById('phoneInput').value.trim();
     const email = document.getElementById('emailInput').value.trim();
@@ -61,7 +61,7 @@ function updateCV() {
     
     document.getElementById('cv-name').innerText = name;
     
-    // 2. प्रोफ़ाइल फ़ोटो और संपर्क विवरण
+    // 2. Profile Photo and Contact Details
     const photoDisplay = document.getElementById('photo-display');
     const initialsDisplay = document.getElementById('initials-display');
     const photoInput = document.getElementById('photoInput');
@@ -91,7 +91,7 @@ function updateCV() {
         initialsDisplay.style.display = 'none';
     }
 
-    // संपर्क विवरण को अपडेट और शो/हाइड करें
+    // Update and show/hide contact lines
     const updateContactLine = (input, displayId, lineId) => {
         const value = input.trim();
         const lineElement = document.getElementById(lineId);
@@ -108,7 +108,7 @@ function updateCV() {
     updateContactLine(email, 'cv-email', 'cv-email-line');
 
     
-    // 3. करियर ऑब्जेक्टिव (Career Objective)
+    // 3. Career Objective
     const objectiveInput = document.getElementById('objectiveInput').value.trim();
     const objectiveOutput = document.getElementById('cv-objective-output');
     
@@ -117,7 +117,7 @@ function updateCV() {
     objectiveOutput.innerText = objectiveInput || defaultObjective;
     
     
-    // 4. कौशल (Skills) को लिस्ट में दिखाना
+    // 4. Skills list
     const skillsInput = document.getElementById('skillsInput').value.trim();
     const skillsOutput = document.getElementById('cv-skills-output');
     skillsOutput.innerHTML = '';
@@ -131,7 +131,7 @@ function updateCV() {
         skillsOutput.innerHTML = '<li style="font-size:0.9em; font-style: italic;">No skills added.</li>';
     }
 
-    // 5. भाषाएँ (Languages) को लिस्ट में दिखाना
+    // 5. Languages list
     const languagesInput = document.getElementById('languagesInput').value.trim();
     const languagesOutput = document.getElementById('cv-languages-output');
     languagesOutput.innerHTML = '';
@@ -150,7 +150,7 @@ function updateCV() {
     }
 
 
-    // 6. कार्य अनुभव (Work History) - खाली होने पर छुपाना
+    // 6. Work History - Hide when empty
     const workHistoryInput = document.getElementById('workHistoryInput').value.trim();
     const workHistoryContainer = document.getElementById('work-history-main-container');
     const workHistoryOutput = document.getElementById('cv-work-history-output');
@@ -171,7 +171,7 @@ function updateCV() {
     }
 
 
-    // 7. शिक्षा विवरण (Education Details) - Passed/Appearing लॉजिक के साथ
+    // 7. Education Details - with Passed/Appearing logic
     const bachelorDegree = document.getElementById('bachelorDegree').value.trim();
     const bachelorCollege = document.getElementById('bachelorCollege').value.trim();
     const bachelorPercentage = document.getElementById('bachelorPercentage').value.trim();
@@ -191,7 +191,7 @@ function updateCV() {
     eduOutput.innerHTML = ''; 
     let hasEducation = false;
 
-    // विस्तृत शिक्षा आइटम बनाने के लिए फ़ंक्शन
+    // Function to create detailed education item
     const createDetailedEduItem = (title, status, lines) => {
         const item = document.createElement('div');
         item.classList.add('edu-item');
@@ -241,24 +241,25 @@ function updateCV() {
         eduOutput.innerHTML = '<p style="font-style: italic; color: #888; font-size:0.9em;">No education details added yet. Please fill the form.</p>';
     }
 
-    // Dynamic Height Adjustment (खाली स्पेस हटाने वाला लॉजिक)
+    // Dynamic Height Adjustment (Logic to remove white space)
     setTimeout(adjustCVHeight, 100); 
 }
 
 // Debounced version of updateCV (300ms delay to prevent jumping while typing/selecting)
 const debouncedUpdateCV = debounce(updateCV, 300);
 
-// पेज लोड होने पर CV को एक बार अपडेट करें
+// Update CV once on page load
 document.addEventListener('DOMContentLoaded', updateCV);
 
 /**
- * PDF जनरेशन फ़ंक्शन - केवल CV आउटपुट को कैप्चर करने के लिए
+ * PDF Generation Function.
+ * HTML2PDF settings updated for A4 size, multi-page support, and avoiding word breaks.
  */
 function prepareAndDownloadPDF() {
-    // पहले CV को नवीनतम डेटा से अपडेट करें
+    // Update CV with the latest data before generating
     updateCV(); 
 
-    // सिर्फ़ CV आउटपुट एरिया (#cv-output-area) को टारगेट करें 
+    // Target the CV output area (#cv-output-area) 
     const element = document.getElementById('cv-output-area');
     const name = document.getElementById('nameInput').value.trim() || 'My_Resume';
     
@@ -266,25 +267,35 @@ function prepareAndDownloadPDF() {
     downloadBtn.innerText = "Generating PDF...";
     downloadBtn.disabled = true;
 
-    // PDF सेटिंग्स
+    // PDF Settings
     const opt = {
-        margin:       0.5, // 0.5 इंच का मार्जिन
+        // Set margin to 10mm (0.39 inches)
+        margin:       [10, 10, 10, 10], 
         filename:     `${name.replace(/\s/g, '_')}_CV.pdf`, 
         image:        { type: 'jpeg', quality: 0.98 },
-        html2canvas:  { scale: 2 }, // उच्च गुणवत्ता के लिए स्केल 2
-        jsPDF:        { unit: 'in', format: 'A4', orientation: 'portrait' }
+        html2canvas:  { 
+            scale: 2,           // Scale 2 for high quality
+            useCORS: true, 
+            scrollY: 0,
+            allowTaint: true 
+        },
+        // A4 size, in millimeter unit
+        jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }, 
+        // Page break mode: Ensure sections don't cut in the middle
+        pagebreak: { mode: 'avoid-all' }
     };
 
+    // Add CSS class before download (defined in style.css)
+    element.classList.add('pdf-downloading');
+
     // Generate and Download
-    setTimeout(() => {
-        html2pdf().from(element).set(opt).save().then(() => {
-            downloadBtn.innerText = "📥 Download PDF";
-            downloadBtn.disabled = false;
-        }).catch(error => {
-            console.error("PDF generation failed:", error);
-            alert("Error: PDF could not be generated. Please check console for details.");
-            downloadBtn.innerText = "📥 Download PDF";
-            downloadBtn.disabled = false;
-        });
-    }, 50); 
+    html2pdf().from(element).set(opt).save().finally(function() {
+        // Remove CSS class after download
+        element.classList.remove('pdf-downloading');
+        
+        // Restore button state
+        downloadBtn.innerText = "📥 Download PDF";
+        downloadBtn.disabled = false;
+        alert('Your CV has been downloaded!');
+    });
 }
