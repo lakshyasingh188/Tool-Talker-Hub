@@ -116,7 +116,7 @@ function updateCV() {
 
     objectiveOutput.innerText = objectiveInput || defaultObjective;
     
-    // 4. Professional Summary (NEW STATIC CONTENT)
+    // 4. Professional Summary (STATIC CONTENT)
     const professionalSummaryOutput = document.getElementById('cv-professional-summary-output');
     if (professionalSummaryOutput) {
         professionalSummaryOutput.innerText = "A dedicated and detail-oriented individual with strong technical and analytical skills. Passionate about learning emerging technologies and applying innovative solutions to real-world challenges. Able to work both independently and collaboratively within a team to achieve organizational goals.";
@@ -273,7 +273,7 @@ function prepareAndDownloadPDF() {
     downloadBtn.innerText = "Generating PDF...";
     downloadBtn.disabled = true;
 
-    // PDF Settings
+    // PDF Settings (FIXED to ensure full A4 and no cutting)
     const opt = {
         // Set margin to 10mm 
         margin:       [10, 10, 10, 10], 
