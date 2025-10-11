@@ -116,8 +116,14 @@ function updateCV() {
 
     objectiveOutput.innerText = objectiveInput || defaultObjective;
     
+    // 4. Professional Summary (NEW STATIC CONTENT)
+    const professionalSummaryOutput = document.getElementById('cv-professional-summary-output');
+    if (professionalSummaryOutput) {
+        professionalSummaryOutput.innerText = "A dedicated and detail-oriented individual with strong technical and analytical skills. Passionate about learning emerging technologies and applying innovative solutions to real-world challenges. Able to work both independently and collaboratively within a team to achieve organizational goals.";
+    }
+
     
-    // 4. Skills list
+    // 5. Skills list
     const skillsInput = document.getElementById('skillsInput').value.trim();
     const skillsOutput = document.getElementById('cv-skills-output');
     skillsOutput.innerHTML = '';
@@ -131,7 +137,7 @@ function updateCV() {
         skillsOutput.innerHTML = '<li style="font-size:0.9em; font-style: italic;">No skills added.</li>';
     }
 
-    // 5. Languages list
+    // 6. Languages list
     const languagesInput = document.getElementById('languagesInput').value.trim();
     const languagesOutput = document.getElementById('cv-languages-output');
     languagesOutput.innerHTML = '';
@@ -150,7 +156,7 @@ function updateCV() {
     }
 
 
-    // 6. Work History - Hide when empty
+    // 7. Work History - Hide when empty
     const workHistoryInput = document.getElementById('workHistoryInput').value.trim();
     const workHistoryContainer = document.getElementById('work-history-main-container');
     const workHistoryOutput = document.getElementById('cv-work-history-output');
@@ -171,7 +177,7 @@ function updateCV() {
     }
 
 
-    // 7. Education Details - with Passed/Appearing logic
+    // 8. Education Details - with Passed/Appearing logic
     const bachelorDegree = document.getElementById('bachelorDegree').value.trim();
     const bachelorCollege = document.getElementById('bachelorCollege').value.trim();
     const bachelorPercentage = document.getElementById('bachelorPercentage').value.trim();
@@ -253,7 +259,7 @@ document.addEventListener('DOMContentLoaded', updateCV);
 
 /**
  * PDF Generation Function.
- * HTML2PDF settings updated for A4 size, multi-page support, and avoiding word breaks.
+ * FIX: Used 'mm' unit and stronger html2canvas settings to prevent cutting and enforce A4 size.
  */
 function prepareAndDownloadPDF() {
     // Update CV with the latest data before generating
@@ -269,7 +275,7 @@ function prepareAndDownloadPDF() {
 
     // PDF Settings
     const opt = {
-        // Set margin to 10mm (0.39 inches)
+        // Set margin to 10mm 
         margin:       [10, 10, 10, 10], 
         filename:     `${name.replace(/\s/g, '_')}_CV.pdf`, 
         image:        { type: 'jpeg', quality: 0.98 },
@@ -277,9 +283,10 @@ function prepareAndDownloadPDF() {
             scale: 2,           // Scale 2 for high quality
             useCORS: true, 
             scrollY: 0,
-            allowTaint: true 
+            allowTaint: true,
+            width: 794,         // Explicit width setting (in px for A4 aspect ratio at 96 DPI)
         },
-        // A4 size, in millimeter unit
+        // A4 size, in millimeter unit (This is key for accurate A4)
         jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }, 
         // Page break mode: Ensure sections don't cut in the middle
         pagebreak: { mode: 'avoid-all' }
