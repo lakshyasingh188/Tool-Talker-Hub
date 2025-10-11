@@ -290,6 +290,8 @@ body {
     box-shadow: none; 
     /* IMPORTANT FIX for Border */
     border: 1px solid #000 !important; 
+    /* Ensure content visibility */
+    overflow: hidden !important; 
 }
 
 .cv-paper.pdf-downloading .cv-grid {
