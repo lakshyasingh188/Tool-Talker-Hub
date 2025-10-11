@@ -29,7 +29,8 @@
             </select>
             
             <h2>Personal Details</h2>
-            <input type="file" id="photoInput" accept="image/*" onchange="updateCV()" aria-label="Upload Photo" value="Upload/Select Photo">
+            <label for="photoInput" style="display: block; font-size: 0.9em; margin-bottom: 5px;">Upload/Select Photo</label>
+            <input type="file" id="photoInput" accept="image/*" onchange="updateCV()" aria-label="Upload Photo" style="padding: 5px;">
             
             <input type="text" id="nameInput" placeholder="Full Name (e.g., John Doe)" onkeyup="debouncedUpdateCV()">
             <input type="text" id="phoneInput" placeholder="Phone Number (e.g., +91 9876543210)" onkeyup="debouncedUpdateCV()">
