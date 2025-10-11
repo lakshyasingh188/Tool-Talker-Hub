@@ -125,6 +125,7 @@ body {
 
 /* CV Border Style */
 .bordered-cv {
+    /* Main CV border for screen view */
     border: 3px solid black; 
     box-shadow: none; 
 }
@@ -276,7 +277,7 @@ body {
 
 /*
 ====================================
- 3. PDF Print Styles (Updated for A4 Size, Border, and Page Break)
+ 3. PDF Print Styles (FIXED FOR BORDER & CUTTING)
 ====================================
 */
 
@@ -288,8 +289,8 @@ body {
     width: 210mm; /* A4 width */
     min-height: 297mm; /* Maintain A4 size even with less content */
     box-shadow: none; 
-    /* IMPORTANT FIX for Border */
-    border: 1px solid #000 !important; 
+    /* IMPORTANT FIX for Border to show in PDF */
+    border: 3px solid #000 !important; 
     /* Ensure content visibility */
     overflow: hidden !important; 
 }
@@ -338,7 +339,7 @@ body {
         padding: 10mm !important; 
         box-shadow: none !important;
         /* Line for the border */
-        border: 1px solid #000 !important; 
+        border: 3px solid #000 !important; 
     }
     
     .cv-grid {
