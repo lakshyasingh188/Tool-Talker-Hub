@@ -28,13 +28,15 @@
         .input-group { margin-bottom: 15px; text-align: left; }
         .input-group label { display: block; margin-bottom: 5px; font-weight: bold; }
         .input-group input[type="number"], 
-        .input-group input[type="file"] {
+        .input-group input[type="file"],
+        .input-group select {
             width: 100%;
             padding: 10px;
             border: 1px solid #ccc;
             border-radius: 5px;
             box-sizing: border-box;
         }
+        .note { font-size: 0.9em; color: #800000; margin-top: 10px; }
         #resizeBtn {
             padding: 12px 25px;
             background-color: #A52A2A; /* Maroon */
@@ -53,22 +55,36 @@
     <a href="index.html" class="back-link"><i class="fas fa-arrow-left"></i> Back to Tool Hub</a>
     
     <div class="tool-container">
-        <h1>Photo Resizer</h1>
-        <p>JPG/PNG Photo अपलोड करें और साइज़ (Width/Height) बदलें।</p>
+        <h1>Photo Resizer & Compressor</h1>
+        <p>Image अपलोड करें, Pixels (Width/Height) और Quality (KB कम करने के लिए) कंट्रोल करें।</p>
         
         <div class="input-group">
             <label for="imageInput">1. Image अपलोड करें:</label>
-            <input type="file" id="imageInput" accept="image/*">
+            <input type="file" id="imageInput" accept="image/jpeg, image/png">
             <p id="originalDimensions" style="font-size: 0.9em; color: #666; margin-top: 5px;">Original Size: -- x -- px</p>
+        </div>
+        
+        <div class="input-group">
+            <label for="formatSelect">2. आउटपुट फ़ॉर्मेट चुनें:</label>
+            <select id="formatSelect">
+                <option value="image/jpeg">JPG (Quality Control)</option>
+                <option value="image/png">PNG (Lossless, No Quality Control)</option>
+            </select>
+            <p class="note">KB साइज़ कम करने के लिए JPG चुनें और Quality घटाएं। PNG में साइज़ कंट्रोल नहीं होता।</p>
+        </div>
+
+        <div class="input-group" id="qualityGroup">
+            <label for="qualityInput">3. JPG Quality (%):</label>
+            <input type="number" id="qualityInput" value="90" min="1" max="100">
         </div>
 
         <div class="input-group">
-            <label for="widthInput">2. नई Width (pixels):</label>
+            <label for="widthInput">4. नई Width (pixels):</label>
             <input type="number" id="widthInput" value="500" min="10">
         </div>
 
         <div class="input-group">
-            <label for="heightInput">3. नई Height (pixels):</label>
+            <label for="heightInput">5. नई Height (pixels):</label>
             <input type="number" id="heightInput" value="500" min="10">
         </div>
         
@@ -77,5 +93,16 @@
     </div>
 
     <script src="resizer.js"></script>
+    <script>
+        // Toggle quality input based on format selection
+        document.getElementById('formatSelect').addEventListener('change', function() {
+            const qualityGroup = document.getElementById('qualityGroup');
+            if (this.value === 'image/jpeg') {
+                qualityGroup.style.display = 'block';
+            } else {
+                qualityGroup.style.display = 'none';
+            }
+        });
+    </script>
 </body>
 </html>
