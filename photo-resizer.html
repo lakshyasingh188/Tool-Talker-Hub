@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Photo Resizer - Tool Hub</title>
+    <title>Photo Resizer & Compressor - Tool Hub</title>
     
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4506455388257042" crossorigin="anonymous"></script>
     <script type='text/javascript' src='//p127804691.effectivegatemcp.com/0e/23/e4/0e23e4d3a013d81adc6c1533c90b7e69.js'></script>
@@ -49,6 +49,9 @@
             transition: background-color 0.3s;
         }
         #resizeBtn:hover { background-color: #800000; }
+        /* Style for the range slider */
+        #qualityInput { width: 95%; height: 25px; }
+        .range-value { display: block; text-align: center; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -56,26 +59,27 @@
     
     <div class="tool-container">
         <h1>Photo Resizer & Compressor</h1>
-        <p>Image अपलोड करें, Pixels (Width/Height) और Quality (KB कम करने के लिए) कंट्रोल करें।</p>
+        <p>Image अपलोड करें, Pixels (Width/Height) और Quality (MB/KB साइज़ कम करने के लिए) कंट्रोल करें।</p>
         
         <div class="input-group">
             <label for="imageInput">1. Image अपलोड करें:</label>
             <input type="file" id="imageInput" accept="image/jpeg, image/png">
-            <p id="originalDimensions" style="font-size: 0.9em; color: #666; margin-top: 5px;">Original Size: -- x -- px</p>
+            <p id="originalDimensions" style="font-size: 0.9em; color: #666; margin-top: 5px;">Original Size: -- x -- px (-- KB/MB)</p>
         </div>
         
         <div class="input-group">
             <label for="formatSelect">2. आउटपुट फ़ॉर्मेट चुनें:</label>
             <select id="formatSelect">
-                <option value="image/jpeg">JPG (Quality Control)</option>
-                <option value="image/png">PNG (Lossless, No Quality Control)</option>
+                <option value="image/jpeg">JPG (Quality Control/Compression)</option>
+                <option value="image/png">PNG (Lossless, No Compression)</option>
             </select>
-            <p class="note">KB साइज़ कम करने के लिए JPG चुनें और Quality घटाएं। PNG में साइज़ कंट्रोल नहीं होता।</p>
+            <p class="note">MB/KB साइज़ कम करने के लिए **JPG** चुनें और Quality Slider का उपयोग करें।</p>
         </div>
 
         <div class="input-group" id="qualityGroup">
             <label for="qualityInput">3. JPG Quality (%):</label>
-            <input type="number" id="qualityInput" value="90" min="1" max="100">
+            <input type="range" id="qualityInput" value="90" min="10" max="100" oninput="document.getElementById('qualityValue').innerText = this.value + '%'">
+            <span id="qualityValue" class="range-value">90%</span>
         </div>
 
         <div class="input-group">
@@ -97,6 +101,7 @@
         // Toggle quality input based on format selection
         document.getElementById('formatSelect').addEventListener('change', function() {
             const qualityGroup = document.getElementById('qualityGroup');
+            // Show quality slider only for JPG
             if (this.value === 'image/jpeg') {
                 qualityGroup.style.display = 'block';
             } else {
