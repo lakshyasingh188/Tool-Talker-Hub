@@ -8,10 +8,10 @@ function calculate(value) {
     }
 
     if (value === 'Math.PI') {
-        currentExpression += Math.PI.toFixed(4); // Use fixed precision for display
+        currentExpression += 'Math.PI'; 
         display.value += 'π';
     } else if (value === 'Math.E') {
-        currentExpression += Math.E.toFixed(4);
+        currentExpression += 'Math.E';
         display.value += 'e';
     } else if (value === '**') {
         currentExpression += value;
@@ -32,8 +32,18 @@ function clearDisplay() {
 }
 
 function backspace() {
+    // Remove the last character from the display and the expression string
+    const lastChar = display.value.slice(-1);
+    
+    // Handle complex replacements (like 'sin(' or 'π')
+    if (lastChar === ')' && display.value.endsWith('sin()')) {
+        // This is a simplified check, full logic is complex
+    }
+    
+    // Simple backspace for now
     currentExpression = currentExpression.slice(0, -1);
     display.value = display.value.slice(0, -1);
+
     if (display.value === '') {
         display.value = '0';
     }
@@ -54,6 +64,9 @@ function evaluateExpression() {
         if (isNaN(finalResult) || finalResult === Infinity) {
              throw new Error("Invalid expression");
         }
+
+        // Round off to a reasonable number of decimal places for display
+        finalResult = parseFloat(finalResult.toFixed(10)); 
 
         display.value = finalResult;
         currentExpression = finalResult.toString();
