@@ -36,8 +36,11 @@ async function universalConvert() {
     
     if (targetFormat === 'PDF') {
         if (uploadedFileType.startsWith('image/') || uploadedFileType === 'text/plain') {
+            // Only proceed if file type is supported for PDF conversion
             await convertToPDF(fileName);
+            // Alert is inside the conversion function to ensure it runs only on success
         } else {
+            // Alert for unsupported files like DOCX
             alert("माफ़ करें। PDF में कन्वर्ट करने के लिए केवल Image (JPG/PNG) या Text (TXT) फ़ाइलें ही समर्थित (supported) हैं। DOCX के लिए सर्वर की आवश्यकता होती है।");
             return;
         }
@@ -60,21 +63,20 @@ async function universalConvert() {
         return;
     }
     
-    alert(`File सफलतापूर्वक ${targetFormat} में Convert हो गया है और डाउनलोड हो गया है!`);
+    // Final success alert is removed here and placed inside specific functions
 }
 
 
-// --- Conversion Functions (No major change here, just better usage) ---
+// --- Conversion Functions (Focus on fixing PDF) ---
 
 async function convertToPDF(fileName) {
     const reader = new FileReader();
+    const { jsPDF } = window.jspdf; // Use window.jspdf for proper access
     
     if (uploadedFileType.startsWith('image/')) {
         reader.onload = function(e) {
             const img = new Image();
             img.onload = function() {
-                // ... (Image to PDF logic remains the same)
-                const { jsPDF } = window.jspdf;
                 const doc = new jsPDF('p', 'pt', 'a4');
                 const a4Width = 595.28;
                 const a4Height = 841.89;
@@ -88,7 +90,7 @@ async function convertToPDF(fileName) {
                 doc.addImage(img, 'JPEG', 0, position, a4Width, imgHeight);
                 heightLeft -= a4Height;
                 
-                while (heightLeft >= 0) {
+                while (heightLeft > 0) { // Condition change to "> 0"
                     position = heightLeft - imgHeight;
                     doc.addPage();
                     doc.addImage(img, 'JPEG', 0, position, a4Width, imgHeight);
@@ -96,6 +98,7 @@ async function convertToPDF(fileName) {
                 }
                 
                 doc.save(`${fileName}.pdf`);
+                alert(`File सफलतापूर्वक PDF में Convert हो गया है और डाउनलोड हो गया है!`);
             };
             img.src = e.target.result;
         };
@@ -103,15 +106,15 @@ async function convertToPDF(fileName) {
     } 
     else if (uploadedFileType === 'text/plain') {
         reader.onload = function(e) {
-            // ... (TXT to PDF logic remains the same)
             const textContent = e.target.result;
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF();
+            const doc = new jsPDF(); // Use the object created from window.jspdf
             
-            const lines = doc.splitTextToSize(textContent, 180); // 180mm width
-            doc.text(lines, 10, 10); // Start at 10mm from top/left
+            // Adjust text split size for clarity
+            const lines = doc.splitTextToSize(textContent, 180); 
+            doc.text(lines, 10, 10); 
             
             doc.save(`${fileName}.pdf`);
+            alert(`File सफलतापूर्वक PDF में Convert हो गया है और डाउनलोड हो गया है!`);
         };
         reader.readAsText(uploadedFile);
     }
@@ -126,6 +129,7 @@ async function convertToTXT(fileName) {
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(a.href);
+    alert(`File सफलतापूर्वक TXT में Convert हो गया है और डाउनलोड हो गया है!`);
 }
 
 async function convertImageToFormat(fileName, targetFormat) {
@@ -133,7 +137,6 @@ async function convertImageToFormat(fileName, targetFormat) {
     reader.onload = function(e) {
         const img = new Image();
         img.onload = function() {
-            // ... (Image to Image conversion logic remains the same)
             const canvas = document.createElement('canvas');
             const ctx = canvas.getContext('2d');
             canvas.width = img.width;
@@ -154,6 +157,7 @@ async function convertImageToFormat(fileName, targetFormat) {
                 a.click();
                 document.body.removeChild(a);
                 URL.revokeObjectURL(url);
+                alert(`File सफलतापूर्वक ${targetFormat} में Convert हो गया है और डाउनलोड हो गया है!`);
             }, mimeType);
         };
         img.src = e.target.result;
