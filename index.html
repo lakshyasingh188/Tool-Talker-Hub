@@ -3,157 +3,115 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Professional CV Maker</title>
+    <title>Tool-Talker-Hub</title>
     
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4506455388257042"
         crossorigin="anonymous"></script>
         
-    <link rel="stylesheet" href="style.css">
+    <script type='text/javascript' src='//p127804691.effectivegatemcp.com/0e/23/e4/0e23e4d3a013d81adc6c1533c90b7e69.js'></script>
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <style>
+        /* Base Styles for Tool Hub Dashboard */
+        :root {
+            --primary-color: #004D40; /* Teal Green */
+            --secondary-color: #f4f4f9; 
+            --text-color: #333;
+        }
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: var(--secondary-color);
+            margin: 0;
+            padding: 0;
+            color: var(--text-color);
+            text-align: center;
+        }
+        .header-nav {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 15px 0;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .header-nav h1 {
+            margin: 0;
+            font-size: 2em;
+        }
+        .tool-dashboard {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 20px;
+            /* Grid layout to display tool cards properly */
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+        .tool-card {
+            background-color: #fff;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            text-decoration: none;
+            color: var(--text-color);
+            border-top: 5px solid var(--primary-color);
+        }
+        .tool-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+        .tool-card i {
+            font-size: 3em;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+        .tool-card h2 {
+            margin-top: 0;
+            font-size: 1.5em;
+        }
+        .tool-card p {
+            font-size: 0.9em;
+            color: #666;
+        }
+    </style>
 </head>
 <body>
 
-    <div class="container">
-        
-        <div class="input-form">
-            <h1>Create Your CV</h1>
-
-            <h2>Theme Color</h2>
-            <select id="colorPicker" onchange="debouncedUpdateCV()">
-                <option value="#A52A2A">Maroon (Default)</option>
-                <option value="#000000">Deep Black</option>
-                <option value="#1565C0">Bright Blue</option>
-                <option value="#004D40">Teal Green</option>
-                <option value="#D84315">Orange Red</option>
-                <option value="#6A1B9A">Deep Purple</option>
-            </select>
-            
-            <h2>Personal Details</h2>
-            <label for="photoInput" style="display: block; font-size: 0.9em; margin-bottom: 5px;">Upload/Select Photo</label>
-            <input type="file" id="photoInput" accept="image/*" onchange="updateCV()" aria-label="Upload Photo" style="padding: 5px;">
-            
-            <input type="text" id="nameInput" placeholder="Full Name (e.g., John Doe)" onkeyup="debouncedUpdateCV()">
-            <input type="text" id="phoneInput" placeholder="Phone Number (e.g., +91 9876543210)" onkeyup="debouncedUpdateCV()">
-            <input type="email" id="emailInput" placeholder="Email Address (e.g., example@email.com)" onkeyup="debouncedUpdateCV()">
-            <input type="text" id="addressInput" placeholder="Address (e.g., City, Country)" onkeyup="debouncedUpdateCV()">
-            
-            <h2>Career Objective</h2>
-            <textarea id="objectiveInput" rows="3" placeholder="Enter your Career Objective or Professional Summary here." onkeyup="debouncedUpdateCV()"></textarea>
-
-            <h2>Skills</h2>
-            <textarea id="skillsInput" rows="3" placeholder="Enter skills separated by commas (e.g., Java, Python, HTML, Teamwork)" onkeyup="debouncedUpdateCV()"></textarea>
-
-            <h2>Languages</h2>
-            <textarea id="languagesInput" rows="2" placeholder="Enter languages and proficiency (e.g., Hindi (Native), English (Fluent))" onkeyup="debouncedUpdateCV()"></textarea>
-
-            <h2>Work History</h2>
-            <textarea id="workHistoryInput" rows="4" placeholder="Enter job details (e.g., Role, Company, 2020-2022, Responsibility 1, Responsibility 2)" onkeyup="debouncedUpdateCV()"></textarea>
-
-            <h2>Education</h2>
-            <div id="educationInputs">
-                
-                <p><strong>Bachelor's Degree</strong></p>
-                <select id="bachelorStatus" onchange="debouncedUpdateCV()">
-                    <option value="Passed">Passed</option>
-                    <option value="Appearing">Appearing</option>
-                </select>
-                <input type="text" id="bachelorDegree" placeholder="Degree Name (e.g., B.Tech Computer Science)" onkeyup="debouncedUpdateCV()">
-                <input type="text" id="bachelorCollege" placeholder="College/University Name" onkeyup="debouncedUpdateCV()">
-                <input type="text" id="bachelorPercentage" placeholder="Percentage/CGPA (e.g., 8.5 CGPA)" onkeyup="debouncedUpdateCV()">
-                <input type="text" id="bachelorDuration" placeholder="Duration (e.g., 2018-2022)" onkeyup="debouncedUpdateCV()">
-                
-                <p><strong>12th / Intermediate</strong></p>
-                <select id="interStatus" onchange="debouncedUpdateCV()">
-                    <option value="Passed">Passed</option>
-                    <option value="Appearing">Appearing</option>
-                </select>
-                <input type="text" id="interSubjects" placeholder="Subjects (e.g., PCM/PCB/Arts)" onkeyup="debouncedUpdateCV()">
-                <input type="text" id="interBoard" placeholder="Board/School Name" onkeyup="debouncedUpdateCV()">
-                <input type="text" id="interPercentage" placeholder="Percentage/CGPA (e.g., 90%)" onkeyup="debouncedUpdateCV()">
-                
-                <p><strong>10th / Matriculation</strong></p>
-                <select id="hscStatus" onchange="debouncedUpdateCV()">
-                    <option value="Passed">Passed</option>
-                    <option value="Appearing">Appearing</option>
-                </select>
-                <input type="text" id="hscBoard" placeholder="Board/School Name" onkeyup="debouncedUpdateCV()">
-                <input type="text" id="hscPercentage" placeholder="Percentage/CGPA (e.g., 9.5 CGPA)" onkeyup="debouncedUpdateCV()">
-            </div>
-            
-            <button id="downloadBtn" onclick="prepareAndDownloadPDF()">📥 Download PDF</button>
-            <p class="note">Your CV updates live. Click 'Download PDF' to save your final document.</p>
-        </div>
-
-        <div id="cv-output-area" class="cv-paper bordered-cv">
-            <div class="cv-grid">
-                
-                <div class="left-column">
-                    <div class="profile-section">
-                        <div class="profile-image">
-                            <img id="photo-display" src="" alt="Profile Photo" style="display: none;">
-                            <span id="initials-display" style="display: none;"></span>
-                        </div>
-                        <h2 class="name-display" id="cv-name"></h2>
-                    </div>
-
-                    <div class="contact-section">
-                        <h3>Contact</h3>
-                        <p id="cv-address-line" style="display:none;"><i class="fas fa-map-marker-alt"></i> <span id="cv-address"></span></p>
-                        <p id="cv-phone-line" style="display:none;"><i class="fas fa-phone"></i> <span id="cv-phone"></span></p>
-                        <p id="cv-email-line" style="display:none;"><i class="fas fa-envelope"></i> <span id="cv-email"></span></p>
-                    </div>
-
-                    <div class="skills-section">
-                        <h3>Skills</h3>
-                        <ul id="cv-skills-output">
-                            </ul>
-                    </div>
-
-                    <div class="extra-section">
-                        <h3>Languages</h3>
-                        <ul id="cv-languages-output">
-                            </ul>
-                    </div>
-                </div>
-
-                <div class="right-column">
-                    
-                    <div class="summary-section">
-                        <h3>Career Objective</h3>
-                        <p id="cv-objective-output"></p>
-                    </div>
-                    
-                    <div class="summary-section">
-                        <h3>Professional Summary</h3>
-                        <p id="cv-professional-summary-output"></p>
-                    </div>
-                    
-                    <div id="work-history-main-container" class="work-history-section">
-                        <h3>Work History</h3>
-                        <div id="cv-work-history-output">
-                            </div>
-                    </div>
-
-                    <div class="education-section">
-                        <h3>Education</h3>
-                        <div id="cv-education-output">
-                            </div>
-                    </div>
-                    
-                    <div class="filler-content">
-                         <h3>Declaration</h3>
-                         <div id="cv-declaration-output">
-                             <p id="cv-summary-para2">I look forward to being a part of a progressive organization where I can utilize my skills, learn continuously, and contribute to the overall growth and success of the company. I am confident in my ability to bring a positive impact and grow alongside the organization.</p>
-                         </div>
-                    </div>
-
-                </div>
-
-            </div>
-        </div>
+    <div class="header-nav">
+        <h1>🛠️ Tool-Talker-Hub</h1>
     </div>
 
-    <script src="script.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
+    <div class="tool-dashboard">
+        
+        <a href="resume.html" class="tool-card">
+            <i class="fas fa-file-alt"></i>
+            <h2>Resume / CV Maker</h2>
+            <p>Professional CV/Resume बनाएं।</p>
+        </a>
+
+        <a href="photo-resizer.html" class="tool-card">
+            <i class="fas fa-image"></i>
+            <h2>Photo Resizer</h2>
+            <p>JPG/PNG Photos का साइज़ (Width/Height) Resize करें।</p>
+        </a>
+
+        <a href="image-converter.html" class="tool-card">
+            <i class="fas fa-sync-alt"></i>
+            <h2>Image Converter</h2>
+            <p>JPG, PNG, WebP फॉर्मेट्स में Convert करें।</p>
+        </a>
+        
+        <a href="calculator.html" class="tool-card">
+            <i class="fas fa-calculator"></i>
+            <h2>Scientific Calculator</h2>
+            <p>गणित (Math) की गणनाएँ करें।</p>
+        </a>
+        
+    </div>
+    
+    <div style="margin-top: 50px; padding: 20px; font-size: 0.8em; color: #888;">
+        &copy; 2025 Tool-Talker-Hub. All Rights Reserved.
+    </div>
+
 </body>
 </html>
