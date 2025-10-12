@@ -1,5 +1,13 @@
 let originalImage = null;
 
+function formatFileSize(bytes) {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     const imageInput = document.getElementById('imageInput');
     imageInput.addEventListener('change', previewImage);
@@ -11,16 +19,18 @@ function previewImage(event) {
         const reader = new FileReader();
         reader.onload = function(e) {
             originalImage = new Image();
+            originalImage.file = file; // Store file object for size calculation
             originalImage.onload = function() {
-                // Display original dimensions and size
-                const fileSizeKB = (file.size / 1024).toFixed(2);
+                // Display original dimensions and size (KB/MB)
+                const originalFileSize = formatFileSize(originalImage.file.size);
                 document.getElementById('originalDimensions').textContent = 
-                    `Original Size: ${originalImage.width} x ${originalImage.height} px (${fileSizeKB} KB)`;
+                    `Original Size: ${originalImage.width} x ${originalImage.height} px (${originalFileSize})`;
                     
                 // Set default resize values 
                 document.getElementById('widthInput').value = originalImage.width;
                 document.getElementById('heightInput').value = originalImage.height;
-                document.getElementById('qualityInput').value = 90; // Default high quality
+                document.getElementById('qualityInput').value = 90; 
+                document.getElementById('qualityValue').innerText = '90%';
             };
             originalImage.src = e.target.result;
         };
@@ -40,7 +50,7 @@ function resizeImage() {
     const format = document.getElementById('formatSelect').value;
     const qualityPercent = parseInt(document.getElementById('qualityInput').value);
     
-    // Calculate quality as a decimal (0.0 to 1.0)
+    // Calculate quality as a decimal (0.10 to 1.00) for toBlob()
     const quality = format === 'image/jpeg' ? (qualityPercent / 100) : 1.0; 
 
     if (isNaN(newWidth) || isNaN(newHeight) || newWidth < 10 || newHeight < 10) {
@@ -48,8 +58,8 @@ function resizeImage() {
         return;
     }
     
-    if (format === 'image/jpeg' && (isNaN(qualityPercent) || qualityPercent < 1 || qualityPercent > 100)) {
-        alert("JPG Quality 1% से 100% के बीच होनी चाहिए।");
+    if (format === 'image/jpeg' && (isNaN(qualityPercent) || qualityPercent < 10 || qualityPercent > 100)) {
+        alert("JPG Quality 10% से 100% के बीच होनी चाहिए।");
         return;
     }
 
@@ -73,15 +83,19 @@ function resizeImage() {
         const extension = format === 'image/jpeg' ? 'jpg' : 'png';
         
         a.href = url;
-        a.download = `resized_image_${newWidth}x${newHeight}_${qualityPercent || 100}.${extension}`; 
+        // Use quality in file name only for JPG
+        const namePart = format === 'image/jpeg' ? `q${qualityPercent}` : 'lossless';
+        a.download = `resized_image_${newWidth}x${newHeight}_${namePart}.${extension}`; 
         
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
         
-        const finalSizeKB = (blob.size / 1024).toFixed(2);
-        alert(`Image सफलतापूर्वक Resize/Compress हो गया है।\nफाइनल साइज़: ${finalSizeKB} KB\n(पुराना साइज़: ${(originalImage.size / 1024).toFixed(2)} KB)`);
+        const originalFileSize = formatFileSize(originalImage.file.size);
+        const finalFileSize = formatFileSize(blob.size);
+        
+        alert(`Image सफलतापूर्वक Resize/Compress हो गया है।\nफाइनल साइज़: ${finalFileSize}\n(पुराना साइज़: ${originalFileSize})`);
         
     }, format, quality); // Pass format and quality here
 }
