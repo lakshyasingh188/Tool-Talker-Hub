@@ -12,9 +12,13 @@ function previewImage(event) {
         reader.onload = function(e) {
             originalImage = new Image();
             originalImage.onload = function() {
-                // Set initial values to original dimensions
-                document.getElementById('widthInput').value = originalImage.width;
-                document.getElementById('heightInput').value = originalImage.height;
+                // Display original dimensions
+                document.getElementById('originalDimensions').textContent = 
+                    `Original Size: ${originalImage.width} x ${originalImage.height} px`;
+                    
+                // Set default resize values to common size (e.g., 500x500)
+                document.getElementById('widthInput').value = 500;
+                document.getElementById('heightInput').value = 500;
                 console.log(`Image loaded: ${originalImage.width}x${originalImage.height}`);
             };
             originalImage.src = e.target.result;
@@ -29,6 +33,7 @@ function resizeImage() {
         return;
     }
     
+    // Get the user-specified new dimensions
     const newWidth = parseInt(document.getElementById('widthInput').value);
     const newHeight = parseInt(document.getElementById('heightInput').value);
 
@@ -40,11 +45,11 @@ function resizeImage() {
     const canvas = document.getElementById('imageCanvas');
     const ctx = canvas.getContext('2d');
     
-    // Set canvas to new dimensions
+    // Set canvas to new dimensions provided by the user
     canvas.width = newWidth;
     canvas.height = newHeight;
     
-    // Draw the image onto the canvas, resizing it
+    // Draw the image onto the canvas, forcing it to the new size
     ctx.drawImage(originalImage, 0, 0, newWidth, newHeight);
 
     // Get the resized image data (as PNG for general quality)
