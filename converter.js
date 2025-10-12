@@ -1,9 +1,9 @@
+let imageToConvert = null;
+
 document.addEventListener('DOMContentLoaded', () => {
     const imageInput = document.getElementById('convertImageInput');
     imageInput.addEventListener('change', loadConvertImage);
 });
-
-let imageToConvert = null;
 
 function loadConvertImage(event) {
     const file = event.target.files[0];
@@ -13,6 +13,7 @@ function loadConvertImage(event) {
             imageToConvert = new Image();
             imageToConvert.src = e.target.result;
             imageToConvert.onload = () => {
+                console.log(`Image loaded: ${file.name}`);
                 alert(`Image loaded: ${file.name}`);
             }
         };
@@ -22,7 +23,7 @@ function loadConvertImage(event) {
 
 function convertImage() {
     if (!imageToConvert) {
-        alert("Please upload an image first.");
+        alert("पहले एक Image अपलोड करें।");
         return;
     }
     
@@ -52,5 +53,5 @@ function convertImage() {
         URL.revokeObjectURL(url);
     }, targetMimeType);
     
-    alert(`Image successfully converted to ${targetExtension} and downloaded!`);
+    alert(`Image सफलतापूर्वक ${targetExtension} में Convert हो गया है और डाउनलोड हो गया है!`);
 }
