@@ -1,4 +1,4 @@
-// Functionality relies on jspdf and html2canvas libraries linked in HTML
+// Functionality relies on jspdf library linked in HTML
 let uploadedFile = null;
 let uploadedFileType = '';
 
@@ -11,6 +11,16 @@ function loadFile(event) {
     uploadedFile = event.target.files[0];
     if (uploadedFile) {
         uploadedFileType = uploadedFile.type;
+        // Check if file type is not available and infer from extension
+        if (!uploadedFileType) {
+             const extension = uploadedFile.name.split('.').pop().toLowerCase();
+             if (extension === 'txt') {
+                 uploadedFileType = 'text/plain';
+             } else if (extension === 'docx' || extension === 'doc') {
+                 // For unsupported files, we just allow the selection
+                 uploadedFileType = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+             }
+        }
         alert(`File loaded: ${uploadedFile.name} (${uploadedFileType})`);
     }
 }
@@ -25,11 +35,26 @@ async function universalConvert() {
     const fileName = uploadedFile.name.substring(0, uploadedFile.name.lastIndexOf('.')) || 'converted_file';
     
     if (targetFormat === 'PDF') {
-        await convertToPDF(fileName);
+        if (uploadedFileType.startsWith('image/') || uploadedFileType === 'text/plain') {
+            await convertToPDF(fileName);
+        } else {
+            alert("माफ़ करें। PDF में कन्वर्ट करने के लिए केवल Image (JPG/PNG) या Text (TXT) फ़ाइलें ही समर्थित (supported) हैं। DOCX के लिए सर्वर की आवश्यकता होती है।");
+            return;
+        }
     } else if (targetFormat === 'TXT') {
-        await convertToTXT(fileName);
-    } else if (uploadedFileType.startsWith('image/')) {
-        await convertImageToFormat(fileName, targetFormat);
+        if (uploadedFileType === 'text/plain') {
+             await convertToTXT(fileName);
+        } else {
+            alert("TXT में कन्वर्ट करने के लिए केवल TXT फ़ाइल ही समर्थित है।");
+            return;
+        }
+    } else if (targetFormat === 'JPG' || targetFormat === 'PNG') {
+        if (uploadedFileType.startsWith('image/')) {
+            await convertImageToFormat(fileName, targetFormat);
+        } else {
+            alert("Image फ़ॉर्मेट में कन्वर्ट करने के लिए केवल Image फ़ाइल ही अपलोड करें।");
+            return;
+        }
     } else {
         alert("माफ़ करें, यह फ़ॉर्मेट अभी समर्थित (supported) नहीं है।");
         return;
@@ -39,7 +64,7 @@ async function universalConvert() {
 }
 
 
-// --- Conversion Functions ---
+// --- Conversion Functions (No major change here, just better usage) ---
 
 async function convertToPDF(fileName) {
     const reader = new FileReader();
@@ -48,20 +73,18 @@ async function convertToPDF(fileName) {
         reader.onload = function(e) {
             const img = new Image();
             img.onload = function() {
-                // Initialize jsPDF
+                // ... (Image to PDF logic remains the same)
                 const { jsPDF } = window.jspdf;
                 const doc = new jsPDF('p', 'pt', 'a4');
                 const a4Width = 595.28;
                 const a4Height = 841.89;
                 
-                // Calculate scale to fit width
                 const scale = a4Width / img.width;
                 const imgHeight = img.height * scale;
                 
                 let position = 0;
                 let heightLeft = imgHeight;
                 
-                // Add the image, creating new pages if necessary
                 doc.addImage(img, 'JPEG', 0, position, a4Width, imgHeight);
                 heightLeft -= a4Height;
                 
@@ -80,6 +103,7 @@ async function convertToPDF(fileName) {
     } 
     else if (uploadedFileType === 'text/plain') {
         reader.onload = function(e) {
+            // ... (TXT to PDF logic remains the same)
             const textContent = e.target.result;
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
@@ -91,22 +115,17 @@ async function convertToPDF(fileName) {
         };
         reader.readAsText(uploadedFile);
     }
-    // DOCX to PDF and other complex conversions require server-side code, which is not possible here.
 }
 
 async function convertToTXT(fileName) {
-    if (uploadedFileType === 'text/plain') {
-        // If it's already a text file, just save it with a new name (no conversion needed)
-        const a = document.createElement('a');
-        a.href = URL.createObjectURL(uploadedFile);
-        a.download = `${fileName}.txt`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(a.href);
-    } else {
-        alert("TXT में कन्वर्ट करने के लिए केवल TXT फ़ाइल ही अपलोड करें।");
-    }
+    // Simply download the uploaded TXT file with a potentially new name
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(uploadedFile);
+    a.download = `${fileName}.txt`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(a.href);
 }
 
 async function convertImageToFormat(fileName, targetFormat) {
@@ -114,6 +133,7 @@ async function convertImageToFormat(fileName, targetFormat) {
     reader.onload = function(e) {
         const img = new Image();
         img.onload = function() {
+            // ... (Image to Image conversion logic remains the same)
             const canvas = document.createElement('canvas');
             const ctx = canvas.getContext('2d');
             canvas.width = img.width;
@@ -124,7 +144,6 @@ async function convertImageToFormat(fileName, targetFormat) {
             let extension = targetFormat.toLowerCase();
             if (targetFormat === 'JPG') mimeType = 'image/jpeg';
             else if (targetFormat === 'PNG') mimeType = 'image/png';
-            else if (targetFormat === 'WEBP') mimeType = 'image/webp'; // Add WEBP option if needed
 
             canvas.toBlob(function(blob) {
                 const url = URL.createObjectURL(blob);
