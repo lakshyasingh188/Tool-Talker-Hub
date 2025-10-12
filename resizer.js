@@ -1,9 +1,9 @@
+let originalImage = null;
+
 document.addEventListener('DOMContentLoaded', () => {
     const imageInput = document.getElementById('imageInput');
     imageInput.addEventListener('change', previewImage);
 });
-
-let originalImage = null;
 
 function previewImage(event) {
     const file = event.target.files[0];
@@ -15,7 +15,7 @@ function previewImage(event) {
                 // Set initial values to original dimensions
                 document.getElementById('widthInput').value = originalImage.width;
                 document.getElementById('heightInput').value = originalImage.height;
-                alert(`Image loaded: ${originalImage.width}x${originalImage.height}`);
+                console.log(`Image loaded: ${originalImage.width}x${originalImage.height}`);
             };
             originalImage.src = e.target.result;
         };
@@ -25,7 +25,7 @@ function previewImage(event) {
 
 function resizeImage() {
     if (!originalImage) {
-        alert("Please upload an image first.");
+        alert("पहले एक Image अपलोड करें।");
         return;
     }
     
@@ -33,7 +33,7 @@ function resizeImage() {
     const newHeight = parseInt(document.getElementById('heightInput').value);
 
     if (isNaN(newWidth) || isNaN(newHeight) || newWidth <= 0 || newHeight <= 0) {
-        alert("Please enter valid width and height values.");
+        alert("Width और Height के सही मान (value) भरें।");
         return;
     }
 
@@ -59,5 +59,5 @@ function resizeImage() {
         URL.revokeObjectURL(url);
     }, 'image/png');
     
-    alert(`Image successfully resized to ${newWidth}x${newHeight} and downloaded!`);
+    alert(`Image सफलतापूर्वक ${newWidth}x${newHeight} पर Resize हो गया है और डाउनलोड हो गया है!`);
 }
