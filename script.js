@@ -1,9 +1,14 @@
+// --- STATE MANAGEMENT ---
+let workHistoryCount = 1;
+let educationCount = 1;
+let skillCount = 1;
+let languageCount = 1;
+
 document.addEventListener('DOMContentLoaded', () => {
-    // Check if the user is on the CV maker page before adding event listeners
     if (document.getElementById('cvPreview')) {
-        // Add default work, education, skill, and language entries for initial view
-        addWorkHistory();
-        addEducation();
+        // Add default entries for initial view (not manual to keep forms clean)
+        addWorkHistory(false);
+        addEducation(false);
         addSkill();
         addLanguage();
 
@@ -21,11 +26,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// --- STATE MANAGEMENT ---
-let workHistoryCount = 1;
-let educationCount = 1;
-let skillCount = 1;
-let languageCount = 1;
 
 // --- INPUT FIELD GENERATORS ---
 
@@ -38,30 +38,39 @@ function createInput(type, id, placeholder, containerId, value = '') {
     input.value = value;
     input.addEventListener('input', updateCV);
     
-    // Create a wrapper div for consistent styling and the remove button
     const wrapper = document.createElement('div');
     wrapper.className = 'input-wrapper';
-    wrapper.appendChild(input);
+    
+    // Create Label
+    const label = document.createElement('p');
+    label.textContent = placeholder.split('(')[0].trim() + ':';
+    wrapper.appendChild(label);
 
+
+    // Create Remove Button
     if (container.children.length > 0) {
         const removeBtn = document.createElement('button');
         removeBtn.textContent = 'Remove';
         removeBtn.className = 'remove-btn';
         removeBtn.onclick = function() {
             container.removeChild(wrapper);
-            updateCV(); // Update CV immediately after removing
+            updateCV();
         };
-        // Style the remove button
-        removeBtn.style.cssText = 'width: 15%; margin-top: 10px; padding: 5px; background-color: #f44336; font-size: 12px;';
-        input.style.width = '80%';
+        removeBtn.style.cssText = 'width: 15%; padding: 10px; background-color: #f44336; font-size: 14px; margin-left: 5px;';
+        input.style.width = 'calc(85% - 5px)';
         input.style.display = 'inline-block';
+        
+        wrapper.appendChild(input);
         wrapper.appendChild(removeBtn);
+    } else {
+        input.style.width = '100%';
+        wrapper.appendChild(input);
     }
     
     container.appendChild(wrapper);
 }
 
-function addWorkHistory() {
+function addWorkHistory(isManual = true) {
     const container = document.getElementById('workHistoryContainer');
     const index = workHistoryCount++;
 
@@ -69,15 +78,14 @@ function addWorkHistory() {
     div.className = 'work-entry';
     div.innerHTML = `
         <h4 style="margin-top: 15px; color: #444;">Job #${index}</h4>
-        <input type="text" id="jobTitle${index}" placeholder="Job Title (e.g., Senior Developer)">
-        <input type="text" id="company${index}" placeholder="Company Name">
-        <input type="text" id="duration${index}" placeholder="Duration (e.g., 2020 - Present)">
-        <textarea id="tasks${index}" placeholder="Key Responsibilities (one task per line)" rows="3"></textarea>
-        <button onclick="this.parentNode.remove(); updateCV()" style="width: 100%; padding: 8px; background-color: #f44336; margin-bottom: 10px;">Remove Job</button>
+        <p>Job Title:</p><input type="text" id="jobTitle${index}" placeholder="Senior Developer">
+        <p>Company Name:</p><input type="text" id="company${index}" placeholder="Company Name">
+        <p>Duration:</p><input type="text" id="duration${index}" placeholder="2020 - Present">
+        <p>Key Responsibilities (one per line):</p><textarea id="tasks${index}" placeholder="Key Responsibilities" rows="3"></textarea>
+        ${isManual ? `<button onclick="this.parentNode.remove(); updateCV()" style="width: 100%; padding: 8px; background-color: #f44336; margin-bottom: 10px;">Remove Job</button>` : ''}
         <hr style="border-top: 1px solid #eee; margin-top: 15px;">
     `;
 
-    // Re-add event listeners to the new inputs
     div.querySelectorAll('input, textarea').forEach(element => {
         element.addEventListener('input', updateCV);
     });
@@ -86,7 +94,7 @@ function addWorkHistory() {
     updateCV();
 }
 
-function addEducation() {
+function addEducation(isManual = true) {
     const container = document.getElementById('educationContainer');
     const index = educationCount++;
     
@@ -94,16 +102,15 @@ function addEducation() {
     div.className = 'edu-entry';
     div.innerHTML = `
         <h4 style="margin-top: 15px; color: #444;">Education #${index}</h4>
-        <input type="text" id="course${index}" placeholder="Course/Degree (e.g., B.Tech)">
-        <input type="text" id="university${index}" placeholder="University/College">
-        <input type="text" id="eduDuration${index}" placeholder="Duration (e.g., 2020-2024)">
-        <input type="text" id="subject${index}" placeholder="Subjects/Major (e.g., PCM/Computer Science)">
-        <input type="text" id="percentage${index}" placeholder="Percentage/CGPA">
-        <button onclick="this.parentNode.remove(); updateCV()" style="width: 100%; padding: 8px; background-color: #f44336; margin-bottom: 10px;">Remove Education</button>
+        <p>Course/Degree:</p><input type="text" id="course${index}" placeholder="B.Tech (Computer Science)">
+        <p>University/College:</p><input type="text" id="university${index}" placeholder="University/College Name">
+        <p>Duration:</p><input type="text" id="eduDuration${index}" placeholder="2020-2024">
+        <p>Subjects/Major:</p><input type="text" id="subject${index}" placeholder="Subjects/Major">
+        <p>Percentage/CGPA:</p><input type="text" id="percentage${index}" placeholder="Percentage/CGPA">
+        ${isManual ? `<button onclick="this.parentNode.remove(); updateCV()" style="width: 100%; padding: 8px; background-color: #f44336; margin-bottom: 10px;">Remove Education</button>` : ''}
         <hr style="border-top: 1px solid #eee; margin-top: 15px;">
     `;
 
-    // Re-add event listeners to the new inputs
     div.querySelectorAll('input, textarea').forEach(element => {
         element.addEventListener('input', updateCV);
     });
@@ -148,16 +155,15 @@ function updateCV() {
         }
         reader.readAsDataURL(photoInput.files[0]);
     } else {
-        // Fallback to Icon if no file selected
         placeholder.innerHTML = `<i class="fas fa-camera"></i>`;
     }
 
     // Career Objective & Summary
-    document.getElementById('cvObjective').innerHTML = `<p>${document.getElementById('objective').value.replace(/\n/g, '</p><p>') || 'Write your career objective here...'}</p>`;
-    document.getElementById('cvSummary').innerHTML = `<p>${document.getElementById('summary').value.replace(/\n/g, '</p><p>') || 'Write a brief professional summary here...'}</p>`;
+    document.getElementById('cvObjective').innerHTML = `<p>${document.getElementById('objective').value.replace(/\n/g, '</p><p>') || 'An enthusiastic and hardworking individual with the ability to adapt to new situations quickly...'}</p>`;
+    document.getElementById('cvSummary').innerHTML = `<p>${document.getElementById('summary').value.replace(/\n/g, '</p><p>') || 'A dedicated and detail-oriented individual with strong technical and analytical skills...'}</p>`;
     
     // Declaration
-    document.getElementById('cvDeclaration').innerHTML = `<p>${document.getElementById('declaration').value.replace(/\n/g, '</p><p>') || 'Write your declaration here...'}</p>`;
+    document.getElementById('cvDeclaration').innerHTML = `<p>${document.getElementById('declaration').value.replace(/\n/g, '</p><p>') || 'I look forward to being a part of a progressive organization...'}</p>`;
 
 
     // Skills
@@ -184,7 +190,7 @@ function updateCV() {
 
     // Work History
     const workHistorySection = document.getElementById('cvWorkHistory');
-    workHistorySection.innerHTML = ''; // Clear previous entries
+    workHistorySection.innerHTML = ''; 
     let workEntries = 0;
     
     document.getElementById('workHistoryContainer').querySelectorAll('.work-entry').forEach((entry, index) => {
@@ -214,7 +220,7 @@ function updateCV() {
 
     // Education
     const educationSection = document.getElementById('cvEducation');
-    educationSection.innerHTML = ''; // Clear previous entries
+    educationSection.innerHTML = ''; 
     let eduEntries = 0;
     
     document.getElementById('educationContainer').querySelectorAll('.edu-entry').forEach((entry, index) => {
@@ -242,7 +248,7 @@ function updateCV() {
     }
 }
 
-// --- PDF DOWNLOADER (The function that adds the border fix) ---
+// --- PDF DOWNLOADER ---
 
 function downloadPDF() {
     const cvElement = document.getElementById('cvPreview');
