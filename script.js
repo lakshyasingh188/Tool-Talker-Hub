@@ -1,309 +1,272 @@
-/**
- * Debounce function: Ensures function isn't called too frequently.
- * @param {function} func - The function to debounce.
- * @param {number} delay - The delay time (in ms).
- */
-function debounce(func, delay) {
-    let timeout;
-    return function() {
-        const context = this;
-        const args = arguments;
-        clearTimeout(timeout);
-        timeout = setTimeout(() => func.apply(context, args), delay);
-    };
-}
+document.addEventListener('DOMContentLoaded', () => {
+    // Check if the user is on the CV maker page before adding event listeners
+    if (document.getElementById('cvPreview')) {
+        // Add default work, education, skill, and language entries for initial view
+        addWorkHistory();
+        addEducation();
+        addSkill();
+        addLanguage();
 
-/**
- * Changes the theme color of the CV.
- * @param {string} colorCode - The new color code (e.g., '#004D40').
- */
-function changeThemeColor(colorCode) {
-    document.documentElement.style.setProperty('--primary-color', colorCode);
-}
+        // Add event listeners for all form elements to update CV
+        document.querySelectorAll('.input-form input, .input-form textarea, .input-form select').forEach(element => {
+            element.addEventListener('input', updateCV);
+        });
 
-/**
- * Dynamically adjusts the height of the CV page based on content to minimize gaps.
- */
-function adjustCVHeight() {
-    const cvOutput = document.getElementById('cv-output-area');
-    const leftCol = cvOutput.querySelector('.left-column');
-    const rightCol = cvOutput.querySelector('.right-column');
-    
-    // Measures the height of both columns
-    const leftHeight = leftCol.scrollHeight;
-    const rightHeight = rightCol.scrollHeight;
-    
-    // Sets the height of the CV output as the maximum height
-    const newHeight = Math.max(leftHeight, rightHeight);
-    
-    // Set CV container height (50px buffer for padding)
-    cvOutput.style.height = `${newHeight + 50}px`; 
-    
-    // Set Left column's min-height to equal the Right column's height 
-    leftCol.style.minHeight = `${rightHeight}px`; 
-}
+        // Add event listener for the theme color dropdown
+        document.getElementById('themeColor').addEventListener('change', updateTheme);
 
-
-/**
- * Fetches data from the form and updates the CV live.
- */
-function updateCV() {
-    // 0. Update theme color
-    const colorPicker = document.getElementById('colorPicker');
-    const selectedColor = colorPicker ? colorPicker.value : '#A52A2A'; 
-    changeThemeColor(selectedColor);
-    
-    // 1. Personal Details
-    const name = document.getElementById('nameInput').value.trim();
-    const phone = document.getElementById('phoneInput').value.trim();
-    const email = document.getElementById('emailInput').value.trim();
-    const address = document.getElementById('addressInput').value.trim();
-    
-    document.getElementById('cv-name').innerText = name;
-    
-    // 2. Profile Photo and Contact Details
-    const photoDisplay = document.getElementById('photo-display');
-    const initialsDisplay = document.getElementById('initials-display');
-    const photoInput = document.getElementById('photoInput');
-
-    let initials = '';
-    if (name) {
-        const parts = name.split(' ');
-        initials = parts.slice(0, 2).map(p => p.charAt(0).toUpperCase()).join('');
+        // Call once to load initial defaults and theme
+        updateCV();
+        updateTheme();
     }
-    initialsDisplay.innerText = initials;
+});
 
-    const hasPhoto = photoInput.files && photoInput.files[0];
+// --- STATE MANAGEMENT ---
+let workHistoryCount = 1;
+let educationCount = 1;
+let skillCount = 1;
+let languageCount = 1;
 
-    if (hasPhoto) {
+// --- INPUT FIELD GENERATORS ---
+
+function createInput(type, id, placeholder, containerId, value = '') {
+    const container = document.getElementById(containerId);
+    const input = document.createElement(type === 'textarea' ? 'textarea' : 'input');
+    input.type = type;
+    input.id = id;
+    input.placeholder = placeholder;
+    input.value = value;
+    input.addEventListener('input', updateCV);
+    
+    // Create a wrapper div for consistent styling and the remove button
+    const wrapper = document.createElement('div');
+    wrapper.className = 'input-wrapper';
+    wrapper.appendChild(input);
+
+    if (container.children.length > 0) {
+        const removeBtn = document.createElement('button');
+        removeBtn.textContent = 'Remove';
+        removeBtn.className = 'remove-btn';
+        removeBtn.onclick = function() {
+            container.removeChild(wrapper);
+            updateCV(); // Update CV immediately after removing
+        };
+        // Style the remove button
+        removeBtn.style.cssText = 'width: 15%; margin-top: 10px; padding: 5px; background-color: #f44336; font-size: 12px;';
+        input.style.width = '80%';
+        input.style.display = 'inline-block';
+        wrapper.appendChild(removeBtn);
+    }
+    
+    container.appendChild(wrapper);
+}
+
+function addWorkHistory() {
+    const container = document.getElementById('workHistoryContainer');
+    const index = workHistoryCount++;
+
+    const div = document.createElement('div');
+    div.className = 'work-entry';
+    div.innerHTML = `
+        <h4 style="margin-top: 15px; color: #444;">Job #${index}</h4>
+        <input type="text" id="jobTitle${index}" placeholder="Job Title (e.g., Senior Developer)">
+        <input type="text" id="company${index}" placeholder="Company Name">
+        <input type="text" id="duration${index}" placeholder="Duration (e.g., 2020 - Present)">
+        <textarea id="tasks${index}" placeholder="Key Responsibilities (one task per line)" rows="3"></textarea>
+        <button onclick="this.parentNode.remove(); updateCV()" style="width: 100%; padding: 8px; background-color: #f44336; margin-bottom: 10px;">Remove Job</button>
+        <hr style="border-top: 1px solid #eee; margin-top: 15px;">
+    `;
+
+    // Re-add event listeners to the new inputs
+    div.querySelectorAll('input, textarea').forEach(element => {
+        element.addEventListener('input', updateCV);
+    });
+
+    container.appendChild(div);
+    updateCV();
+}
+
+function addEducation() {
+    const container = document.getElementById('educationContainer');
+    const index = educationCount++;
+    
+    const div = document.createElement('div');
+    div.className = 'edu-entry';
+    div.innerHTML = `
+        <h4 style="margin-top: 15px; color: #444;">Education #${index}</h4>
+        <input type="text" id="course${index}" placeholder="Course/Degree (e.g., B.Tech)">
+        <input type="text" id="university${index}" placeholder="University/College">
+        <input type="text" id="eduDuration${index}" placeholder="Duration (e.g., 2020-2024)">
+        <input type="text" id="subject${index}" placeholder="Subjects/Major (e.g., PCM/Computer Science)">
+        <input type="text" id="percentage${index}" placeholder="Percentage/CGPA">
+        <button onclick="this.parentNode.remove(); updateCV()" style="width: 100%; padding: 8px; background-color: #f44336; margin-bottom: 10px;">Remove Education</button>
+        <hr style="border-top: 1px solid #eee; margin-top: 15px;">
+    `;
+
+    // Re-add event listeners to the new inputs
+    div.querySelectorAll('input, textarea').forEach(element => {
+        element.addEventListener('input', updateCV);
+    });
+
+    container.appendChild(div);
+    updateCV();
+}
+
+function addSkill() {
+    createInput('text', `skill${skillCount++}`, 'Skill (e.g., JavaScript, Python)', 'skillsContainer');
+}
+
+function addLanguage() {
+    createInput('text', `language${languageCount++}`, 'Language (e.g., Hindi, English)', 'languagesContainer');
+}
+
+
+// --- THEME COLOR UPDATER ---
+
+function updateTheme() {
+    const color = document.getElementById('themeColor').value;
+    document.documentElement.style.setProperty('--primary-color', color);
+}
+
+
+// --- CV PREVIEW UPDATER ---
+
+function updateCV() {
+    // Personal Details
+    document.getElementById('cvFullName').textContent = document.getElementById('fullName').value || 'Your Name';
+    document.getElementById('cvPhone').innerHTML = `<i class="fas fa-phone"></i> ${document.getElementById('phone').value || '+91 9876543210'}`;
+    document.getElementById('cvEmail').innerHTML = `<i class="fas fa-envelope"></i> ${document.getElementById('email').value || 'example@email.com'}`;
+    document.getElementById('cvAddress').innerHTML = `<i class="fas fa-map-marker-alt"></i> ${document.getElementById('address').value || 'Address, City, Country'}`;
+    
+    // Photo
+    const photoInput = document.getElementById('photo');
+    const placeholder = document.getElementById('profileImagePlaceholder');
+    if (photoInput.files && photoInput.files[0]) {
         const reader = new FileReader();
         reader.onload = function(e) {
-            photoDisplay.src = e.target.result;
-            photoDisplay.style.display = 'block';
-            initialsDisplay.style.display = 'none';
+            placeholder.innerHTML = `<img src="${e.target.result}" alt="Profile Photo">`;
         }
         reader.readAsDataURL(photoInput.files[0]);
-    } else if (name) {
-        photoDisplay.style.display = 'none';
-        initialsDisplay.style.display = 'flex';
     } else {
-        photoDisplay.style.display = 'none';
-        initialsDisplay.style.display = 'none';
+        // Fallback to Icon if no file selected
+        placeholder.innerHTML = `<i class="fas fa-camera"></i>`;
     }
 
-    // Update and show/hide contact lines
-    const updateContactLine = (input, displayId, lineId) => {
-        const value = input.trim();
-        const lineElement = document.getElementById(lineId);
-        
-        if (value) {
-            document.getElementById(displayId).innerText = value;
-            lineElement.style.display = 'flex';
-        } else {
-            lineElement.style.display = 'none';
+    // Career Objective & Summary
+    document.getElementById('cvObjective').innerHTML = `<p>${document.getElementById('objective').value.replace(/\n/g, '</p><p>') || 'Write your career objective here...'}</p>`;
+    document.getElementById('cvSummary').innerHTML = `<p>${document.getElementById('summary').value.replace(/\n/g, '</p><p>') || 'Write a brief professional summary here...'}</p>`;
+    
+    // Declaration
+    document.getElementById('cvDeclaration').innerHTML = `<p>${document.getElementById('declaration').value.replace(/\n/g, '</p><p>') || 'Write your declaration here...'}</p>`;
+
+
+    // Skills
+    const skillsList = document.getElementById('cvSkillsList');
+    skillsList.innerHTML = '';
+    document.getElementById('skillsContainer').querySelectorAll('input[type="text"]').forEach(input => {
+        if (input.value.trim()) {
+            const li = document.createElement('li');
+            li.textContent = input.value.trim();
+            skillsList.appendChild(li);
         }
-    };
-    updateContactLine(address, 'cv-address', 'cv-address-line');
-    updateContactLine(phone, 'cv-phone', 'cv-phone-line');
-    updateContactLine(email, 'cv-email', 'cv-email-line');
+    });
 
+    // Languages
+    const languagesList = document.getElementById('cvLanguagesList');
+    languagesList.innerHTML = '';
+    document.getElementById('languagesContainer').querySelectorAll('input[type="text"]').forEach(input => {
+        if (input.value.trim()) {
+            const li = document.createElement('li');
+            li.textContent = input.value.trim();
+            languagesList.appendChild(li);
+        }
+    });
+
+    // Work History
+    const workHistorySection = document.getElementById('cvWorkHistory');
+    workHistorySection.innerHTML = ''; // Clear previous entries
+    let workEntries = 0;
     
-    // 3. Career Objective
-    const objectiveInput = document.getElementById('objectiveInput').value.trim();
-    const objectiveOutput = document.getElementById('cv-objective-output');
-    
-    const defaultObjective = "An enthusiastic and hardworking individual with the ability to adapt to new situations quickly. Seeking a challenging position in a progressive organization to leverage acquired skills, contribute to company growth, and engage in continuous learning and professional development.";
-
-    objectiveOutput.innerText = objectiveInput || defaultObjective;
-    
-    // 4. Professional Summary (STATIC CONTENT)
-    const professionalSummaryOutput = document.getElementById('cv-professional-summary-output');
-    if (professionalSummaryOutput) {
-        professionalSummaryOutput.innerText = "A dedicated and detail-oriented individual with strong technical and analytical skills. Passionate about learning emerging technologies and applying innovative solutions to real-world challenges. Able to work both independently and collaboratively within a team to achieve organizational goals.";
-    }
-
-    
-    // 5. Skills list
-    const skillsInput = document.getElementById('skillsInput').value.trim();
-    const skillsOutput = document.getElementById('cv-skills-output');
-    skillsOutput.innerHTML = '';
-    
-    if (skillsInput) {
-        const skillList = skillsInput.split(',').map(s => s.trim()).filter(s => s.length > 0);
-        skillList.forEach(skill => {
-            skillsOutput.innerHTML += `<li>${skill}</li>`; 
-        });
-    } else {
-        skillsOutput.innerHTML = '<li style="font-size:0.9em; font-style: italic;">No skills added.</li>';
-    }
-
-    // 6. Languages list
-    const languagesInput = document.getElementById('languagesInput').value.trim();
-    const languagesOutput = document.getElementById('cv-languages-output');
-    languagesOutput.innerHTML = '';
-    
-    if (languagesInput) {
-        const langList = languagesInput
-            .split(/,|\n/)
-            .map(l => l.trim())
-            .filter(l => l.length > 0);
-            
-        langList.forEach(lang => {
-            languagesOutput.innerHTML += `<li>${lang}</li>`;
-        });
-    } else {
-        languagesOutput.innerHTML = '<li style="font-size:0.9em; font-style: italic;">No languages added.</li>';
-    }
-
-
-    // 7. Work History - Hide when empty
-    const workHistoryInput = document.getElementById('workHistoryInput').value.trim();
-    const workHistoryContainer = document.getElementById('work-history-main-container');
-    const workHistoryOutput = document.getElementById('cv-work-history-output');
-
-    if (workHistoryInput) {
-        workHistoryContainer.style.display = 'block';
+    document.getElementById('workHistoryContainer').querySelectorAll('.work-entry').forEach((entry, index) => {
+        const title = entry.querySelector(`#jobTitle${index + 1}`).value;
+        const company = entry.querySelector(`#company${index + 1}`).value;
+        const duration = entry.querySelector(`#duration${index + 1}`).value;
+        const tasksText = entry.querySelector(`#tasks${index + 1}`).value;
         
-        workHistoryOutput.innerHTML = `
-            <div class="job-item">
+        if (title.trim() || company.trim() || duration.trim() || tasksText.trim()) {
+            workEntries++;
+            const div = document.createElement('div');
+            div.className = 'job-item';
+            div.innerHTML = `
+                <h4 style="margin: 0; color: #444;">${title || 'Job Title'} at ${company || 'Company'}</h4>
+                <p style="margin: 0 0 5px 0; font-size: 0.85em; color: #555;">${duration || 'Duration'}</p>
                 <ul class="job-tasks">
-                    ${workHistoryInput.split('\n').map(line => line.trim()).filter(line => line.length > 0).map(line => `<li>${line}</li>`).join('')}
+                    ${tasksText.split('\n').map(task => task.trim() ? `<li>${task.trim()}</li>` : '').join('')}
                 </ul>
-            </div>
-        `;
-        
-    } else {
-        workHistoryContainer.style.display = 'none';
-    }
-
-
-    // 8. Education Details - with Passed/Appearing logic
-    const bachelorDegree = document.getElementById('bachelorDegree').value.trim();
-    const bachelorCollege = document.getElementById('bachelorCollege').value.trim();
-    const bachelorPercentage = document.getElementById('bachelorPercentage').value.trim();
-    const bachelorDuration = document.getElementById('bachelorDuration').value.trim();
-    const bachelorStatus = document.getElementById('bachelorStatus').value; 
-
-    const interSubjects = document.getElementById('interSubjects').value.trim();
-    const interBoard = document.getElementById('interBoard').value.trim();
-    const interPercentage = document.getElementById('interPercentage').value.trim();
-    const interStatus = document.getElementById('interStatus').value; 
-
-    const hscBoard = document.getElementById('hscBoard').value.trim();
-    const hscPercentage = document.getElementById('hscPercentage').value.trim();
-    const hscStatus = document.getElementById('hscStatus').value; 
-
-    const eduOutput = document.getElementById('cv-education-output');
-    eduOutput.innerHTML = ''; 
-    let hasEducation = false;
-
-    // Function to create detailed education item
-    const createDetailedEduItem = (title, status, lines) => {
-        const item = document.createElement('div');
-        item.classList.add('edu-item');
-        item.innerHTML += `<h4 class="edu-title">${title} <span class="edu-status">(${status})</span></h4>`;
-        
-        lines.forEach(line => {
-            if (line.value) {
-                item.innerHTML += `<p class="edu-line"><strong>${line.label}:</strong> ${line.value}</p>`;
-            }
-        });
-        eduOutput.appendChild(item);
-    };
-
-    // 1. Bachelor's Degree
-    if (bachelorDegree || bachelorCollege || bachelorPercentage) {
-        const title = bachelorDegree || "Bachelor's Degree";
-        createDetailedEduItem(title, bachelorStatus, [
-            { label: "University/College", value: bachelorCollege },
-            { label: "Percentage/CGPA", value: bachelorPercentage },
-            { label: "Duration", value: bachelorDuration }
-        ]);
-        hasEducation = true;
-    }
+            `;
+            workHistorySection.appendChild(div);
+        }
+    });
     
-    // 2. 12th / Intermediate
-    if (interBoard || interPercentage || interSubjects) {
-        const title = "12th / Intermediate";
-        createDetailedEduItem(title, interStatus, [
-            { label: "Subjects", value: interSubjects },
-            { label: "Board/School", value: interBoard },
-            { label: "Percentage/CGPA", value: interPercentage }
-        ]);
-        hasEducation = true;
+    if (workEntries === 0) {
+        workHistorySection.innerHTML = '<p class="filler-content">No work experience added yet. Please fill the form.</p>';
     }
 
-    // 3. 10th / Matriculation
-    if (hscBoard || hscPercentage) {
-        const title = "10th / Matriculation";
-        createDetailedEduItem(title, hscStatus, [
-            { label: "Board/School", value: hscBoard },
-            { label: "Percentage/CGPA", value: hscPercentage }
-        ]);
-        hasEducation = true;
-    }
+    // Education
+    const educationSection = document.getElementById('cvEducation');
+    educationSection.innerHTML = ''; // Clear previous entries
+    let eduEntries = 0;
+    
+    document.getElementById('educationContainer').querySelectorAll('.edu-entry').forEach((entry, index) => {
+        const course = entry.querySelector(`#course${index + 1}`).value;
+        const university = entry.querySelector(`#university${index + 1}`).value;
+        const duration = entry.querySelector(`#eduDuration${index + 1}`).value;
+        const subject = entry.querySelector(`#subject${index + 1}`).value;
+        const percentage = entry.querySelector(`#percentage${index + 1}`).value;
 
-    if (!hasEducation) {
-        eduOutput.innerHTML = '<p style="font-style: italic; color: #888; font-size:0.9em;">No education details added yet. Please fill the form.</p>';
+        if (course.trim() || university.trim() || duration.trim()) {
+            eduEntries++;
+            const div = document.createElement('div');
+            div.className = 'edu-item';
+            div.innerHTML = `
+                <p class="edu-title">${course || 'Course/Degree'} <span class="edu-status">(${duration || 'Duration'})</span></p>
+                <p class="edu-line">${university || 'University/College'}</p>
+                ${(subject.trim() || percentage.trim()) ? `<p class="edu-line">Subjects: ${subject || 'N/A'} | Percentage/CGPA: ${percentage || 'N/A'}</p>` : ''}
+            `;
+            educationSection.appendChild(div);
+        }
+    });
+    
+    if (eduEntries === 0) {
+        educationSection.innerHTML = '<p class="filler-content">No education details added yet. Please fill the form.</p>';
     }
-
-    // Dynamic Height Adjustment (Logic to remove white space)
-    setTimeout(adjustCVHeight, 100); 
 }
 
-// Debounced version of updateCV (300ms delay to prevent jumping while typing/selecting)
-const debouncedUpdateCV = debounce(updateCV, 300);
+// --- PDF DOWNLOADER (The function that adds the border fix) ---
 
-// Update CV once on page load
-document.addEventListener('DOMContentLoaded', updateCV);
+function downloadPDF() {
+    const cvElement = document.getElementById('cvPreview');
+    const filename = (document.getElementById('fullName').value.replace(/\s/g, '_') || 'My_Resume') + '.pdf';
 
-/**
- * PDF Generation Function.
- * FIX: Used 'mm' unit and stronger html2canvas settings to prevent cutting and enforce A4 size.
- */
-function prepareAndDownloadPDF() {
-    // Update CV with the latest data before generating
-    updateCV(); 
+    // 1. Add the special class to trigger PDF-specific CSS (including the border fix)
+    cvElement.classList.add('pdf-downloading');
 
-    // Target the CV output area (#cv-output-area) 
-    const element = document.getElementById('cv-output-area');
-    const name = document.getElementById('nameInput').value.trim() || 'My_Resume';
-    
-    const downloadBtn = document.getElementById('downloadBtn');
-    downloadBtn.innerText = "Generating PDF...";
-    downloadBtn.disabled = true;
-
-    // PDF Settings (FIXED to ensure full A4 and no cutting)
+    // 2. Configuration for html2pdf
     const opt = {
-        // Set margin to 10mm 
-        margin:       [10, 10, 10, 10], 
-        filename:     `${name.replace(/\s/g, '_')}_CV.pdf`, 
-        image:        { type: 'jpeg', quality: 0.98 },
-        html2canvas:  { 
-            scale: 2,           // Scale 2 for high quality
-            useCORS: true, 
-            scrollY: 0,
-            allowTaint: true,
-            // Explicitly set width matching A4 aspect ratio for better PDF rendering
-            width: 794,         
+        margin: [0, 0, 0, 0], // Remove default margin
+        filename: filename,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { 
+            scale: 4, // Higher scale for better resolution
+            logging: true, 
+            useCORS: true 
         },
-        // A4 size, in millimeter unit (This is key for accurate A4)
-        jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }, 
-        // Page break mode: Ensure sections don't cut in the middle
-        pagebreak: { mode: 'avoid-all' }
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
     };
 
-    // Add CSS class before download (defined in style.css)
-    element.classList.add('pdf-downloading');
-
-    // Generate and Download
-    html2pdf().from(element).set(opt).save().finally(function() {
-        // Remove CSS class after download
-        element.classList.remove('pdf-downloading');
-        
-        // Restore button state
-        downloadBtn.innerText = "📥 Download PDF";
-        downloadBtn.disabled = false;
-        alert('Your CV has been downloaded!');
+    // 3. Generate PDF
+    html2pdf().from(cvElement).set(opt).save().then(() => {
+        // 4. IMPORTANT: Remove the class after download is complete
+        cvElement.classList.remove('pdf-downloading');
     });
 }
