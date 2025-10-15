@@ -7,9 +7,10 @@ let languageCount = 1;
 document.addEventListener('DOMContentLoaded', () => {
     if (document.getElementById('cvPreview')) {
         // Add default entries for initial view (not manual to keep forms clean)
-        addWorkHistory(false);
-        // Default Education entries for a clean start
-        addEducation(false, 'B Tech', 'Appearing', 'Dr Ram Manohar Lohia Avadh University', '2024-2028', 'Computer Science'); 
+        addWorkHistory(false); // Default Job, will be hidden if empty
+
+        // Default Education entries
+        addEducation(false, 'B Tech', 'Appearing', 'Dr Ram Manohar Lohia Avadh University', '2024-2028', '', ''); // Subjects/Major is intentionally empty for Bachelor
         addEducation(false, '12th / Intermediate', 'Passed', 'UP Board/School', 'N/A', 'PCM', '60'); 
         addEducation(false, '10th / Matriculation', 'Passed', 'UP Board/School', 'N/A', 'N/A', '77'); 
         
@@ -31,7 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
-// --- INPUT FIELD GENERATORS (No changes needed here) ---
+// --- INPUT FIELD GENERATORS (Cleaned up for clarity) ---
 
 function createInput(type, id, placeholder, containerId, value = '') {
     const container = document.getElementById(containerId);
@@ -98,20 +99,31 @@ function addWorkHistory(isManual = true) {
     updateCV();
 }
 
-// *** UPDATED addEducation function to support default values ***
+// *** UPDATED addEducation function to dynamically show/hide subject field ***
 function addEducation(isManual = true, course = '', status = '', university = '', duration = '', subject = '', percentage = '') {
     const container = document.getElementById('educationContainer');
     const index = educationCount++;
     
+    // Check if the course is a Bachelor/Post-Graduate degree (for simplicity)
+    const isBachelor = (course.toLowerCase().includes('b tech') || course.toLowerCase().includes('bachelor') || course.toLowerCase().includes('m tech') || course.toLowerCase().includes('master'));
+
     const div = document.createElement('div');
     div.className = 'edu-entry';
+    
+    // Subjects/Major field will be hidden for Bachelor/Master Degrees
+    const subjectField = `
+        <div id="subjectWrapper${index}" style="display: ${isBachelor ? 'none' : 'block'};">
+            <p>Subjects/Major:</p><input type="text" id="subject${index}" placeholder="Subjects/Major" value="${subject}">
+        </div>
+    `;
+
     div.innerHTML = `
         <h4 style="margin-top: 15px; color: #444;">Education #${index}</h4>
-        <p>Course/Degree:</p><input type="text" id="course${index}" placeholder="B.Tech (Computer Science)" value="${course}">
-        <p>Status (Appearing/Passed):</p><input type="text" id="status${index}" placeholder="Passed" value="${status}">
+        <p>Course/Degree:</p><input type="text" id="course${index}" placeholder="B.Tech, 12th, 10th, etc." value="${course}">
+        <p>Status (Appearing/Passed):</p><input type="text" id="status${index}" placeholder="Passed/Appearing" value="${status}">
         <p>University/College:</p><input type="text" id="university${index}" placeholder="University/College Name" value="${university}">
         <p>Duration (e.g., 2020-2024):</p><input type="text" id="eduDuration${index}" placeholder="2020-2024" value="${duration}">
-        <p>Subjects/Major:</p><input type="text" id="subject${index}" placeholder="Subjects/Major" value="${subject}">
+        ${subjectField}
         <p>Percentage/CGPA:</p><input type="text" id="percentage${index}" placeholder="Percentage/CGPA" value="${percentage}">
         ${isManual ? `<button onclick="this.parentNode.remove(); updateCV()" style="width: 100%; padding: 8px; background-color: #f44336; margin-bottom: 10px;">Remove Education</button>` : ''}
         <hr style="border-top: 1px solid #eee; margin-top: 15px;">
@@ -120,6 +132,21 @@ function addEducation(isManual = true, course = '', status = '', university = ''
     div.querySelectorAll('input, textarea').forEach(element => {
         element.addEventListener('input', updateCV);
     });
+    
+    // Listener to dynamically hide/show subject field based on input
+    const courseInput = div.querySelector(`#course${index}`);
+    courseInput.addEventListener('input', function() {
+        const wrapper = document.getElementById(`subjectWrapper${index}`);
+        const currentCourse = this.value.toLowerCase();
+        
+        // Hide if it looks like a Bachelor/Master/Professional Degree
+        if (currentCourse.includes('b tech') || currentCourse.includes('bachelor') || currentCourse.includes('m tech') || currentCourse.includes('master')) {
+            wrapper.style.display = 'none';
+        } else {
+            wrapper.style.display = 'block';
+        }
+    });
+
 
     container.appendChild(div);
     updateCV();
@@ -142,7 +169,7 @@ function updateTheme() {
 }
 
 
-// --- CV PREVIEW UPDATER (UPDATED EDUCATION SECTION) ---
+// --- CV PREVIEW UPDATER (UPDATED Work History & Education Logic) ---
 
 function updateCV() {
     // Helper function to safely update the paragraph content
@@ -151,13 +178,13 @@ function updateCV() {
         document.getElementById(id).innerHTML = `<p>${value.replace(/\n/g, '</p><p>')}</p>`;
     };
     
-    // Personal Details
+    // Personal Details (No change)
     document.getElementById('cvFullName').textContent = document.getElementById('fullName').value || 'Your Name';
     document.getElementById('cvPhone').innerHTML = `<i class="fas fa-phone"></i> ${document.getElementById('phone').value || '+91 9876543210'}`;
     document.getElementById('cvEmail').innerHTML = `<i class="fas fa-envelope"></i> ${document.getElementById('email').value || 'example@email.com'}`;
     document.getElementById('cvAddress').innerHTML = `<i class="fas fa-map-marker-alt"></i> ${document.getElementById('address').value || 'Address, City, Country'}`;
     
-    // Photo
+    // Photo (No change)
     const photoInput = document.getElementById('photo');
     const placeholder = document.getElementById('profileImagePlaceholder');
     if (photoInput.files && photoInput.files[0]) {
@@ -170,13 +197,13 @@ function updateCV() {
         placeholder.innerHTML = `<i class="fas fa-camera"></i>`;
     }
 
-    // Career Objective, Summary, and Declaration are updated directly from textarea value
+    // Career Objective, Summary, and Declaration (No change)
     updateSection('cvObjective', document.getElementById('objective').value);
     updateSection('cvSummary', document.getElementById('summary').value);
     updateSection('cvDeclaration', document.getElementById('declaration').value);
 
 
-    // Skills
+    // Skills & Languages (No change)
     const skillsList = document.getElementById('cvSkillsList');
     skillsList.innerHTML = '';
     document.getElementById('skillsContainer').querySelectorAll('input[type="text"]').forEach(input => {
@@ -187,7 +214,6 @@ function updateCV() {
         }
     });
 
-    // Languages
     const languagesList = document.getElementById('cvLanguagesList');
     languagesList.innerHTML = '';
     document.getElementById('languagesContainer').querySelectorAll('input[type="text"]').forEach(input => {
@@ -198,16 +224,18 @@ function updateCV() {
         }
     });
 
-    // Work History
+    // *** WORK HISTORY LOGIC (Hide if empty) ***
     const workHistorySection = document.getElementById('cvWorkHistory');
+    const workHeader = document.getElementById('workHeader');
     workHistorySection.innerHTML = ''; 
     let workEntries = 0;
     
     document.getElementById('workHistoryContainer').querySelectorAll('.work-entry').forEach((entry, index) => {
-        const title = entry.querySelector(`#jobTitle${index + 1}`).value;
-        const company = entry.querySelector(`#company${index + 1}`).value;
-        const duration = entry.querySelector(`#duration${index + 1}`).value;
-        const tasksText = entry.querySelector(`#tasks${index + 1}`).value;
+        // Find inputs dynamically based on the current count.
+        const title = entry.querySelector(`#jobTitle${index + 1}`) ? entry.querySelector(`#jobTitle${index + 1}`).value : '';
+        const company = entry.querySelector(`#company${index + 1}`) ? entry.querySelector(`#company${index + 1}`).value : '';
+        const duration = entry.querySelector(`#duration${index + 1}`) ? entry.querySelector(`#duration${index + 1}`).value : '';
+        const tasksText = entry.querySelector(`#tasks${index + 1}`) ? entry.querySelector(`#tasks${index + 1}`).value : '';
         
         if (title.trim() || company.trim() || duration.trim() || tasksText.trim()) {
             workEntries++;
@@ -225,10 +253,18 @@ function updateCV() {
     });
     
     if (workEntries === 0) {
-        workHistorySection.innerHTML = '<p class="filler-content">No work experience added yet. Please fill the form.</p>';
+        // Hide the entire section if no work is entered
+        workHistorySection.style.display = 'none';
+        workHeader.style.display = 'none';
+    } else {
+        // Show the section if at least one valid entry exists
+        workHistorySection.style.display = 'block';
+        workHeader.style.display = 'block';
     }
+    // *** END WORK HISTORY LOGIC ***
 
-    // *** UPDATED Education Logic ***
+
+    // *** UPDATED Education Logic (Handles Subject field based on degree type) ***
     const educationSection = document.getElementById('cvEducation');
     educationSection.innerHTML = ''; 
     let eduEntries = 0;
@@ -238,33 +274,33 @@ function updateCV() {
         const status = entry.querySelector(`#status${index + 1}`) ? entry.querySelector(`#status${index + 1}`).value : '';
         const university = entry.querySelector(`#university${index + 1}`).value;
         const duration = entry.querySelector(`#eduDuration${index + 1}`).value;
-        const subject = entry.querySelector(`#subject${index + 1}`).value;
+        // Check if subject input exists (it will be missing if dynamically hidden)
+        const subjectInput = entry.querySelector(`#subject${index + 1}`);
+        const subject = (subjectInput && subjectInput.closest('div').style.display !== 'none') ? subjectInput.value : '';
         const percentage = entry.querySelector(`#percentage${index + 1}`).value;
-
+        
         if (course.trim() || university.trim() || duration.trim()) {
             eduEntries++;
             const div = document.createElement('div');
             div.className = 'edu-item';
             
             // Format 1: Course (Status)
-            // Example: B Tech (Appearing)
             let titleLine = `${course || 'Course/Degree'}`;
             if (status.trim()) {
                 titleLine += ` <span class="edu-status">(${status.trim()})</span>`;
             }
 
             // Format 2: University/College
-            // Example: Dr Ram Manohar Lohia Avadh University
             let universityLine = `${university || 'University/College'}`;
             
-            // Format 3: Details (Subjects, Percentage, Duration)
-            // Example: Duration: 2024-2028 | Subjects: PCM | Percentage/CGPA: 60
+            // Format 3: Details (Duration, Subjects, Percentage)
             let detailsLine = '';
             const details = [];
 
             if (duration.trim()) {
                 details.push(`Duration: ${duration.trim()}`);
             }
+            // Only push subject if it's NOT empty (and it was visible in the form)
             if (subject.trim()) {
                 details.push(`Subjects: ${subject.trim()}`);
             }
@@ -292,7 +328,7 @@ function updateCV() {
     // *** END Education Logic Update ***
 }
 
-// --- PDF DOWNLOADER (No changes needed here) ---
+// --- PDF DOWNLOADER (No change) ---
 
 function downloadPDF() {
     const cvElement = document.getElementById('cvPreview');
@@ -300,6 +336,8 @@ function downloadPDF() {
 
     // 1. Add the special class to trigger PDF-specific CSS (including the border fix)
     cvElement.classList.add('pdf-downloading');
+    
+    // NOTE: Work History visibility is already handled by updateCV() which runs before download.
 
     // 2. Configuration for html2pdf
     const opt = {
@@ -318,5 +356,7 @@ function downloadPDF() {
     html2pdf().from(cvElement).set(opt).save().then(() => {
         // 4. IMPORTANT: Remove the class after download is complete
         cvElement.classList.remove('pdf-downloading');
+        // Restore Work History visibility in the UI if it was hidden (in case user keeps editing)
+        updateCV();
     });
 }
