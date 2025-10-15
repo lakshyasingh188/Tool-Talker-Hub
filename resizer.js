@@ -13,7 +13,11 @@ function formatFileSize(bytes) {
 document.addEventListener('DOMContentLoaded', () => {
     const imageInput = document.getElementById('imageInput');
     imageInput.addEventListener('change', previewImage);
-    document.getElementById('formatSelect').dispatchEvent(new Event('change')); // Initialize quality group display
+    // Initialize quality group display based on default selection (JPG)
+    const formatSelect = document.getElementById('formatSelect');
+    if (formatSelect) {
+        formatSelect.dispatchEvent(new Event('change'));
+    }
 });
 
 function previewImage(event) {
