@@ -304,8 +304,12 @@ body {
     width: 210mm; /* A4 width */
     min-height: 297mm; /* Maintain A4 size even with less content */
     box-shadow: none; 
-    /* IMPORTANT FIX for all borders to show in PDF */
-    border: 3px solid #000 !important; 
+    
+    /* ************************************************************ */
+    /* *** FINAL FIX FOR MISSING RIGHT BORDER IN PDF DOWNLOAD *** */
+    /* ************************************************************ */
+    border: 3px solid #000 !important; /* चारों तरफ एक मजबूत बॉर्डर */
+    
     /* Ensure content visibility */
     overflow: hidden !important; 
 }
@@ -351,10 +355,13 @@ body {
         width: 210mm !important; 
         min-height: 297mm !important;
         margin: 0 !important;
-        padding: 0 !important; /* Changed to 0 to rely only on the border and internal padding */
+        padding: 0 !important; 
         box-shadow: none !important;
-        /* Line for the border: This is the second important fix */
-        border: 3px solid #000 !important; 
+        
+        /* ************************************************************ */
+        /* *** FINAL FIX FOR MISSING RIGHT BORDER IN BROWSER PRINT *** */
+        /* ************************************************************ */
+        border: 3px solid #000 !important; /* चारों तरफ एक मजबूत बॉर्डर */
     }
     
     .cv-grid {
