@@ -52,6 +52,7 @@
         /* Style for the range slider */
         #qualityInput { width: 95%; height: 25px; }
         .range-value { display: block; text-align: center; font-weight: bold; }
+        #estimatedSize { font-size: 0.9em; color: #004D40; margin-top: 5px; }
     </style>
 </head>
 <body>
@@ -59,12 +60,12 @@
     
     <div class="tool-container">
         <h1>Photo Resizer & Compressor</h1>
-        <p>Image अपलोड करें, Pixels (Width/Height) और Quality (MB/KB साइज़ कम करने के लिए) कंट्रोल करें।</p>
+        <p>Image अपलोड करें, Pixels (Width/Height) और Quality **(KB/MB साइज़ कंट्रोल करने के लिए)** एडजस्ट करें।</p>
         
         <div class="input-group">
             <label for="imageInput">1. Image अपलोड करें:</label>
             <input type="file" id="imageInput" accept="image/jpeg, image/png">
-            <p id="originalDimensions" style="font-size: 0.9em; color: #666; margin-top: 5px;">Original Size: -- x -- px (-- KB/MB)</p>
+            <p id="originalDetails" style="font-size: 0.9em; color: #666; margin-top: 5px;">Original Size: -- x -- px (-- KB/MB)</p>
         </div>
         
         <div class="input-group">
@@ -73,23 +74,24 @@
                 <option value="image/jpeg">JPG (Quality Control/Compression)</option>
                 <option value="image/png">PNG (Lossless, No Compression)</option>
             </select>
-            <p class="note">MB/KB साइज़ कम करने के लिए **JPG** चुनें और Quality Slider का उपयोग करें।</p>
+            <p class="note">KB/MB साइज़ कम करने के लिए **JPG** चुनें और Quality Slider का उपयोग करें।</p>
         </div>
 
         <div class="input-group" id="qualityGroup">
             <label for="qualityInput">3. JPG Quality (%):</label>
-            <input type="range" id="qualityInput" value="90" min="10" max="100" oninput="document.getElementById('qualityValue').innerText = this.value + '%'">
+            <input type="range" id="qualityInput" value="90" min="10" max="100" oninput="updateEstimatedSize()">
             <span id="qualityValue" class="range-value">90%</span>
+            <p id="estimatedSize" style="display:none;">Estimated Size: loading...</p>
         </div>
 
         <div class="input-group">
             <label for="widthInput">4. नई Width (pixels):</label>
-            <input type="number" id="widthInput" value="500" min="10">
+            <input type="number" id="widthInput" value="500" min="10" oninput="updateEstimatedSize()">
         </div>
 
         <div class="input-group">
             <label for="heightInput">5. नई Height (pixels):</label>
-            <input type="number" id="heightInput" value="500" min="10">
+            <input type="number" id="heightInput" value="500" min="10" oninput="updateEstimatedSize()">
         </div>
         
         <button id="resizeBtn" onclick="resizeImage()">Resize & Download</button>
@@ -98,15 +100,19 @@
 
     <script src="resizer.js"></script>
     <script>
-        // Toggle quality input based on format selection
+        // Toggle quality input and estimated size display based on format selection
         document.getElementById('formatSelect').addEventListener('change', function() {
             const qualityGroup = document.getElementById('qualityGroup');
-            // Show quality slider only for JPG
+            const estimatedSizeDisplay = document.getElementById('estimatedSize');
             if (this.value === 'image/jpeg') {
                 qualityGroup.style.display = 'block';
+                estimatedSizeDisplay.style.display = 'block';
             } else {
                 qualityGroup.style.display = 'none';
+                estimatedSizeDisplay.style.display = 'none';
             }
+            // Update estimated size when format changes
+            updateEstimatedSize();
         });
     </script>
 </body>
