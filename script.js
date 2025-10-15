@@ -10,18 +10,19 @@ document.addEventListener('DOMContentLoaded', () => {
         addWorkHistory(false); // Default Job, will be hidden if empty
 
         // Default Education entries
-        addEducation(false, 'B Tech', 'Appearing', 'Dr Ram Manohar Lohia Avadh University', '2024-2028', '', ''); // Subjects/Major is intentionally empty for Bachelor
-        addEducation(false, '12th / Intermediate', 'Passed', 'UP Board/School', 'N/A', 'PCM', '60'); 
-        addEducation(false, '10th / Matriculation', 'Passed', 'UP Board/School', 'N/A', 'N/A', '77'); 
+        addEducation(false, 'Bachelor', 'Appearing', 'Dr Ram Manohar Lohia Avadh University', '2024-2028', '', ''); // Subjects/Major is intentionally empty for Bachelor
+        addEducation(false, '12th', 'Passed', 'UP Board/School', 'N/A', 'PCM', '60'); 
+        addEducation(false, '10th', 'Passed', 'UP Board/School', 'N/A', 'N/A', '77'); 
         
         addSkill();
         addLanguage();
 
         // Add event listeners for all form elements to update CV
+        // NOTE: We need to re-attach listeners dynamically for generated elements
         document.querySelectorAll('.input-form input, .input-form textarea, .input-form select').forEach(element => {
             element.addEventListener('input', updateCV);
         });
-
+        
         // Add event listener for the theme color dropdown
         document.getElementById('themeColor').addEventListener('change', updateTheme);
 
@@ -32,7 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
-// --- INPUT FIELD GENERATORS (Cleaned up for clarity) ---
+// --- INPUT FIELD GENERATORS (No change) ---
 
 function createInput(type, id, placeholder, containerId, value = '') {
     const container = document.getElementById(containerId);
@@ -99,59 +100,6 @@ function addWorkHistory(isManual = true) {
     updateCV();
 }
 
-// *** UPDATED addEducation function to dynamically show/hide subject field ***
-function addEducation(isManual = true, course = '', status = '', university = '', duration = '', subject = '', percentage = '') {
-    const container = document.getElementById('educationContainer');
-    const index = educationCount++;
-    
-    // Check if the course is a Bachelor/Post-Graduate degree (for simplicity)
-    const isBachelor = (course.toLowerCase().includes('b tech') || course.toLowerCase().includes('bachelor') || course.toLowerCase().includes('m tech') || course.toLowerCase().includes('master'));
-
-    const div = document.createElement('div');
-    div.className = 'edu-entry';
-    
-    // Subjects/Major field will be hidden for Bachelor/Master Degrees
-    const subjectField = `
-        <div id="subjectWrapper${index}" style="display: ${isBachelor ? 'none' : 'block'};">
-            <p>Subjects/Major:</p><input type="text" id="subject${index}" placeholder="Subjects/Major" value="${subject}">
-        </div>
-    `;
-
-    div.innerHTML = `
-        <h4 style="margin-top: 15px; color: #444;">Education #${index}</h4>
-        <p>Course/Degree:</p><input type="text" id="course${index}" placeholder="B.Tech, 12th, 10th, etc." value="${course}">
-        <p>Status (Appearing/Passed):</p><input type="text" id="status${index}" placeholder="Passed/Appearing" value="${status}">
-        <p>University/College:</p><input type="text" id="university${index}" placeholder="University/College Name" value="${university}">
-        <p>Duration (e.g., 2020-2024):</p><input type="text" id="eduDuration${index}" placeholder="2020-2024" value="${duration}">
-        ${subjectField}
-        <p>Percentage/CGPA:</p><input type="text" id="percentage${index}" placeholder="Percentage/CGPA" value="${percentage}">
-        ${isManual ? `<button onclick="this.parentNode.remove(); updateCV()" style="width: 100%; padding: 8px; background-color: #f44336; margin-bottom: 10px;">Remove Education</button>` : ''}
-        <hr style="border-top: 1px solid #eee; margin-top: 15px;">
-    `;
-
-    div.querySelectorAll('input, textarea').forEach(element => {
-        element.addEventListener('input', updateCV);
-    });
-    
-    // Listener to dynamically hide/show subject field based on input
-    const courseInput = div.querySelector(`#course${index}`);
-    courseInput.addEventListener('input', function() {
-        const wrapper = document.getElementById(`subjectWrapper${index}`);
-        const currentCourse = this.value.toLowerCase();
-        
-        // Hide if it looks like a Bachelor/Master/Professional Degree
-        if (currentCourse.includes('b tech') || currentCourse.includes('bachelor') || currentCourse.includes('m tech') || currentCourse.includes('master')) {
-            wrapper.style.display = 'none';
-        } else {
-            wrapper.style.display = 'block';
-        }
-    });
-
-
-    container.appendChild(div);
-    updateCV();
-}
-
 function addSkill() {
     createInput('text', `skill${skillCount++}`, 'Skill (e.g., JavaScript, Python)', 'skillsContainer');
 }
@@ -160,6 +108,172 @@ function addLanguage() {
     createInput('text', `language${languageCount++}`, 'Language (e.g., Hindi, English)', 'languagesContainer');
 }
 
+
+// --- EDUCATION LOGIC (NEW DROPDOWN FUNCTION) ---
+
+function addEducationDropdown(isManual) {
+    // This is for the manual 'Add Education' button
+    const container = document.getElementById('educationContainer');
+    const index = educationCount++;
+    
+    const div = document.createElement('div');
+    div.className = 'edu-entry';
+    div.id = `eduEntry${index}`;
+
+    div.innerHTML = `
+        <h4 style="margin-top: 15px; color: #444;">Education #${index}</h4>
+        <p>Level:</p>
+        <select id="levelSelect${index}" style="width: 100%; padding: 10px; margin-bottom: 10px;" onchange="updateEducationForm(${index}, this.value)">
+            <option value="10th">10th / Matriculation</option>
+            <option value="12th">12th / Intermediate</option>
+            <option value="Bachelor" selected>Bachelor / Equivalent</option>
+            <option value="Others">Others (Master/Diploma)</option>
+        </select>
+        
+        <div id="dynamicEduFields${index}">
+            </div>
+
+        ${isManual ? `<button onclick="this.parentNode.remove(); updateCV()" style="width: 100%; padding: 8px; background-color: #f44336; margin-bottom: 10px;">Remove Education</button>` : ''}
+        <hr style="border-top: 1px solid #eee; margin-top: 15px;">
+    `;
+    
+    container.appendChild(div);
+    
+    // Automatically initialize with 'Bachelor' details
+    updateEducationForm(index, 'Bachelor');
+}
+
+// Function to generate and initialize education form fields (Used by both manual and default)
+function addEducation(isManual = false, courseType = 'Bachelor', status = 'Appearing', university = '', duration = '', subject = '', percentage = '') {
+    const container = document.getElementById('educationContainer');
+    const index = educationCount++;
+    
+    const div = document.createElement('div');
+    div.className = 'edu-entry';
+    div.id = `eduEntry${index}`;
+    
+    const isBachelorOrOther = (courseType === 'Bachelor' || courseType === 'Others');
+    
+    // Determine the course input type/value
+    let courseInputHtml = '';
+    if (courseType === 'Bachelor' || courseType === 'Others') {
+        courseInputHtml = `<input type="text" id="course${index}" placeholder="e.g., B.Tech (Computer Science)" value="${courseType === 'Bachelor' ? 'B.Tech' : courseType === 'Others' ? 'M.Tech / PGDCA' : ''}">`;
+    } else {
+         courseInputHtml = `<input type="text" id="course${index}" placeholder="e.g., 10th / Matriculation" value="${courseType}">`;
+    }
+
+    const subjectDisplay = (courseType === '10th' || courseType === '12th') ? 'block' : 'none';
+
+    div.innerHTML = `
+        <h4 style="margin-top: 15px; color: #444;">Education #${index}</h4>
+        <p>Course Level/Degree:</p>
+        ${courseInputHtml}
+        
+        <p>Status:</p>
+        <select id="statusSelect${index}" style="width: 100%; padding: 10px; margin-bottom: 10px;">
+            <option value="Appearing" ${status === 'Appearing' ? 'selected' : ''}>Appearing</option>
+            <option value="Passed" ${status === 'Passed' ? 'selected' : ''}>Passed</option>
+        </select>
+        
+        <p>University/Board/College:</p><input type="text" id="university${index}" placeholder="University/Board/College Name" value="${university}">
+        <p>Duration/Year (e.g., 2020-2024 or 2018):</p><input type="text" id="eduDuration${index}" placeholder="2020-2024" value="${duration}">
+        
+        <div id="subjectWrapper${index}" style="display: ${subjectDisplay};">
+            <p>Subjects/Major:</p><input type="text" id="subject${index}" placeholder="PCM, Commerce, N/A" value="${subject}">
+        </div>
+        
+        <p>Percentage/CGPA:</p><input type="text" id="percentage${index}" placeholder="Percentage/CGPA" value="${percentage}">
+        
+        ${isManual ? `<button onclick="this.parentNode.remove(); updateCV()" style="width: 100%; padding: 8px; background-color: #f44336; margin-bottom: 10px;">Remove Education</button>` : ''}
+        <hr style="border-top: 1px solid #eee; margin-top: 15px;">
+    `;
+
+    container.appendChild(div);
+
+    // Re-attach listeners to new inputs/selects
+    div.querySelectorAll('input, select').forEach(element => {
+        element.addEventListener('input', updateCV);
+        element.addEventListener('change', updateCV);
+    });
+    
+    // Add event listener for course input to hide/show subject field (only needed for manual entries like 'Others')
+    const courseInput = div.querySelector(`#course${index}`);
+    if(courseInput) {
+        courseInput.addEventListener('input', function() {
+             const currentCourse = this.value.toLowerCase();
+             const wrapper = document.getElementById(`subjectWrapper${index}`);
+             if (currentCourse.includes('10th') || currentCourse.includes('12th')) {
+                 wrapper.style.display = 'block';
+             } else {
+                 wrapper.style.display = 'none';
+             }
+        });
+    }
+
+    updateCV();
+}
+
+
+// Function to dynamically update form when dropdown changes (For manual add only)
+function updateEducationForm(index, level) {
+    const dynamicContainer = document.getElementById(`dynamicEduFields${index}`);
+    const eduEntry = document.getElementById(`eduEntry${index}`);
+    
+    let coursePlaceholder = '';
+    let subjectDisplay = 'none';
+    
+    if (level === '10th') {
+        coursePlaceholder = '10th / Matriculation';
+        subjectDisplay = 'block';
+    } else if (level === '12th') {
+        coursePlaceholder = '12th / Intermediate';
+        subjectDisplay = 'block';
+    } else if (level === 'Bachelor') {
+        coursePlaceholder = 'e.g., B.Tech (Computer Science), B.Sc.';
+    } else { // Others
+        coursePlaceholder = 'e.g., M.Tech, Diploma, PGDCA';
+    }
+    
+    // Clear previous dynamic fields (except the select box which is in the parent)
+    eduEntry.innerHTML = `
+        <h4 style="margin-top: 15px; color: #444;">Education #${index}</h4>
+        <p>Level:</p>
+        <select id="levelSelect${index}" style="width: 100%; padding: 10px; margin-bottom: 10px;" onchange="updateEducationForm(${index}, this.value)">
+            <option value="10th" ${level === '10th' ? 'selected' : ''}>10th / Matriculation</option>
+            <option value="12th" ${level === '12th' ? 'selected' : ''}>12th / Intermediate</option>
+            <option value="Bachelor" ${level === 'Bachelor' ? 'selected' : ''}>Bachelor / Equivalent</option>
+            <option value="Others" ${level === 'Others' ? 'selected' : ''}>Others (Master/Diploma)</option>
+        </select>
+        
+        <p>Course/Degree Name:</p><input type="text" id="course${index}" placeholder="${coursePlaceholder}" value="${level === '10th' ? '10th / Matriculation' : level === '12th' ? '12th / Intermediate' : ''}">
+        
+        <p>Status:</p>
+        <select id="statusSelect${index}" style="width: 100%; padding: 10px; margin-bottom: 10px;">
+            <option value="Appearing">Appearing</option>
+            <option value="Passed" selected>Passed</option>
+        </select>
+        
+        <p>University/Board/College:</p><input type="text" id="university${index}" placeholder="University/Board/College Name">
+        <p>Duration/Year (e.g., 2020-2024 or 2018):</p><input type="text" id="eduDuration${index}" placeholder="2020-2024 or 2018">
+        
+        <div id="subjectWrapper${index}" style="display: ${subjectDisplay};">
+            <p>Subjects/Major:</p><input type="text" id="subject${index}" placeholder="PCM, Commerce, N/A">
+        </div>
+        
+        <p>Percentage/CGPA:</p><input type="text" id="percentage${index}" placeholder="Percentage/CGPA">
+        
+        <button onclick="this.parentNode.remove(); updateCV()" style="width: 100%; padding: 8px; background-color: #f44336; margin-bottom: 10px;">Remove Education</button>
+        <hr style="border-top: 1px solid #eee; margin-top: 15px;">
+    `;
+    
+    // Re-attach listeners to new inputs/selects
+    eduEntry.querySelectorAll('input, select').forEach(element => {
+        element.addEventListener('input', updateCV);
+        element.addEventListener('change', updateCV);
+    });
+    
+    updateCV();
+}
 
 // --- THEME COLOR UPDATER ---
 
@@ -174,7 +288,6 @@ function updateTheme() {
 function updateCV() {
     // Helper function to safely update the paragraph content
     const updateSection = (id, value) => {
-        // Replace newlines with closing/opening paragraph tags for formatting
         document.getElementById(id).innerHTML = `<p>${value.replace(/\n/g, '</p><p>')}</p>`;
     };
     
@@ -231,7 +344,6 @@ function updateCV() {
     let workEntries = 0;
     
     document.getElementById('workHistoryContainer').querySelectorAll('.work-entry').forEach((entry, index) => {
-        // Find inputs dynamically based on the current count.
         const title = entry.querySelector(`#jobTitle${index + 1}`) ? entry.querySelector(`#jobTitle${index + 1}`).value : '';
         const company = entry.querySelector(`#company${index + 1}`) ? entry.querySelector(`#company${index + 1}`).value : '';
         const duration = entry.querySelector(`#duration${index + 1}`) ? entry.querySelector(`#duration${index + 1}`).value : '';
@@ -264,21 +376,32 @@ function updateCV() {
     // *** END WORK HISTORY LOGIC ***
 
 
-    // *** UPDATED Education Logic (Handles Subject field based on degree type) ***
+    // *** UPDATED Education Logic ***
     const educationSection = document.getElementById('cvEducation');
     educationSection.innerHTML = ''; 
     let eduEntries = 0;
     
     document.getElementById('educationContainer').querySelectorAll('.edu-entry').forEach((entry, index) => {
-        const course = entry.querySelector(`#course${index + 1}`).value;
-        const status = entry.querySelector(`#status${index + 1}`) ? entry.querySelector(`#status${index + 1}`).value : '';
-        const university = entry.querySelector(`#university${index + 1}`).value;
-        const duration = entry.querySelector(`#eduDuration${index + 1}`).value;
-        // Check if subject input exists (it will be missing if dynamically hidden)
-        const subjectInput = entry.querySelector(`#subject${index + 1}`);
-        const subject = (subjectInput && subjectInput.closest('div').style.display !== 'none') ? subjectInput.value : '';
-        const percentage = entry.querySelector(`#percentage${index + 1}`).value;
+        // Find inputs dynamically. Check for existence as manual entries use different structure
+        const course = entry.querySelector(`#course${index + 1}`) ? entry.querySelector(`#course${index + 1}`).value : '';
+        const status = entry.querySelector(`#statusSelect${index}`) ? entry.querySelector(`#statusSelect${index}`).value : 
+                       (entry.querySelector(`#status${index + 1}`) ? entry.querySelector(`#status${index + 1}`).value : ''); // Fallback for old style status input
+        const university = entry.querySelector(`#university${index + 1}`) ? entry.querySelector(`#university${index + 1}`).value : '';
+        const duration = entry.querySelector(`#eduDuration${index + 1}`) ? entry.querySelector(`#eduDuration${index + 1}`).value : '';
         
+        // Subject logic (check if input exists and is visible)
+        const subjectInput = entry.querySelector(`#subject${index + 1}`);
+        let subject = '';
+        if (subjectInput) {
+             // If subject input exists, check if its wrapper is visible (for manual entries)
+            const subjectWrapper = entry.querySelector(`#subjectWrapper${index}`);
+            if (!subjectWrapper || subjectWrapper.style.display !== 'none') {
+                 subject = subjectInput.value;
+            }
+        }
+        
+        const percentage = entry.querySelector(`#percentage${index + 1}`) ? entry.querySelector(`#percentage${index + 1}`).value : '';
+
         if (course.trim() || university.trim() || duration.trim()) {
             eduEntries++;
             const div = document.createElement('div');
@@ -300,7 +423,6 @@ function updateCV() {
             if (duration.trim()) {
                 details.push(`Duration: ${duration.trim()}`);
             }
-            // Only push subject if it's NOT empty (and it was visible in the form)
             if (subject.trim()) {
                 details.push(`Subjects: ${subject.trim()}`);
             }
@@ -337,7 +459,8 @@ function downloadPDF() {
     // 1. Add the special class to trigger PDF-specific CSS (including the border fix)
     cvElement.classList.add('pdf-downloading');
     
-    // NOTE: Work History visibility is already handled by updateCV() which runs before download.
+    // Ensure the CV preview is updated one last time before download
+    updateCV();
 
     // 2. Configuration for html2pdf
     const opt = {
@@ -356,7 +479,7 @@ function downloadPDF() {
     html2pdf().from(cvElement).set(opt).save().then(() => {
         // 4. IMPORTANT: Remove the class after download is complete
         cvElement.classList.remove('pdf-downloading');
-        // Restore Work History visibility in the UI if it was hidden (in case user keeps editing)
+        // Restore UI visibility in case work history was hidden
         updateCV();
     });
 }
