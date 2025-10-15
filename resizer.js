@@ -1,5 +1,7 @@
 let originalImage = null;
+let debounceTimer;
 
+// Helper function to show file size in KB or MB
 function formatFileSize(bytes) {
     if (bytes === 0) return '0 Bytes';
     const k = 1024;
@@ -11,6 +13,7 @@ function formatFileSize(bytes) {
 document.addEventListener('DOMContentLoaded', () => {
     const imageInput = document.getElementById('imageInput');
     imageInput.addEventListener('change', previewImage);
+    document.getElementById('formatSelect').dispatchEvent(new Event('change')); // Initialize quality group display
 });
 
 function previewImage(event) {
@@ -23,7 +26,7 @@ function previewImage(event) {
             originalImage.onload = function() {
                 // Display original dimensions and size (KB/MB)
                 const originalFileSize = formatFileSize(originalImage.file.size);
-                document.getElementById('originalDimensions').textContent = 
+                document.getElementById('originalDetails').textContent = 
                     `Original Size: ${originalImage.width} x ${originalImage.height} px (${originalFileSize})`;
                     
                 // Set default resize values 
@@ -31,12 +34,60 @@ function previewImage(event) {
                 document.getElementById('heightInput').value = originalImage.height;
                 document.getElementById('qualityInput').value = 90; 
                 document.getElementById('qualityValue').innerText = '90%';
+                
+                // Update estimated size after image loads
+                updateEstimatedSize();
             };
             originalImage.src = e.target.result;
         };
         reader.readAsDataURL(file);
     }
 }
+
+// Debounced function to update estimated size
+function updateEstimatedSize() {
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(() => {
+        if (!originalImage) {
+            document.getElementById('estimatedSize').textContent = 'Estimated Size: N/A (Image not loaded)';
+            return;
+        }
+
+        const newWidth = parseInt(document.getElementById('widthInput').value);
+        const newHeight = parseInt(document.getElementById('heightInput').value);
+        const format = document.getElementById('formatSelect').value;
+        const qualityPercent = parseInt(document.getElementById('qualityInput').value);
+        
+        document.getElementById('qualityValue').innerText = `${qualityPercent}%`;
+
+        if (format === 'image/png') {
+            document.getElementById('estimatedSize').textContent = 'Estimated Size: PNG (Lossless, size depends on content)';
+            return;
+        }
+
+        if (isNaN(newWidth) || isNaN(newHeight) || newWidth < 10 || newHeight < 10 || isNaN(qualityPercent) || qualityPercent < 10 || qualityPercent > 100) {
+            document.getElementById('estimatedSize').textContent = 'Estimated Size: Invalid inputs';
+            return;
+        }
+
+        // Create a temporary canvas for estimation
+        const tempCanvas = document.createElement('canvas');
+        const tempCtx = tempCanvas.getContext('2d');
+        tempCanvas.width = newWidth;
+        tempCanvas.height = newHeight;
+        tempCtx.drawImage(originalImage, 0, 0, newWidth, newHeight);
+
+        // Get blob with current settings
+        tempCanvas.toBlob(function(blob) {
+            if (blob) {
+                document.getElementById('estimatedSize').textContent = `Estimated Size: ${formatFileSize(blob.size)}`;
+            } else {
+                document.getElementById('estimatedSize').textContent = 'Estimated Size: Error calculating';
+            }
+        }, format, qualityPercent / 100);
+    }, 300); // Debounce for 300ms
+}
+
 
 function resizeImage() {
     if (!originalImage) {
@@ -71,7 +122,7 @@ function resizeImage() {
     canvas.height = newHeight;
     ctx.drawImage(originalImage, 0, 0, newWidth, newHeight);
 
-    // 3. Download using Blob
+    // 3. Download using Blob (where the compression happens)
     canvas.toBlob(function(blob) {
         if (!blob) {
             alert("Image बनाने में कोई समस्या आई। फ़ाइल टाइप जाँचें।");
@@ -97,5 +148,5 @@ function resizeImage() {
         
         alert(`Image सफलतापूर्वक Resize/Compress हो गया है।\nफाइनल साइज़: ${finalFileSize}\n(पुराना साइज़: ${originalFileSize})`);
         
-    }, format, quality); // Pass format and quality here
+    }, format, quality); // Pass format and quality here to control KB/MB size
 }
