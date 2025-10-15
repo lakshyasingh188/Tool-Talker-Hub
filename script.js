@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
-// --- INPUT FIELD GENERATORS ---
+// --- INPUT FIELD GENERATORS (No changes needed here) ---
 
 function createInput(type, id, placeholder, containerId, value = '') {
     const container = document.getElementById(containerId);
@@ -136,9 +136,15 @@ function updateTheme() {
 }
 
 
-// --- CV PREVIEW UPDATER ---
+// --- CV PREVIEW UPDATER (UPDATED SECTION) ---
 
 function updateCV() {
+    // Helper function to safely update the paragraph content
+    const updateSection = (id, value) => {
+        // Replace newlines with closing/opening paragraph tags for formatting
+        document.getElementById(id).innerHTML = `<p>${value.replace(/\n/g, '</p><p>')}</p>`;
+    };
+    
     // Personal Details
     document.getElementById('cvFullName').textContent = document.getElementById('fullName').value || 'Your Name';
     document.getElementById('cvPhone').innerHTML = `<i class="fas fa-phone"></i> ${document.getElementById('phone').value || '+91 9876543210'}`;
@@ -158,12 +164,10 @@ function updateCV() {
         placeholder.innerHTML = `<i class="fas fa-camera"></i>`;
     }
 
-    // Career Objective & Summary
-    document.getElementById('cvObjective').innerHTML = `<p>${document.getElementById('objective').value.replace(/\n/g, '</p><p>') || 'An enthusiastic and hardworking individual with the ability to adapt to new situations quickly...'}</p>`;
-    document.getElementById('cvSummary').innerHTML = `<p>${document.getElementById('summary').value.replace(/\n/g, '</p><p>') || 'A dedicated and detail-oriented individual with strong technical and analytical skills...'}</p>`;
-    
-    // Declaration
-    document.getElementById('cvDeclaration').innerHTML = `<p>${document.getElementById('declaration').value.replace(/\n/g, '</p><p>') || 'I look forward to being a part of a progressive organization...'}</p>`;
+    // Career Objective, Summary, and Declaration are updated directly from textarea value
+    updateSection('cvObjective', document.getElementById('objective').value);
+    updateSection('cvSummary', document.getElementById('summary').value);
+    updateSection('cvDeclaration', document.getElementById('declaration').value);
 
 
     // Skills
@@ -248,7 +252,7 @@ function updateCV() {
     }
 }
 
-// --- PDF DOWNLOADER ---
+// --- PDF DOWNLOADER (No changes needed here) ---
 
 function downloadPDF() {
     const cvElement = document.getElementById('cvPreview');
