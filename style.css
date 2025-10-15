@@ -290,7 +290,7 @@ body {
     min-height: 297mm; /* Maintain A4 size even with less content */
     box-shadow: none; 
     /* IMPORTANT FIX for Border to show in PDF */
-    border: 3px solid #000 !important; 
+    border: 3px solid #000 !important; /* <--- FIXED: Ensure border is always present */
     /* Ensure content visibility */
     overflow: hidden !important; 
 }
@@ -305,6 +305,9 @@ body {
 .cv-paper.pdf-downloading .right-column {
     padding-top: 10mm; 
     padding-bottom: 10mm;
+    /* Reduce side padding slightly for less crowding */
+    padding-left: 10mm; 
+    padding-right: 10mm;
 }
 .cv-paper.pdf-downloading .right-column h3 {
     /* This rule applies to Career Objective AND Professional Summary */
