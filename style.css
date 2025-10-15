@@ -29,20 +29,6 @@ body {
     align-items: flex-start;
 }
 
-.back-link { 
-    position: absolute;
-    top: 0;
-    left: 0;
-    padding: 10px 15px; 
-    background: #004D40; 
-    color: white; 
-    text-align: center; 
-    text-decoration: none; 
-    z-index: 10;
-    border-bottom-right-radius: 8px;
-    font-size: 1em;
-}
-
 .container {
     display: flex;
     width: 95%;
@@ -51,7 +37,6 @@ body {
     padding: 20px 0; 
     height: 100%; 
     box-sizing: border-box; 
-    margin-top: 50px; /* Space for the Back-link */
 }
 
 /* Input Form Styling (Left Column - Independent Scroll) */
@@ -75,12 +60,12 @@ body {
     flex: 2;
     background-color: #fff;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    width: 794px; /* A4 width approximation */
+    width: 794px; /* A4 width */
     height: auto; 
     border-radius: 4px;
     
     /* max-height given to avoid conflict with Dynamic Height Logic */
-    max-height: calc(100vh - 70px); /* Adjusted for back-link and padding */
+    max-height: calc(100vh - 40px); 
     overflow-y: auto; /* CV itself scrolls if content is long */
     overflow-x: hidden; 
 }
@@ -304,12 +289,8 @@ body {
     width: 210mm; /* A4 width */
     min-height: 297mm; /* Maintain A4 size even with less content */
     box-shadow: none; 
-    
-    /* ************************************************************ */
-    /* *** FINAL FIX FOR MISSING RIGHT BORDER IN PDF DOWNLOAD *** */
-    /* ************************************************************ */
-    border: 3px solid #000 !important; /* चारों तरफ एक मजबूत बॉर्डर */
-    
+    /* IMPORTANT FIX for Border to show in PDF */
+    border: 3px solid #000 !important; 
     /* Ensure content visibility */
     overflow: hidden !important; 
 }
@@ -355,13 +336,10 @@ body {
         width: 210mm !important; 
         min-height: 297mm !important;
         margin: 0 !important;
-        padding: 0 !important; 
+        padding: 10mm !important; 
         box-shadow: none !important;
-        
-        /* ************************************************************ */
-        /* *** FINAL FIX FOR MISSING RIGHT BORDER IN BROWSER PRINT *** */
-        /* ************************************************************ */
-        border: 3px solid #000 !important; /* चारों तरफ एक मजबूत बॉर्डर */
+        /* Line for the border */
+        border: 3px solid #000 !important; 
     }
     
     .cv-grid {
