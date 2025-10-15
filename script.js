@@ -108,17 +108,19 @@ function updateCV() {
     updateContactLine(email, 'cv-email', 'cv-email-line');
 
     
-    // 3. Career Objective
+    // 3. Career Objective (Updated Default Text)
     const objectiveInput = document.getElementById('objectiveInput').value.trim();
     const objectiveOutput = document.getElementById('cv-objective-output');
     
-    const defaultObjective = "An enthusiastic and hardworking individual with the ability to adapt to new situations quickly. Seeking a challenging position in a progressive organization to leverage acquired skills, contribute to company growth, and engage in continuous learning and professional development.";
+    // NEW DEFAULT CAREER OBJECTIVE TEXT
+    const defaultObjective = "A highly motivated and enthusiastic individual, eager to learn and grow in the field of web development and technology. I aim to work in a dynamic organization where I can apply my technical knowledge, enhance my skills through continuous learning, and contribute effectively towards achieving the company’s goals. My objective is to build a successful career through dedication, creativity, and consistent performance.";
 
     objectiveOutput.innerText = objectiveInput || defaultObjective;
     
-    // 4. Professional Summary (STATIC CONTENT)
+    // 4. Professional Summary (STATIC CONTENT - as requested)
     const professionalSummaryOutput = document.getElementById('cv-professional-summary-output');
     if (professionalSummaryOutput) {
+        // PROFESSIONAL SUMMARY TEXT
         professionalSummaryOutput.innerText = "A dedicated and detail-oriented individual with strong technical and analytical skills. Passionate about learning emerging technologies and applying innovative solutions to real-world challenges. Able to work both independently and collaboratively within a team to achieve organizational goals.";
     }
 
@@ -246,6 +248,14 @@ function updateCV() {
     if (!hasEducation) {
         eduOutput.innerHTML = '<p style="font-style: italic; color: #888; font-size:0.9em;">No education details added yet. Please fill the form.</p>';
     }
+    
+    // 9. Declaration (Updated Static Content)
+    const declarationOutput = document.getElementById('cv-declaration-output');
+    if (declarationOutput) {
+         // NEW DECLARATION TEXT
+        declarationOutput.innerHTML = `<p id="cv-summary-para2">I hereby declare that all the information mentioned above is true and correct to the best of my knowledge and belief. I take full responsibility for the accuracy of the details provided. I assure you that I will carry out my duties with full sincerity, honesty, and commitment if given an opportunity to be a part of your esteemed organization. I am confident that my abilities and enthusiasm will be valuable in contributing to the company’s growth and success.</p>`;
+    }
+
 
     // Dynamic Height Adjustment (Logic to remove white space)
     setTimeout(adjustCVHeight, 100); 
@@ -276,10 +286,10 @@ function prepareAndDownloadPDF() {
     // PDF Settings (FIXED to ensure full A4 and no cutting)
     const opt = {
         // Set margin to 10mm 
-        margin:       [10, 10, 10, 10], 
-        filename:     `${name.replace(/\s/g, '_')}_CV.pdf`, 
-        image:        { type: 'jpeg', quality: 0.98 },
-        html2canvas:  { 
+        margin: [10, 10, 10, 10], 
+        filename: `${name.replace(/\s/g, '_')}_CV.pdf`, 
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { 
             scale: 2,           // Scale 2 for high quality
             useCORS: true, 
             scrollY: 0,
@@ -288,7 +298,7 @@ function prepareAndDownloadPDF() {
             width: 794,         
         },
         // A4 size, in millimeter unit (This is key for accurate A4)
-        jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }, 
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }, 
         // Page break mode: Ensure sections don't cut in the middle
         pagebreak: { mode: 'avoid-all' }
     };
