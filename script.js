@@ -8,7 +8,11 @@ document.addEventListener('DOMContentLoaded', () => {
     if (document.getElementById('cvPreview')) {
         // Add default entries for initial view (not manual to keep forms clean)
         addWorkHistory(false);
-        addEducation(false);
+        // Default Education entries for a clean start
+        addEducation(false, 'B Tech', 'Appearing', 'Dr Ram Manohar Lohia Avadh University', '2024-2028', 'Computer Science'); 
+        addEducation(false, '12th / Intermediate', 'Passed', 'UP Board/School', 'N/A', 'PCM', '60'); 
+        addEducation(false, '10th / Matriculation', 'Passed', 'UP Board/School', 'N/A', 'N/A', '77'); 
+        
         addSkill();
         addLanguage();
 
@@ -94,7 +98,8 @@ function addWorkHistory(isManual = true) {
     updateCV();
 }
 
-function addEducation(isManual = true) {
+// *** UPDATED addEducation function to support default values ***
+function addEducation(isManual = true, course = '', status = '', university = '', duration = '', subject = '', percentage = '') {
     const container = document.getElementById('educationContainer');
     const index = educationCount++;
     
@@ -102,11 +107,12 @@ function addEducation(isManual = true) {
     div.className = 'edu-entry';
     div.innerHTML = `
         <h4 style="margin-top: 15px; color: #444;">Education #${index}</h4>
-        <p>Course/Degree:</p><input type="text" id="course${index}" placeholder="B.Tech (Computer Science)">
-        <p>University/College:</p><input type="text" id="university${index}" placeholder="University/College Name">
-        <p>Duration:</p><input type="text" id="eduDuration${index}" placeholder="2020-2024">
-        <p>Subjects/Major:</p><input type="text" id="subject${index}" placeholder="Subjects/Major">
-        <p>Percentage/CGPA:</p><input type="text" id="percentage${index}" placeholder="Percentage/CGPA">
+        <p>Course/Degree:</p><input type="text" id="course${index}" placeholder="B.Tech (Computer Science)" value="${course}">
+        <p>Status (Appearing/Passed):</p><input type="text" id="status${index}" placeholder="Passed" value="${status}">
+        <p>University/College:</p><input type="text" id="university${index}" placeholder="University/College Name" value="${university}">
+        <p>Duration (e.g., 2020-2024):</p><input type="text" id="eduDuration${index}" placeholder="2020-2024" value="${duration}">
+        <p>Subjects/Major:</p><input type="text" id="subject${index}" placeholder="Subjects/Major" value="${subject}">
+        <p>Percentage/CGPA:</p><input type="text" id="percentage${index}" placeholder="Percentage/CGPA" value="${percentage}">
         ${isManual ? `<button onclick="this.parentNode.remove(); updateCV()" style="width: 100%; padding: 8px; background-color: #f44336; margin-bottom: 10px;">Remove Education</button>` : ''}
         <hr style="border-top: 1px solid #eee; margin-top: 15px;">
     `;
@@ -136,7 +142,7 @@ function updateTheme() {
 }
 
 
-// --- CV PREVIEW UPDATER (UPDATED SECTION) ---
+// --- CV PREVIEW UPDATER (UPDATED EDUCATION SECTION) ---
 
 function updateCV() {
     // Helper function to safely update the paragraph content
@@ -222,13 +228,14 @@ function updateCV() {
         workHistorySection.innerHTML = '<p class="filler-content">No work experience added yet. Please fill the form.</p>';
     }
 
-    // Education
+    // *** UPDATED Education Logic ***
     const educationSection = document.getElementById('cvEducation');
     educationSection.innerHTML = ''; 
     let eduEntries = 0;
     
     document.getElementById('educationContainer').querySelectorAll('.edu-entry').forEach((entry, index) => {
         const course = entry.querySelector(`#course${index + 1}`).value;
+        const status = entry.querySelector(`#status${index + 1}`) ? entry.querySelector(`#status${index + 1}`).value : '';
         const university = entry.querySelector(`#university${index + 1}`).value;
         const duration = entry.querySelector(`#eduDuration${index + 1}`).value;
         const subject = entry.querySelector(`#subject${index + 1}`).value;
@@ -238,10 +245,42 @@ function updateCV() {
             eduEntries++;
             const div = document.createElement('div');
             div.className = 'edu-item';
+            
+            // Format 1: Course (Status)
+            // Example: B Tech (Appearing)
+            let titleLine = `${course || 'Course/Degree'}`;
+            if (status.trim()) {
+                titleLine += ` <span class="edu-status">(${status.trim()})</span>`;
+            }
+
+            // Format 2: University/College
+            // Example: Dr Ram Manohar Lohia Avadh University
+            let universityLine = `${university || 'University/College'}`;
+            
+            // Format 3: Details (Subjects, Percentage, Duration)
+            // Example: Duration: 2024-2028 | Subjects: PCM | Percentage/CGPA: 60
+            let detailsLine = '';
+            const details = [];
+
+            if (duration.trim()) {
+                details.push(`Duration: ${duration.trim()}`);
+            }
+            if (subject.trim()) {
+                details.push(`Subjects: ${subject.trim()}`);
+            }
+            if (percentage.trim()) {
+                details.push(`Percentage/CGPA: ${percentage.trim()}`);
+            }
+            
+            if (details.length > 0) {
+                 detailsLine = `<p class="edu-line">${details.join(' | ')}</p>`;
+            }
+
+
             div.innerHTML = `
-                <p class="edu-title">${course || 'Course/Degree'} <span class="edu-status">(${duration || 'Duration'})</span></p>
-                <p class="edu-line">${university || 'University/College'}</p>
-                ${(subject.trim() || percentage.trim()) ? `<p class="edu-line">Subjects: ${subject || 'N/A'} | Percentage/CGPA: ${percentage || 'N/A'}</p>` : ''}
+                <p class="edu-title">${titleLine}</p>
+                <p class="edu-line">${universityLine}</p>
+                ${detailsLine}
             `;
             educationSection.appendChild(div);
         }
@@ -250,6 +289,7 @@ function updateCV() {
     if (eduEntries === 0) {
         educationSection.innerHTML = '<p class="filler-content">No education details added yet. Please fill the form.</p>';
     }
+    // *** END Education Logic Update ***
 }
 
 // --- PDF DOWNLOADER (No changes needed here) ---
