@@ -36,10 +36,10 @@
             <input type="text" id="address" placeholder="Address (e.g., City, Country)">
 
             <h2>Career Objective</h2>
-            <textarea id="objective" placeholder="Write your career objective here..."></textarea>
+            <textarea id="objective">A highly motivated and enthusiastic individual, eager to learn and grow in the field of web development and technology. I aim to work in a dynamic organization where I can apply my technical knowledge, enhance my skills through continuous learning, and contribute effectively towards achieving the company’s goals. My objective is to build a successful career through dedication, creativity, and consistent performance.</textarea>
 
             <h2>Professional Summary</h2>
-            <textarea id="summary" placeholder="Write a brief professional summary here..."></textarea>
+            <textarea id="summary">A dedicated and detail-oriented individual with strong technical and analytical skills. Passionate about learning emerging technologies and applying innovative solutions to real-world challenges. Able to work both independently and collaboratively within a team to achieve organizational goals.</textarea>
 
             <h2>Work History <button onclick="addWorkHistory(true)" style="width: auto; padding: 5px 10px; margin-top: 5px;">+ Add Job</button></h2>
             <div id="workHistoryContainer">
@@ -58,7 +58,7 @@
                 </div>
             
             <h2>Declaration</h2>
-            <textarea id="declaration" placeholder="Write your declaration here..."></textarea>
+            <textarea id="declaration">I hereby declare that all the information mentioned above is true and correct to the best of my knowledge and belief. I take full responsibility for the accuracy of the details provided. I assure you that I will carry out my duties with full sincerity, honesty, and commitment if given an opportunity to be a part of your esteemed organization. I am confident that my abilities and enthusiasm will be valuable in contributing to the company’s growth and success.</textarea>
 
             <button onclick="downloadPDF()">Download CV as PDF</button>
             <p class="note">सभी इनपुट फ़ील्ड में बदलाव करते ही CV में अपने आप अपडेट हो जाएंगे।</p>
@@ -101,13 +101,11 @@
                     
                     <h3 id="objectiveHeader">Career Objective</h3>
                     <div class="summary-section" id="cvObjective">
-                        <p>An enthusiastic and hardworking individual with the ability to adapt to new situations quickly...</p>
-                    </div>
+                        </div>
 
                     <h3 id="summaryHeader">Professional Summary</h3>
                     <div class="summary-section" id="cvSummary">
-                        <p>A dedicated and detail-oriented individual with strong technical and analytical skills...</p>
-                    </div>
+                        </div>
 
                     <h3 id="workHeader">Work Experience</h3>
                     <div class="work-history-section" id="cvWorkHistory">
@@ -121,8 +119,7 @@
 
                     <h3 id="declarationHeader">Declaration</h3>
                     <div class="filler-content" id="cvDeclaration">
-                        <p>I look forward to being a part of a progressive organization...</p>
-                    </div>
+                        </div>
                 </div>
             </div>
         </div>
