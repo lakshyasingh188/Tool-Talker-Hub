@@ -9,9 +9,11 @@
     <style>
         /* Common Styles */
         :root {
-            --primary-color: #004D40;
+            --primary-color: #004D40; /* Default Green */
             --secondary-color: #f4f4f9;
             --text-color: #333;
+            --template-bg: #fff8e1; /* Default Hindu/Beige */
+            --template-accent: #d8572a;
         }
 
         body {
@@ -31,7 +33,22 @@
             border-radius: 8px;
         }
 
-        /* Form Styles */
+        /* --- Customization Panel --- */
+        .customization-panel {
+            background: #f0f0f0;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+        
+        .customization-panel label {
+            font-weight: bold;
+        }
+        
+        /* Form Styles (Unchanged) */
         .input-form h1 {
             color: var(--primary-color);
             text-align: center;
@@ -65,15 +82,6 @@
             border-radius: 5px;
             box-sizing: border-box;
         }
-
-        .form-group textarea {
-            resize: vertical;
-        }
-        
-        #photo-input-group {
-            text-align: center;
-            grid-column: 1 / -1; /* Full width for photo input */
-        }
         
         .button-group {
             text-align: center;
@@ -96,46 +104,37 @@
             margin-right: 15px;
         }
 
-        #generate-btn:hover {
-            background-color: #00695C;
-        }
-
         #download-btn {
             background-color: #2196F3;
             color: white;
-            display: none; /* Hide until biodata is generated */
+            display: none;
         }
 
-        #download-btn:hover {
-            background-color: #1976D2;
-        }
-        
-        /* Biodata Output Styles (Based on Screenshot) */
+        /* Biodata Output Styles */
         #biodata-output {
-            display: none; /* Hide until generated */
+            display: none; 
             margin-top: 40px;
             padding: 0;
             border: 1px solid #ddd;
-            background: #fff8e1; /* Light beige background */
+            background: var(--template-bg); /* Uses selected background color */
             position: relative;
             overflow: hidden;
         }
 
-        /* Header (Ganesha and Background) */
         .biodata-header {
             text-align: center;
             padding: 20px 0;
-            background: #ffffff; /* White section for header */
+            background: #ffffff; 
             position: relative;
-            border-bottom: 5px double #f1e0c5;
+            border-bottom: 5px double var(--template-accent); /* Uses selected accent color */
         }
         
         .biodata-header h2 {
             margin: 0;
             font-size: 1.8em;
-            color: #d8572a; /* Saffron/Orange color for heading */
+            color: var(--template-accent); /* Uses selected accent color */
             letter-spacing: 1px;
-            font-family: serif; /* Classic font style */
+            font-family: serif; 
         }
 
         .biodata-header img.ganesha-icon {
@@ -143,7 +142,7 @@
             margin-bottom: 10px;
         }
         
-        /* Main Content Grid */
+        /* Main Content Grid (Unchanged) */
         .biodata-content {
             display: flex;
             padding: 30px;
@@ -170,12 +169,8 @@
 
         .detail-row span:first-child {
             font-weight: bold;
-            width: 180px; /* Aligns the colons */
+            width: 180px; 
             min-width: 180px;
-        }
-
-        .detail-row span:last-child {
-            flex-grow: 1;
         }
 
         /* Photo Section */
@@ -188,8 +183,8 @@
         #biodata-photo {
             width: 180px;
             height: 220px;
-            border: 4px solid #d8572a;
-            border-radius: 50%; /* Circular photo like in screenshot */
+            border: 4px solid var(--template-accent); /* Uses selected accent color */
+            border-radius: 50%;
             object-fit: cover;
             margin-top: 10px;
         }
@@ -198,9 +193,8 @@
         @media print {
             body { background: white; padding: 0; }
             .container { box-shadow: none; padding: 0; }
-            .input-form, .button-group { display: none; }
+            .input-form, .button-group, .customization-panel { display: none; }
             #biodata-output { display: block !important; border: none; }
-            /* Force print area to one page if possible */
             .biodata-output {
                 page-break-after: always;
             }
@@ -210,6 +204,24 @@
 <body>
 
     <div class="container">
+        
+        <div class="customization-panel">
+            <label for="template-select">टेम्पलेट चुनें:</label>
+            <select id="template-select">
+                <option value="hindu-beige">Hindu - Beige (Default)</option>
+                <option value="muslim-green">Muslim - Green</option>
+                <option value="muslim-blue">Muslim - Blue</option>
+            </select>
+            
+            <label for="accent-color-select">रंग चुनें:</label>
+            <select id="accent-color-select">
+                <option value="#d8572a">Saffron/Orange (Default)</option>
+                <option value="#004D40">Teal Green</option>
+                <option value="#2196F3">Blue</option>
+                <option value="#6A1B9A">Purple</option>
+            </select>
+        </div>
+
         <div class="input-form">
             <h1>मैरिज बायोडाटा जानकारी 💍</h1>
             
@@ -218,15 +230,15 @@
                 <h3>व्यक्तिगत विवरण (Personal Details)</h3>
                 <div class="form-section">
                     <div class="form-group"><label for="full-name">पूरा नाम (Full Name)</label><input type="text" id="full-name" required></div>
-                    <div class="form-group"><label for="dob">जन्म तिथि (Date of Birth)</label><input type="datetime-local" id="dob" required></div>
+                    <div class="form-group"><label for="dob">जन्म तिथि और समय (Date of Birth & Time)</label><input type="datetime-local" id="dob" required></div>
                     <div class="form-group"><label for="height">कद (Height) (e.g., 160 cm / 5'3")</label><input type="text" id="height" required></div>
                     <div class="form-group"><label for="place-of-birth">जन्म स्थान (Place of Birth)</label><input type="text" id="place-of-birth" required></div>
                     <div class="form-group"><label for="religious">धर्म (Religious)</label><input type="text" id="religious" value="Hindu" required></div>
-                    <div class="form-group"><label for="caste">जाति (Caste)</label><input type="text" id="caste" required></div>
-                    <div class="form-group"><label for="rashi">राशि (Rashi)</label><input type="text" id="rashi" required></div>
-                    <div class="form-group"><label for="nakshatra">नक्षत्र (Nakshatra)</label><input type="text" id="nakshatra"></div>
-                    <div class="form-group"><label for="manglik">मांगलिक (Manglik)</label><select id="manglik"><option value="No">No</option><option value="Yes">Yes</option></select></div>
-                    <div class="form-group"><label for="gotra">गोत्र (Gotra)</label><input type="text" id="gotra"></div>
+                    <div class="form-group"><label for="caste">जाति/समुदाय (Caste/Community)</label><input type="text" id="caste" required></div>
+                    <div class="form-group" id="rashi-group"><label for="rashi">राशि (Rashi)</label><input type="text" id="rashi"></div>
+                    <div class="form-group" id="nakshatra-group"><label for="nakshatra">नक्षत्र (Nakshatra)</label><input type="text" id="nakshatra"></div>
+                    <div class="form-group" id="manglik-group"><label for="manglik">मांगलिक (Manglik)</label><select id="manglik"><option value="No">No</option><option value="Yes">Yes</option></select></div>
+                    <div class="form-group" id="gotra-group"><label for="gotra">गोत्र (Gotra)</label><input type="text" id="gotra"></div>
                     <div class="form-group"><label for="complexion">रंग (Complexion)</label><input type="text" id="complexion" value="Fair"></div>
                     <div class="form-group"><label for="blood-group">ब्लड ग्रुप (Blood Group)</label><input type="text" id="blood-group"></div>
                     <div class="form-group"><label for="education">उच्च शिक्षा (Higher Education)</label><input type="text" id="education" required></div>
@@ -235,8 +247,8 @@
                 
                 <h3>पारिवारिक विवरण (Family Details)</h3>
                 <div class="form-section">
-                    <div class="form-group"><label for="father-name">पिता का नाम</label><input type="text" id="father-name" required></div>
-                    <div class="form-group"><label for="mother-name">माता का नाम</label><input type="text" id="mother-name" required></div>
+                    <div class="form-group"><label for="father-name">पिता का नाम (Father's Name)</label><input type="text" id="father-name" required></div>
+                    <div class="form-group"><label for="mother-name">माता का नाम (Mother's Name)</label><input type="text" id="mother-name" required></div>
                     <div class="form-group"><label for="siblings">भाई-बहन (e.g., 2 Sister, 1 Brother)</label><input type="text" id="siblings"></div>
                 </div>
 
@@ -257,8 +269,8 @@
 
         <div id="biodata-output">
             <div class="biodata-header">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/Lord_Ganesha.svg/100px-Lord_Ganesha.svg.png" class="ganesha-icon" alt="Ganesha">
-                <h2>॥ श्री गणेशाय नमः ॥</h2>
+                <img id="ganesha-icon" src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/Lord_Ganesha.svg/100px-Lord_Ganesha.svg.png" class="ganesha-icon" alt="Ganesha">
+                <h2 id="biodata-mantra">॥ श्री गणेशाय नमः ॥</h2>
                 <h3 style="margin-top: 10px; color: var(--text-color);">BIODATA</h3>
             </div>
             
