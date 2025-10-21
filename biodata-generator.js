@@ -6,8 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const biodataPhoto = document.getElementById('biodata-photo');
     const templateCards = document.querySelectorAll('.template-card');
     const accentColorSelect = document.getElementById('accent-color-select');
-    const backgroundColorSelect = document.getElementById('background-color-select'); // New: Background color select
-    const ganeshaIcon = document.getElementById('ganesha-icon');
+    const backgroundColorSelect = document.getElementById('background-color-select'); 
     const biodataMantra = document.getElementById('biodata-mantra');
     const rootStyles = document.documentElement.style;
     const hinduSpecificFields = document.querySelectorAll('.hindu-specific');
@@ -31,25 +30,19 @@ document.addEventListener('DOMContentLoaded', () => {
             selectedCard.classList.add('selected');
             rootStyles.setProperty('--template-bg', selectedCard.dataset.bg);
             rootStyles.setProperty('--template-accent', selectedCard.dataset.accent);
-            accentColorSelect.value = selectedCard.dataset.accent; // Sync accent dropdown
-            backgroundColorSelect.value = selectedCard.dataset.bg; // Sync background dropdown
+            accentColorSelect.value = selectedCard.dataset.accent; 
+            backgroundColorSelect.value = selectedCard.dataset.bg; 
         }
 
-
+        // Set Mantra and decide on field visibility
         if (template === 'hindu-beige') {
-            ganeshaIcon.src = "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/Lord_Ganesha.svg/100px-Lord_Ganesha.svg.png";
-            ganeshaIcon.style.display = 'block';
             biodataMantra.textContent = '॥ श्री गणेशाय नमः ॥';
-            
-            // Show Hindu-specific fields
             hinduSpecificFields.forEach(field => field.style.display = 'block');
-
         } else if (template.startsWith('muslim')) {
-            ganeshaIcon.style.display = 'none'; // Hide Ganesha icon
-            biodataMantra.textContent = 'بِسْمِ ٱللَّٰهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ'; // Bismillah
-            
-            // Hide Hindu-specific fields
+            biodataMantra.textContent = 'بِسْمِ ٱللَّٰهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ';
             hinduSpecificFields.forEach(field => field.style.display = 'none');
+        } else {
+            biodataMantra.textContent = '॥ BIODATA ॥';
         }
     }
 
@@ -65,7 +58,7 @@ document.addEventListener('DOMContentLoaded', () => {
         rootStyles.setProperty('--template-accent', e.target.value);
     });
 
-    // New: Event listener for background color dropdown
+    // Event listener for background color dropdown
     backgroundColorSelect.addEventListener('change', (e) => {
         rootStyles.setProperty('--template-bg', e.target.value);
     });
@@ -128,7 +121,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (e) {
             formattedDOB = data.dob;
         }
-
+        
         // --- Personal Details Output ---
         let personalDetailsHTML = `
             <div class="detail-row"><span>Full Name</span><span>: ${data.fullName}</span></div>
@@ -185,16 +178,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- 3. DOWNLOAD FUNCTIONALITY with html2pdf.js ---
     downloadBtn.addEventListener('click', () => {
+        // Hide the download button during conversion to ensure it is not in the PDF
+        downloadBtn.style.display = 'none';
+        
         const element = document.getElementById('biodata-output');
         const opt = {
             margin:       10, // Margin in mm
             filename:     'Marriage_Biodata.pdf',
             image:        { type: 'jpeg', quality: 0.98 },
-            html2canvas:  { scale: 2, useCORS: true, logging: true }, // Added logging for debug
+            html2canvas:  { scale: 2, useCORS: true, logging: true }, // useCORS is critical for GitHub Pages
             jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
         };
 
         // Use html2pdf to generate and save the PDF
-        html2pdf().set(opt).from(element).save();
+        html2pdf().set(opt).from(element).save().then(() => {
+            // Re-show the download button after the PDF is saved
+            downloadBtn.style.display = 'inline-block';
+        });
     });
 });
