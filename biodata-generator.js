@@ -179,16 +179,19 @@ document.addEventListener('DOMContentLoaded', () => {
         // Show output (Biodata)
         outputDiv.style.display = 'block';
         
-        // Hide input fields and the GENERATE button
+        // Hide input fields and customization panel
         document.querySelector('.input-form').style.display = 'none'; 
         document.querySelector('.customization-panel').style.display = 'none'; 
         
         // **** DOWNLOAD BUTTON FIX: Show only the download button ****
+        // जनरेट बटन को छिपाएँ
         generateBtn.style.display = 'none'; 
+        
+        // डाउनलोड बटन को दिखाएँ
         downloadBtn.style.display = 'inline-block'; 
     });
 
-    // --- 3. DOWNLOAD FUNCTIONALITY with html2pdf.js (Tested Logic) ---
+    // --- 3. DOWNLOAD FUNCTIONALITY with html2pdf.js ---
     downloadBtn.addEventListener('click', () => {
         // Temporarily hide the download button to prevent it from appearing in the PDF
         downloadBtn.style.display = 'none';
@@ -198,7 +201,7 @@ document.addEventListener('DOMContentLoaded', () => {
             margin:       10, 
             filename:     'Marriage_Biodata.pdf',
             image:        { type: 'jpeg', quality: 0.98 },
-            html2canvas:  { scale: 2, useCORS: true, logging: true }, // useCORS is crucial for uploaded images on GitHub Pages
+            html2canvas:  { scale: 2, useCORS: true, logging: true }, 
             jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
         };
 
