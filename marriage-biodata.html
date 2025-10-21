@@ -6,6 +6,7 @@
     <title>Marriage Biodata Maker</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
     <style>
@@ -14,8 +15,9 @@
             --primary-color: #004D40; 
             --secondary-color: #f4f4f9;
             --text-color: #333;
-            --template-bg: #fff8e1; /* Default Hindu/Beige */
-            --template-accent: #d8572a; /* Default Hindu/Orange */
+            --template-bg: #fff8e1; /* Default background */
+            --template-accent: #d8572a; /* Default accent/border color */
+            --header-bg: #ffe0b2; /* Light Orange for Header Top */
         }
 
         body {
@@ -51,124 +53,11 @@
             font-weight: bold;
         }
 
-        .template-preview-container {
-            display: flex;
-            gap: 15px;
-            margin-top: 10px;
-            flex-wrap: wrap;
-            justify-content: flex-start;
-        }
+        /* Form Styles are kept consistent */
 
-        .template-card {
-            border: 2px solid #ccc;
-            border-radius: 8px;
-            padding: 10px;
-            cursor: pointer;
-            transition: all 0.2s ease-in-out;
-            width: 120px;
-            text-align: center;
-            font-size: 0.85em;
-            position: relative;
-        }
-        .template-card.selected {
-            border-color: var(--primary-color);
-            box-shadow: 0 0 5px var(--primary-color);
-            background-color: #e6f7ff; 
-        }
-        .template-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
-
-        .template-card .preview-box {
-            width: 80px;
-            height: 60px;
-            border: 1px solid #aaa;
-            margin: 0 auto 5px auto;
-            border-radius: 4px;
-            overflow: hidden;
-            position: relative;
-        }
-        
-        .template-card .preview-box::before { /* Accent line */
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 8px;
-        }
-        .template-card .preview-box::after { /* Background fill */
-            content: '';
-            position: absolute;
-            top: 8px;
-            left: 0;
-            width: 100%;
-            height: calc(100% - 8px);
-        }
-        /* Specific Preview Styles (For visual preview only) - keep these fixed for preview */
-        .template-card.hindu .preview-box::before { background: #d8572a; }
-        .template-card.hindu .preview-box::after { background: #fff8e1; }
-        .template-card.muslim-green .preview-box::before { background: #004D40; }
-        .template-card.muslim-green .preview-box::after { background: #e8f5e9; }
-        .template-card.muslim-blue .preview-box::before { background: #1565C0; }
-        .template-card.muslim-blue .preview-box::after { background: #e3f2fd; }
-
-
-        /* Form Styles */
-        .input-form h1 {
-            color: var(--primary-color);
-            text-align: center;
-            border-bottom: 2px solid #eee;
-            padding-bottom: 10px;
-            margin-bottom: 30px;
-        }
-
-        .form-section {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            margin-bottom: 20px;
-        }
-        
-        .form-section.full-width {
-            grid-template-columns: 1fr;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-            font-size: 0.9em;
-        }
-
-        .form-group input, .form-group select, .form-group textarea {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            box-sizing: border-box;
-        }
-        
         .button-group {
             text-align: center;
             margin-top: 30px;
-        }
-
-        .button-group button {
-            padding: 12px 25px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 1em;
-            font-weight: bold;
-            transition: background-color 0.3s;
-        }
-
-        #generate-btn {
-            background-color: var(--primary-color);
-            color: white;
-            margin-right: 15px;
         }
 
         #download-btn {
@@ -177,47 +66,56 @@
             display: none; 
         }
 
-        /* Biodata Output Styles */
+        /* =======================================
+           Biodata Output Styles (The PDF Content)
+           ======================================= */
         #biodata-output {
             display: none; 
             margin-top: 40px;
-            padding: 20px; /* Added padding for the inner content */
-            border: 5mm solid var(--template-accent); /* 5mm thick border */
+            padding: 20px;
+            /* मोटा बॉर्डर फिक्स */
+            border: 5mm solid var(--template-accent); 
             background: var(--template-bg); 
             position: relative;
             overflow: hidden;
-            box-sizing: border-box; /* Ensure padding/border are included in total width/height */
-            min-height: 297mm; /* A4 height approx for better preview */
-            page-break-after: always; /* For printing multiple biodatas */
+            box-sizing: border-box;
+            min-height: 297mm;
         }
 
+        /* TOP COLOR BAR (Replaces Ganesha Icon) */
+        .top-color-bar {
+            height: 10px;
+            background-color: var(--template-accent);
+            margin: -20px -20px 20px -20px; /* Extends to border edges */
+        }
+        
         .biodata-header {
             text-align: center;
-            padding: 20px 0;
-            background: #ffffff; 
+            padding: 10px 0 20px 0;
+            background: transparent; 
             position: relative;
-            border-bottom: 5px double var(--template-accent); 
         }
         
         .biodata-header h2 {
             margin: 0;
-            font-size: 1.8em;
+            font-size: 2.2em;
             color: var(--template-accent); 
-            letter-spacing: 1px;
-            font-family: serif; 
+            letter-spacing: 2px;
+            font-family: 'Georgia', serif; 
+            font-weight: 700;
         }
 
-        .biodata-header img.ganesha-icon {
-            height: 50px;
-            margin-bottom: 10px;
-            object-fit: contain; /* Ensure image fits */
+        .biodata-header h3 {
+            margin-top: 10px;
+            font-size: 1.2em;
+            color: var(--text-color);
         }
         
         /* Main Content Grid */
         .biodata-content {
             display: flex;
-            padding: 15px 0; /* Adjusted padding */
-            align-items: flex-start; /* Align items to the top */
+            padding: 15px 0;
+            align-items: flex-start;
         }
 
         .details-section {
@@ -226,9 +124,9 @@
         }
         
         .details-section h3 {
-            color: var(--primary-color);
+            color: var(--template-accent); /* Accent color for subheadings */
             font-size: 1.4em;
-            border-bottom: 2px solid var(--primary-color);
+            border-bottom: 3px solid var(--template-accent);
             padding-bottom: 5px;
             margin-top: 0;
             margin-bottom: 20px;
@@ -236,8 +134,9 @@
 
         .detail-row {
             display: flex;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             line-height: 1.4;
+            font-size: 0.95em;
         }
 
         .detail-row span:first-child {
@@ -257,12 +156,26 @@
         #biodata-photo {
             width: 180px;
             height: 220px;
-            border: 4px solid var(--template-accent); /* Solid border for photo */
+            border: 4px solid var(--template-accent); 
             border-radius: 50%;
             object-fit: cover;
             margin-top: 10px;
-            background-color: #f0f0f0; /* Placeholder background */
+            background-color: #f0f0f0; 
         }
+
+        /* Customization Panel Styles (Kept from last response) */
+        .template-preview-container { display: flex; gap: 15px; margin-top: 10px; flex-wrap: wrap; justify-content: flex-start; }
+        .template-card { border: 2px solid #ccc; border-radius: 8px; padding: 10px; cursor: pointer; transition: all 0.2s; width: 120px; text-align: center; font-size: 0.85em; position: relative; }
+        .template-card.selected { border-color: var(--primary-color); box-shadow: 0 0 5px var(--primary-color); background-color: #e6f7ff; }
+        .template-card .preview-box { width: 80px; height: 60px; border: 1px solid #aaa; margin: 0 auto 5px auto; border-radius: 4px; overflow: hidden; position: relative; }
+        .template-card .preview-box::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 8px; }
+        .template-card .preview-box::after { content: ''; position: absolute; top: 8px; left: 0; width: 100%; height: calc(100% - 8px); }
+        .template-card.hindu .preview-box::before { background: #d8572a; }
+        .template-card.hindu .preview-box::after { background: #fff8e1; }
+        .template-card.muslim-green .preview-box::before { background: #004D40; }
+        .template-card.muslim-green .preview-box::after { background: #e8f5e9; }
+        .template-card.muslim-blue .preview-box::before { background: #1565C0; }
+        .template-card.muslim-blue .preview-box::after { background: #e3f2fd; }
     </style>
 </head>
 <body>
@@ -289,14 +202,14 @@
             </div>
             
             <div>
-                <label for="accent-color-select">Accent रंग चुनें:</label>
+                <label for="accent-color-select">Accent रंग (Border/Text) चुनें:</label>
                 <select id="accent-color-select">
                     <option value="#d8572a">Saffron/Orange (Default)</option>
+                    <option value="#C62828">Dark Red (Maroon)</option>
                     <option value="#004D40">Teal Green</option>
                     <option value="#2196F3">Blue</option>
                     <option value="#6A1B9A">Purple</option>
                     <option value="#8BC34A">Light Green</option>
-                    <option value="#C62828">Dark Red</option>
                     <option value="#FF6F00">Amber Orange</option>
                     <option value="#4CAF50">Emerald Green</option>
                     <option value="#8E24AA">Deep Purple</option>
@@ -308,13 +221,13 @@
                 <label for="background-color-select">पृष्ठभूमि रंग चुनें:</label>
                 <select id="background-color-select">
                     <option value="#fff8e1">Light Beige (Default)</option>
+                    <option value="#fffde7">Cream (हल्का पीला)</option>
+                    <option value="#f0f4c3">Pale Yellow (पीला)</option>
+                    <option value="#f8bbd0">Light Pink (गुलाबी)</option>
+                    <option value="#ffebee">Light Red/Coral (हल्का लाल)</option>
                     <option value="#e8f5e9">Pale Green</option>
                     <option value="#e3f2fd">Light Blue</option>
-                    <option value="#fffde7">Cream</option>
-                    <option value="#ffebee">Light Pink</option>
                     <option value="#f3e5f5">Lavender</option>
-                    <option value="#fbe9e7">Light Coral</option>
-                    <option value="#f0f4c3">Pale Yellow</option>
                     <option value="#e0f2f7">Sky Blue</option>
                     <option value="#e0e0e0">Light Grey</option>
                 </select>
@@ -367,11 +280,11 @@
         </div>
 
         <div id="biodata-output">
+            <div class="top-color-bar"></div>
+
             <div class="biodata-header">
-                <img id="ganesha-icon" src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/Lord_Ganesha.svg/100px-Lord_Ganesha.svg.png" class="ganesha-icon" alt="Lord Ganesha Symbol">
-                <h2 id="biodata-mantra">॥ श्री गणेशाय नमः ॥</h2>
-                <h3 style="margin-top: 10px; color: var(--text-color);">BIODATA</h3>
-            </div>
+                <h2 id="biodata-mantra">॥ BIODATA ॥</h2>
+                </div>
             
             <div class="biodata-content">
                 <div class="details-section">
