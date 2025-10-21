@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- 0. INITIAL SETUP & TEMPLATE LOGIC ---
     
-    // Default photo placeholder (To prevent broken image icon)
+    // Default photo placeholder 
     biodataPhoto.src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="180" height="220" viewBox="0 0 180 220"><rect width="180" height="220" fill="#cccccc"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Arial" font-size="14" fill="#666666">Profile Photo</text></svg>';
 
     // Function to apply template styles and logic
@@ -84,25 +84,11 @@ document.addEventListener('DOMContentLoaded', () => {
     generateBtn.addEventListener('click', (e) => {
         e.preventDefault();
         
-        // --- Custom Validation: Only check Full Name and Contact No. ---
-        const fullName = document.getElementById('full-name').value.trim();
-        const contactNo = document.getElementById('contact-no').value.trim();
-        
-        if (!fullName) {
-            alert("कृपया पूरा नाम (Full Name) भरें। यह फ़ील्ड अनिवार्य है।");
-            document.getElementById('full-name').focus();
-            return;
-        }
-
-        if (!contactNo) {
-            alert("कृपया संपर्क नंबर (Contact No.) भरें। यह फ़ील्ड अनिवार्य है।");
-            document.getElementById('contact-no').focus();
-            return;
-        }
-        // --- End Custom Validation ---
+        // No custom validation needed, let all empty fields pass.
+        // The check form.checkValidity() is removed.
 
         const data = {
-            fullName: fullName,
+            fullName: document.getElementById('full-name').value,
             dob: document.getElementById('dob').value,
             height: document.getElementById('height').value,
             placeOfBirth: document.getElementById('place-of-birth').value,
@@ -120,70 +106,76 @@ document.addEventListener('DOMContentLoaded', () => {
             motherName: document.getElementById('mother-name').value,
             siblings: document.getElementById('siblings').value,
             address: document.getElementById('address').value,
-            contactNo: contactNo,
+            contactNo: document.getElementById('contact-no').value,
         };
 
-        // Helper function to format data for display (or use "N/A" if empty)
-        const formatValue = (value, fallback = 'N/A') => value.trim() || fallback;
-        const formatSelect = (value, fallback = 'N/A') => (value === 'No' ? 'No' : value.trim()) || fallback;
+        // Helper function to create a detail row ONLY if the value is not empty
+        const createDetailRow = (label, value) => {
+            const trimmedValue = value.trim();
+            if (trimmedValue) {
+                return `<div class="detail-row"><span>${label}</span><span>: ${trimmedValue.replace(/\n/g, '<br>')}</span></div>`;
+            }
+            return '';
+        };
 
         // Format Date and Time
-        let formattedDOB = formatValue(data.dob);
-        let formattedTime = "";
-        if (data.dob) {
+        let dobRow = '';
+        const dobValue = data.dob.trim();
+        if (dobValue) {
+            let formattedDOB = dobValue;
+            let formattedTime = "";
             try {
-                const dt = new Date(data.dob);
-                // Only format if date is valid
+                const dt = new Date(dobValue);
                 if (!isNaN(dt)) {
                     formattedDOB = dt.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' });
                     formattedTime = dt.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
                 }
             } catch (e) {
-                // If parsing fails, use the raw input
-                formattedDOB = formatValue(data.dob);
+                // Keep raw value if formatting fails
             }
+            dobRow = `<div class="detail-row"><span>Date of Birth & Time</span><span>: ${formattedDOB}${formattedTime ? `, ${formattedTime}` : ''}</span></div>`;
         }
         
         // --- Personal Details Output ---
         let personalDetailsHTML = `
-            <div class="detail-row"><span>Full Name</span><span>: ${formatValue(data.fullName)}</span></div>
-            <div class="detail-row"><span>Date of Birth & Time</span><span>: ${formattedDOB}${formattedTime ? `, ${formattedTime}` : ''}</span></div>
-            <div class="detail-row"><span>Height</span><span>: ${formatValue(data.height)}</span></div>
-            <div class="detail-row"><span>Place of Birth</span><span>: ${formatValue(data.placeOfBirth)}</span></div>
-            <div class="detail-row"><span>Religious</span><span>: ${formatValue(data.religious)}</span></div>
-            <div class="detail-row"><span>Caste/Community</span><span>: ${formatValue(data.caste)}</span></div>
+            ${createDetailRow('Full Name', data.fullName)}
+            ${dobRow}
+            ${createDetailRow('Height', data.height)}
+            ${createDetailRow('Place of Birth', data.placeOfBirth)}
+            ${createDetailRow('Religious', data.religious)}
+            ${createDetailRow('Caste/Community', data.caste)}
         `;
         
         if (currentTemplate === 'hindu-beige') {
              personalDetailsHTML += `
-                <div class="detail-row"><span>Rashi</span><span>: ${formatValue(data.rashi)}</span></div>
-                <div class="detail-row"><span>Nakshatra</span><span>: ${formatValue(data.nakshatra)}</span></div>
-                <div class="detail-row"><span>Manglik</span><span>: ${formatSelect(data.manglik)}</span></div>
-                <div class="detail-row"><span>Gotra</span><span>: ${formatValue(data.gotra)}</span></div>
+                ${createDetailRow('Rashi', data.rashi)}
+                ${createDetailRow('Nakshatra', data.nakshatra)}
+                ${createDetailRow('Manglik', data.manglik)}
+                ${createDetailRow('Gotra', data.gotra)}
              `;
         }
 
         personalDetailsHTML += `
-            <div class="detail-row"><span>Complexion</span><span>: ${formatValue(data.complexion)}</span></div>
-            <div class="detail-row"><span>Blood Group</span><span>: ${formatValue(data.bloodGroup)}</span></div>
-            <div class="detail-row"><span>Higher Education</span><span>: ${formatValue(data.education)}</span></div>
-            <div class="detail-row"><span>Job/Occupation</span><span>: ${formatValue(data.job)}</span></div>
+            ${createDetailRow('Complexion', data.complexion)}
+            ${createDetailRow('Blood Group', data.bloodGroup)}
+            ${createDetailRow('Higher Education', data.education)}
+            ${createDetailRow('Job/Occupation', data.job)}
         `;
 
         document.getElementById('personal-details-output').innerHTML = personalDetailsHTML;
 
         // --- Family Details Output ---
         const familyDetailsHTML = `
-            <div class="detail-row"><span>Father's Name</span><span>: ${formatValue(data.fatherName)}</span></div>
-            <div class="detail-row"><span>Mother's Name</span><span>: ${formatValue(data.motherName)}</span></div>
-            <div class="detail-row"><span>Siblings (Brother/Sister)</span><span>: ${formatValue(data.siblings)}</span></div>
+            ${createDetailRow("Father's Name", data.fatherName)}
+            ${createDetailRow("Mother's Name", data.motherName)}
+            ${createDetailRow('Siblings (Brother/Sister)', data.siblings)}
         `;
         document.getElementById('family-details-output').innerHTML = familyDetailsHTML;
 
         // --- Contact Details Output ---
         const contactDetailsHTML = `
-            <div class="detail-row"><span>Current Address</span><span>: ${formatValue(data.address).replace(/\n/g, '<br>')}</span></div>
-            <div class="detail-row"><span>Contact No.</span><span>: ${formatValue(data.contactNo)}</span></div>
+            ${createDetailRow('Current Address', data.address)}
+            ${createDetailRow('Contact No.', data.contactNo)}
         `;
         document.getElementById('contact-details-output').innerHTML = contactDetailsHTML;
 
@@ -198,14 +190,14 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelector('.customization-panel').style.display = 'none'; 
     });
 
-    // --- 3. DOWNLOAD FUNCTIONALITY with html2pdf.js ---
+    // --- 3. DOWNLOAD FUNCTIONALITY with html2pdf.js (FIXED) ---
     downloadBtn.addEventListener('click', () => {
-        // Hide the download button during conversion to ensure it is not in the PDF
+        // Temporarily hide the download button to prevent it from appearing in the PDF
         downloadBtn.style.display = 'none';
         
         const element = document.getElementById('biodata-output');
         const opt = {
-            margin:       10, 
+            margin:       10, // Margin in mm
             filename:     'Marriage_Biodata.pdf',
             image:        { type: 'jpeg', quality: 0.98 },
             html2canvas:  { scale: 2, useCORS: true, logging: true },
@@ -216,6 +208,11 @@ document.addEventListener('DOMContentLoaded', () => {
         html2pdf().set(opt).from(element).save().then(() => {
             // Re-show the download button after the PDF is saved
             downloadBtn.style.display = 'inline-block';
+        }).catch(error => {
+            // Re-show button even if error occurs
+            downloadBtn.style.display = 'inline-block';
+            console.error("PDF generation failed:", error);
+            alert("PDF जनरेट करने में कोई समस्या आई है। कंसोल में देखें।");
         });
     });
 });
