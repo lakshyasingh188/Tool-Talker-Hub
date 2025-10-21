@@ -4,75 +4,69 @@ document.addEventListener('DOMContentLoaded', () => {
     const downloadBtn = document.getElementById('download-btn');
     const outputDiv = document.getElementById('biodata-output');
     const biodataPhoto = document.getElementById('biodata-photo');
-    const templateSelect = document.getElementById('template-select');
+    const templateCards = document.querySelectorAll('.template-card');
     const accentColorSelect = document.getElementById('accent-color-select');
     const ganeshaIcon = document.getElementById('ganesha-icon');
     const biodataMantra = document.getElementById('biodata-mantra');
     const rootStyles = document.documentElement.style;
+    const hinduSpecificFields = document.querySelectorAll('.hindu-specific');
+
+    let currentTemplate = 'hindu-beige'; // Default template
 
     // --- 0. INITIAL SETUP & TEMPLATE LOGIC ---
     
-    // Default photo to avoid broken image initially
+    // Default photo placeholder (To prevent broken image icon)
     biodataPhoto.src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="180" height="220" viewBox="0 0 180 220"><rect width="180" height="220" fill="#cccccc"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Arial" font-size="14" fill="#666666">Profile Photo</text></svg>';
 
-    // Function to apply template styles
+    // Function to apply template styles and logic
     function applyTemplate(template) {
+        currentTemplate = template;
+
+        // Reset all template cards
+        templateCards.forEach(card => card.classList.remove('selected'));
+
+        let selectedCard = document.querySelector(`.template-card[data-template="${template}"]`);
+        if (selectedCard) {
+            selectedCard.classList.add('selected');
+            rootStyles.setProperty('--template-bg', selectedCard.dataset.bg);
+            rootStyles.setProperty('--template-accent', selectedCard.dataset.accent);
+            accentColorSelect.value = selectedCard.dataset.accent; // Sync dropdown
+        }
+
+
         if (template === 'hindu-beige') {
-            rootStyles.setProperty('--template-bg', '#fff8e1');
-            // Check if accent color is a Hindu-style color
-            if (accentColorSelect.value !== '#004D40' && accentColorSelect.value !== '#2196F3') {
-                 rootStyles.setProperty('--template-accent', accentColorSelect.value);
-            } else {
-                 rootStyles.setProperty('--template-accent', '#d8572a'); // Default Hindu accent
-                 accentColorSelect.value = '#d8572a';
-            }
+            ganeshaIcon.src = "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/Lord_Ganesha.svg/100px-Lord_Ganesha.svg.png";
             ganeshaIcon.style.display = 'block';
             biodataMantra.textContent = '॥ श्री गणेशाय नमः ॥';
             
-            // Show Astrological fields for Hindu template
-            document.getElementById('rashi-group').style.display = 'block';
-            document.getElementById('nakshatra-group').style.display = 'block';
-            document.getElementById('manglik-group').style.display = 'block';
-            document.getElementById('gotra-group').style.display = 'block';
+            // Show Hindu-specific fields
+            hinduSpecificFields.forEach(field => field.style.display = 'block');
 
-        } else if (template === 'muslim-green') {
-            rootStyles.setProperty('--template-bg', '#e8f5e9'); // Light Green
-            rootStyles.setProperty('--template-accent', '#004D40'); // Dark Green
-            accentColorSelect.value = '#004D40'; // Force Green accent
-            ganeshaIcon.style.display = 'none';
+        } else if (template.startsWith('muslim')) {
+            ganeshaIcon.style.display = 'none'; // Hide Ganesha icon
             biodataMantra.textContent = 'بِسْمِ ٱللَّٰهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ'; // Bismillah
             
-            // Hide Astrological fields for Muslim template
-            document.getElementById('rashi-group').style.display = 'none';
-            document.getElementById('nakshatra-group').style.display = 'none';
-            document.getElementById('manglik-group').style.display = 'none';
-            document.getElementById('gotra-group').style.display = 'none';
-
-        } else if (template === 'muslim-blue') {
-            rootStyles.setProperty('--template-bg', '#e3f2fd'); // Light Blue
-            rootStyles.setProperty('--template-accent', '#1565C0'); // Dark Blue
-            accentColorSelect.value = '#2196F3'; // Force Blue accent
-            ganeshaIcon.style.display = 'none';
-            biodataMantra.textContent = 'بِسْمِ ٱللَّٰهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ'; // Bismillah
-
-             // Hide Astrological fields for Muslim template
-            document.getElementById('rashi-group').style.display = 'none';
-            document.getElementById('nakshatra-group').style.display = 'none';
-            document.getElementById('manglik-group').style.display = 'none';
-            document.getElementById('gotra-group').style.display = 'none';
+            // Hide Hindu-specific fields
+            hinduSpecificFields.forEach(field => field.style.display = 'none');
         }
     }
 
-    // Event listeners for customization
-    templateSelect.addEventListener('change', (e) => applyTemplate(e.target.value));
+    // Event listeners for template cards (Preview Click)
+    templateCards.forEach(card => {
+        card.addEventListener('click', () => {
+            applyTemplate(card.dataset.template);
+        });
+    });
+
+    // Event listener for accent color dropdown (Only updates accent, not template logic)
     accentColorSelect.addEventListener('change', (e) => {
         rootStyles.setProperty('--template-accent', e.target.value);
     });
 
     // Apply default template on load
-    applyTemplate(templateSelect.value);
+    applyTemplate(currentTemplate);
 
-    // --- 1. HANDLE IMAGE UPLOAD (Unchanged) ---
+    // --- 1. HANDLE IMAGE UPLOAD ---
     document.getElementById('biodata-image').addEventListener('change', function(event) {
         const file = event.target.files[0];
         if (file) {
@@ -81,6 +75,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 biodataPhoto.src = e.target.result;
             };
             reader.readAsDataURL(file);
+        } else {
+            biodataPhoto.src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="180" height="220" viewBox="0 0 180 220"><rect width="180" height="220" fill="#cccccc"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Arial" font-size="14" fill="#666666">Profile Photo</text></svg>';
         }
     });
 
@@ -115,7 +111,7 @@ document.addEventListener('DOMContentLoaded', () => {
             contactNo: document.getElementById('contact-no').value,
         };
 
-        // Format Date of Birth
+        // Format Date and Time
         let formattedDOB = "N/A";
         let formattedTime = "";
         try {
@@ -129,15 +125,14 @@ document.addEventListener('DOMContentLoaded', () => {
         // --- Personal Details Output ---
         let personalDetailsHTML = `
             <div class="detail-row"><span>Full Name</span><span>: ${data.fullName}</span></div>
-            <div class="detail-row"><span>Date of Birth</span><span>: ${formattedDOB}, ${formattedTime}</span></div>
+            <div class="detail-row"><span>Date of Birth & Time</span><span>: ${formattedDOB}, ${formattedTime}</span></div>
             <div class="detail-row"><span>Height</span><span>: ${data.height}</span></div>
             <div class="detail-row"><span>Place of Birth</span><span>: ${data.placeOfBirth}</span></div>
             <div class="detail-row"><span>Religious</span><span>: ${data.religious}</span></div>
             <div class="detail-row"><span>Caste/Community</span><span>: ${data.caste}</span></div>
         `;
         
-        // Add Hindu-specific details if selected template is Hindu
-        if (templateSelect.value === 'hindu-beige') {
+        if (currentTemplate === 'hindu-beige') {
              personalDetailsHTML += `
                 <div class="detail-row"><span>Rashi</span><span>: ${data.rashi}</span></div>
                 <div class="detail-row"><span>Nakshatra</span><span>: ${data.nakshatra}</span></div>
@@ -155,7 +150,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         document.getElementById('personal-details-output').innerHTML = personalDetailsHTML;
 
-        // --- Family Details Output (Unchanged) ---
+        // --- Family Details Output ---
         const familyDetailsHTML = `
             <div class="detail-row"><span>Father's Name</span><span>: ${data.fatherName}</span></div>
             <div class="detail-row"><span>Mother's Name</span><span>: ${data.motherName}</span></div>
@@ -163,7 +158,7 @@ document.addEventListener('DOMContentLoaded', () => {
         `;
         document.getElementById('family-details-output').innerHTML = familyDetailsHTML;
 
-        // --- Contact Details Output (Unchanged) ---
+        // --- Contact Details Output ---
         const contactDetailsHTML = `
             <div class="detail-row"><span>Current Address</span><span>: ${data.address.replace(/\n/g, '<br>')}</span></div>
             <div class="detail-row"><span>Contact No.</span><span>: ${data.contactNo}</span></div>
@@ -171,17 +166,26 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('contact-details-output').innerHTML = contactDetailsHTML;
 
 
-        // Show output and Download button
+        // Hide input fields and show output/download button
         outputDiv.style.display = 'block';
         downloadBtn.style.display = 'inline-block';
         document.querySelector('.input-form').style.display = 'none'; 
         generateBtn.style.display = 'none'; 
-        document.querySelector('.customization-panel').style.display = 'none'; // Hide customization panel too
+        document.querySelector('.customization-panel').style.display = 'none'; 
     });
 
-    // --- 3. DOWNLOAD/PRINT FUNCTIONALITY (Unchanged) ---
+    // --- 3. DOWNLOAD FUNCTIONALITY with html2pdf.js ---
     downloadBtn.addEventListener('click', () => {
-        // This opens the browser's print dialog, which allows "Save as PDF"
-        window.print();
+        const element = document.getElementById('biodata-output');
+        const opt = {
+            margin:       10,
+            filename:     'Marriage_Biodata.pdf',
+            image:        { type: 'jpeg', quality: 0.98 },
+            html2canvas:  { scale: 2, useCORS: true }, // useCORS is critical for Ganesha image and photo
+            jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        };
+
+        // Use html2pdf to generate and save the PDF
+        html2pdf().set(opt).from(element).save();
     });
 });
