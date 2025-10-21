@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marriage Biodata Maker</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <style>
+        /* Common Styles */
+        :root {
+            --primary-color: #004D40;
+            --secondary-color: #f4f4f9;
+            --text-color: #333;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: var(--secondary-color);
+            margin: 0;
+            padding: 20px;
+            color: var(--text-color);
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: auto;
+            background: white;
+            padding: 30px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        /* Form Styles */
+        .input-form h1 {
+            color: var(--primary-color);
+            text-align: center;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+        }
+
+        .form-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .form-section.full-width {
+            grid-template-columns: 1fr;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+        }
+        
+        #photo-input-group {
+            text-align: center;
+            grid-column: 1 / -1; /* Full width for photo input */
+        }
+        
+        .button-group {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .button-group button {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+
+        #generate-btn {
+            background-color: var(--primary-color);
+            color: white;
+            margin-right: 15px;
+        }
+
+        #generate-btn:hover {
+            background-color: #00695C;
+        }
+
+        #download-btn {
+            background-color: #2196F3;
+            color: white;
+            display: none; /* Hide until biodata is generated */
+        }
+
+        #download-btn:hover {
+            background-color: #1976D2;
+        }
+        
+        /* Biodata Output Styles (Based on Screenshot) */
+        #biodata-output {
+            display: none; /* Hide until generated */
+            margin-top: 40px;
+            padding: 0;
+            border: 1px solid #ddd;
+            background: #fff8e1; /* Light beige background */
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Header (Ganesha and Background) */
+        .biodata-header {
+            text-align: center;
+            padding: 20px 0;
+            background: #ffffff; /* White section for header */
+            position: relative;
+            border-bottom: 5px double #f1e0c5;
+        }
+        
+        .biodata-header h2 {
+            margin: 0;
+            font-size: 1.8em;
+            color: #d8572a; /* Saffron/Orange color for heading */
+            letter-spacing: 1px;
+            font-family: serif; /* Classic font style */
+        }
+
+        .biodata-header img.ganesha-icon {
+            height: 50px;
+            margin-bottom: 10px;
+        }
+        
+        /* Main Content Grid */
+        .biodata-content {
+            display: flex;
+            padding: 30px;
+        }
+
+        .details-section {
+            flex-grow: 1;
+            padding-right: 30px;
+        }
+        
+        .details-section h3 {
+            color: var(--primary-color);
+            font-size: 1.4em;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 5px;
+            margin-top: 0;
+            margin-bottom: 20px;
+        }
+
+        .detail-row {
+            display: flex;
+            margin-bottom: 10px;
+        }
+
+        .detail-row span:first-child {
+            font-weight: bold;
+            width: 180px; /* Aligns the colons */
+            min-width: 180px;
+        }
+
+        .detail-row span:last-child {
+            flex-grow: 1;
+        }
+
+        /* Photo Section */
+        .photo-section {
+            width: 200px;
+            min-width: 200px;
+            text-align: center;
+        }
+
+        #biodata-photo {
+            width: 180px;
+            height: 220px;
+            border: 4px solid #d8572a;
+            border-radius: 50%; /* Circular photo like in screenshot */
+            object-fit: cover;
+            margin-top: 10px;
+        }
+
+        /* Utility for Print */
+        @media print {
+            body { background: white; padding: 0; }
+            .container { box-shadow: none; padding: 0; }
+            .input-form, .button-group { display: none; }
+            #biodata-output { display: block !important; border: none; }
+            /* Force print area to one page if possible */
+            .biodata-output {
+                page-break-after: always;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="input-form">
+            <h1>मैरिज बायोडाटा जानकारी 💍</h1>
+            
+            <form id="biodata-form">
+                
+                <h3>व्यक्तिगत विवरण (Personal Details)</h3>
+                <div class="form-section">
+                    <div class="form-group"><label for="full-name">पूरा नाम (Full Name)</label><input type="text" id="full-name" required></div>
+                    <div class="form-group"><label for="dob">जन्म तिथि (Date of Birth)</label><input type="datetime-local" id="dob" required></div>
+                    <div class="form-group"><label for="height">कद (Height) (e.g., 160 cm / 5'3")</label><input type="text" id="height" required></div>
+                    <div class="form-group"><label for="place-of-birth">जन्म स्थान (Place of Birth)</label><input type="text" id="place-of-birth" required></div>
+                    <div class="form-group"><label for="religious">धर्म (Religious)</label><input type="text" id="religious" value="Hindu" required></div>
+                    <div class="form-group"><label for="caste">जाति (Caste)</label><input type="text" id="caste" required></div>
+                    <div class="form-group"><label for="rashi">राशि (Rashi)</label><input type="text" id="rashi" required></div>
+                    <div class="form-group"><label for="nakshatra">नक्षत्र (Nakshatra)</label><input type="text" id="nakshatra"></div>
+                    <div class="form-group"><label for="manglik">मांगलिक (Manglik)</label><select id="manglik"><option value="No">No</option><option value="Yes">Yes</option></select></div>
+                    <div class="form-group"><label for="gotra">गोत्र (Gotra)</label><input type="text" id="gotra"></div>
+                    <div class="form-group"><label for="complexion">रंग (Complexion)</label><input type="text" id="complexion" value="Fair"></div>
+                    <div class="form-group"><label for="blood-group">ब्लड ग्रुप (Blood Group)</label><input type="text" id="blood-group"></div>
+                    <div class="form-group"><label for="education">उच्च शिक्षा (Higher Education)</label><input type="text" id="education" required></div>
+                    <div class="form-group"><label for="job">जॉब/व्यवसाय (Job/Occupation)</label><input type="text" id="job" required></div>
+                </div>
+                
+                <h3>पारिवारिक विवरण (Family Details)</h3>
+                <div class="form-section">
+                    <div class="form-group"><label for="father-name">पिता का नाम</label><input type="text" id="father-name" required></div>
+                    <div class="form-group"><label for="mother-name">माता का नाम</label><input type="text" id="mother-name" required></div>
+                    <div class="form-group"><label for="siblings">भाई-बहन (e.g., 2 Sister, 1 Brother)</label><input type="text" id="siblings"></div>
+                </div>
+
+                <h3>संपर्क और अन्य जानकारी (Contact & Other)</h3>
+                <div class="form-section full-width">
+                    <div class="form-group"><label for="address">वर्तमान पता (Current Address)</label><textarea id="address"></textarea></div>
+                    <div class="form-group"><label for="contact-no">संपर्क नंबर (Contact No.)</label><input type="text" id="contact-no" required></div>
+                    <div class="form-group" id="photo-input-group"><label for="biodata-image">फोटो अपलोड करें (Upload Photo)</label><input type="file" id="biodata-image" accept="image/*"></div>
+                </div>
+                
+            </form>
+
+            <div class="button-group">
+                <button type="submit" id="generate-btn"><i class="fas fa-magic"></i> बायोडाटा जनरेट करें</button>
+                <button id="download-btn"><i class="fas fa-download"></i> प्रिंट/डाउनलोड करें (PDF)</button>
+            </div>
+        </div>
+
+        <div id="biodata-output">
+            <div class="biodata-header">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/Lord_Ganesha.svg/100px-Lord_Ganesha.svg.png" class="ganesha-icon" alt="Ganesha">
+                <h2>॥ श्री गणेशाय नमः ॥</h2>
+                <h3 style="margin-top: 10px; color: var(--text-color);">BIODATA</h3>
+            </div>
+            
+            <div class="biodata-content">
+                <div class="details-section">
+                    <h3>Personal Details</h3>
+                    <div id="personal-details-output">
+                        </div>
+                </div>
+                
+                <div class="photo-section">
+                    <img id="biodata-photo" src="" alt="Profile Photo">
+                </div>
+            </div>
+            
+            <div class="biodata-content" style="padding-top: 0;">
+                <div class="details-section" style="padding-right: 0;">
+                    <h3>Family Details</h3>
+                    <div id="family-details-output">
+                        </div>
+                    <h3>Contact & Other Details</h3>
+                    <div id="contact-details-output">
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="biodata-generator.js"></script>
+</body>
+</html>
