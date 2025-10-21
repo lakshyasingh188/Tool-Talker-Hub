@@ -84,9 +84,6 @@ document.addEventListener('DOMContentLoaded', () => {
     generateBtn.addEventListener('click', (e) => {
         e.preventDefault();
         
-        // No custom validation needed, let all empty fields pass.
-        // The check form.checkValidity() is removed.
-
         const data = {
             fullName: document.getElementById('full-name').value,
             dob: document.getElementById('dob').value,
@@ -118,7 +115,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return '';
         };
 
-        // Format Date and Time
+        // Format Date and Time (Only if DOB is present)
         let dobRow = '';
         const dobValue = data.dob.trim();
         if (dobValue) {
@@ -179,28 +176,29 @@ document.addEventListener('DOMContentLoaded', () => {
         `;
         document.getElementById('contact-details-output').innerHTML = contactDetailsHTML;
 
-
-        // Show output and Download button
+        // Show output (Biodata)
         outputDiv.style.display = 'block';
-        downloadBtn.style.display = 'inline-block'; 
         
-        // Hide input fields
+        // Hide input fields and the GENERATE button
         document.querySelector('.input-form').style.display = 'none'; 
-        generateBtn.style.display = 'none'; 
         document.querySelector('.customization-panel').style.display = 'none'; 
+        
+        // **** DOWNLOAD BUTTON FIX: Show only the download button ****
+        generateBtn.style.display = 'none'; 
+        downloadBtn.style.display = 'inline-block'; 
     });
 
-    // --- 3. DOWNLOAD FUNCTIONALITY with html2pdf.js (FIXED) ---
+    // --- 3. DOWNLOAD FUNCTIONALITY with html2pdf.js (Tested Logic) ---
     downloadBtn.addEventListener('click', () => {
         // Temporarily hide the download button to prevent it from appearing in the PDF
         downloadBtn.style.display = 'none';
         
         const element = document.getElementById('biodata-output');
         const opt = {
-            margin:       10, // Margin in mm
+            margin:       10, 
             filename:     'Marriage_Biodata.pdf',
             image:        { type: 'jpeg', quality: 0.98 },
-            html2canvas:  { scale: 2, useCORS: true, logging: true },
+            html2canvas:  { scale: 2, useCORS: true, logging: true }, // useCORS is crucial for uploaded images on GitHub Pages
             jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
         };
 
@@ -212,7 +210,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Re-show button even if error occurs
             downloadBtn.style.display = 'inline-block';
             console.error("PDF generation failed:", error);
-            alert("PDF जनरेट करने में कोई समस्या आई है। कंसोल में देखें।");
+            alert("PDF जनरेट करने में कोई समस्या आई है। (यदि आपने फोटो अपलोड की है, तो उसे हटाकर फिर से प्रयास करें क्योंकि यह CORS की समस्या हो सकती है।)"); 
         });
     });
 });
