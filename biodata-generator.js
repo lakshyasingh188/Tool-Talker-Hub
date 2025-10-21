@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const rootStyles = document.documentElement.style;
     const hinduSpecificFields = document.querySelectorAll('.hindu-specific');
 
-    let currentTemplate = 'hindu-beige'; // Default template
+    let currentTemplate = 'hindu-beige'; 
 
     // --- 0. INITIAL SETUP & TEMPLATE LOGIC ---
     
@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
             selectedCard.classList.add('selected');
             rootStyles.setProperty('--template-bg', selectedCard.dataset.bg);
             rootStyles.setProperty('--template-accent', selectedCard.dataset.accent);
-            accentColorSelect.value = selectedCard.dataset.accent; // Sync dropdown
+            accentColorSelect.value = selectedCard.dataset.accent; 
         }
 
 
@@ -166,9 +166,11 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('contact-details-output').innerHTML = contactDetailsHTML;
 
 
-        // Hide input fields and show output/download button
+        // Show output and Download button
         outputDiv.style.display = 'block';
-        downloadBtn.style.display = 'inline-block';
+        downloadBtn.style.display = 'inline-block'; // <<<--- This line ensures the button is visible
+        
+        // Hide input fields
         document.querySelector('.input-form').style.display = 'none'; 
         generateBtn.style.display = 'none'; 
         document.querySelector('.customization-panel').style.display = 'none'; 
