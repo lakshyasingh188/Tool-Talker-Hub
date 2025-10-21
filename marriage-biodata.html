@@ -6,14 +6,16 @@
     <title>Marriage Biodata Maker</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
     <style>
         /* Common Styles */
         :root {
-            --primary-color: #004D40; /* Default Green */
+            --primary-color: #004D40; 
             --secondary-color: #f4f4f9;
             --text-color: #333;
             --template-bg: #fff8e1; /* Default Hindu/Beige */
-            --template-accent: #d8572a;
+            --template-accent: #d8572a; /* Default Hindu/Orange */
         }
 
         body {
@@ -40,6 +42,7 @@
             border-radius: 8px;
             margin-bottom: 20px;
             display: flex;
+            flex-wrap: wrap; 
             gap: 20px;
             align-items: center;
         }
@@ -47,8 +50,72 @@
         .customization-panel label {
             font-weight: bold;
         }
+
+        .template-preview-container {
+            display: flex;
+            gap: 15px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+            justify-content: flex-start;
+        }
+
+        .template-card {
+            border: 2px solid #ccc;
+            border-radius: 8px;
+            padding: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            width: 120px;
+            text-align: center;
+            font-size: 0.85em;
+            position: relative;
+        }
+        .template-card.selected {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 5px var(--primary-color);
+            background-color: #e6f7ff; 
+        }
+        .template-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .template-card .preview-box {
+            width: 80px;
+            height: 60px;
+            border: 1px solid #aaa;
+            margin: 0 auto 5px auto;
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+        }
         
-        /* Form Styles (Unchanged) */
+        .template-card .preview-box::before { /* Accent line */
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 8px;
+        }
+        .template-card .preview-box::after { /* Background fill */
+            content: '';
+            position: absolute;
+            top: 8px;
+            left: 0;
+            width: 100%;
+            height: calc(100% - 8px);
+        }
+        /* Specific Preview Styles (For visual preview only) */
+        .template-card.hindu .preview-box::before { background: #d8572a; }
+        .template-card.hindu .preview-box::after { background: #fff8e1; }
+        .template-card.muslim-green .preview-box::before { background: #004D40; }
+        .template-card.muslim-green .preview-box::after { background: #e8f5e9; }
+        .template-card.muslim-blue .preview-box::before { background: #1565C0; }
+        .template-card.muslim-blue .preview-box::after { background: #e3f2fd; }
+
+
+        /* Form Styles */
         .input-form h1 {
             color: var(--primary-color);
             text-align: center;
@@ -116,7 +183,7 @@
             margin-top: 40px;
             padding: 0;
             border: 1px solid #ddd;
-            background: var(--template-bg); /* Uses selected background color */
+            background: var(--template-bg); 
             position: relative;
             overflow: hidden;
         }
@@ -126,13 +193,13 @@
             padding: 20px 0;
             background: #ffffff; 
             position: relative;
-            border-bottom: 5px double var(--template-accent); /* Uses selected accent color */
+            border-bottom: 5px double var(--template-accent); 
         }
         
         .biodata-header h2 {
             margin: 0;
             font-size: 1.8em;
-            color: var(--template-accent); /* Uses selected accent color */
+            color: var(--template-accent); 
             letter-spacing: 1px;
             font-family: serif; 
         }
@@ -142,7 +209,7 @@
             margin-bottom: 10px;
         }
         
-        /* Main Content Grid (Unchanged) */
+        /* Main Content Grid */
         .biodata-content {
             display: flex;
             padding: 30px;
@@ -183,22 +250,13 @@
         #biodata-photo {
             width: 180px;
             height: 220px;
-            border: 4px solid var(--template-accent); /* Uses selected accent color */
+            border: 4px solid var(--template-accent); 
             border-radius: 50%;
             object-fit: cover;
             margin-top: 10px;
         }
 
-        /* Utility for Print */
-        @media print {
-            body { background: white; padding: 0; }
-            .container { box-shadow: none; padding: 0; }
-            .input-form, .button-group, .customization-panel { display: none; }
-            #biodata-output { display: block !important; border: none; }
-            .biodata-output {
-                page-break-after: always;
-            }
-        }
+        /* Print media query is handled by html2pdf */
     </style>
 </head>
 <body>
@@ -206,20 +264,32 @@
     <div class="container">
         
         <div class="customization-panel">
-            <label for="template-select">टेम्पलेट चुनें:</label>
-            <select id="template-select">
-                <option value="hindu-beige">Hindu - Beige (Default)</option>
-                <option value="muslim-green">Muslim - Green</option>
-                <option value="muslim-blue">Muslim - Blue</option>
-            </select>
+            <label>टेम्पलेट चुनें:</label>
+            <div class="template-preview-container">
+                <div class="template-card hindu" data-template="hindu-beige" data-accent="#d8572a" data-bg="#fff8e1">
+                    <div class="preview-box"></div>
+                    <span>Hindu</span>
+                </div>
+                <div class="template-card muslim-green" data-template="muslim-green" data-accent="#004D40" data-bg="#e8f5e9">
+                    <div class="preview-box"></div>
+                    <span>Muslim (Green)</span>
+                </div>
+                <div class="template-card muslim-blue" data-template="muslim-blue" data-accent="#1565C0" data-bg="#e3f2fd">
+                    <div class="preview-box"></div>
+                    <span>Muslim (Blue)</span>
+                </div>
+            </div>
             
-            <label for="accent-color-select">रंग चुनें:</label>
-            <select id="accent-color-select">
-                <option value="#d8572a">Saffron/Orange (Default)</option>
-                <option value="#004D40">Teal Green</option>
-                <option value="#2196F3">Blue</option>
-                <option value="#6A1B9A">Purple</option>
-            </select>
+            <div style="margin-left: auto;">
+                <label for="accent-color-select">रंग चुनें:</label>
+                <select id="accent-color-select">
+                    <option value="#d8572a">Saffron/Orange (Default)</option>
+                    <option value="#004D40">Teal Green</option>
+                    <option value="#2196F3">Blue</option>
+                    <option value="#6A1B9A">Purple</option>
+                    <option value="#8BC34A">Light Green</option>
+                </select>
+            </div>
         </div>
 
         <div class="input-form">
@@ -235,10 +305,10 @@
                     <div class="form-group"><label for="place-of-birth">जन्म स्थान (Place of Birth)</label><input type="text" id="place-of-birth" required></div>
                     <div class="form-group"><label for="religious">धर्म (Religious)</label><input type="text" id="religious" value="Hindu" required></div>
                     <div class="form-group"><label for="caste">जाति/समुदाय (Caste/Community)</label><input type="text" id="caste" required></div>
-                    <div class="form-group" id="rashi-group"><label for="rashi">राशि (Rashi)</label><input type="text" id="rashi"></div>
-                    <div class="form-group" id="nakshatra-group"><label for="nakshatra">नक्षत्र (Nakshatra)</label><input type="text" id="nakshatra"></div>
-                    <div class="form-group" id="manglik-group"><label for="manglik">मांगलिक (Manglik)</label><select id="manglik"><option value="No">No</option><option value="Yes">Yes</option></select></div>
-                    <div class="form-group" id="gotra-group"><label for="gotra">गोत्र (Gotra)</label><input type="text" id="gotra"></div>
+                    <div class="form-group hindu-specific"><label for="rashi">राशि (Rashi)</label><input type="text" id="rashi"></div>
+                    <div class="form-group hindu-specific"><label for="nakshatra">नक्षत्र (Nakshatra)</label><input type="text" id="nakshatra"></div>
+                    <div class="form-group hindu-specific"><label for="manglik">मांगलिक (Manglik)</label><select id="manglik"><option value="No">No</option><option value="Yes">Yes</option></select></div>
+                    <div class="form-group hindu-specific"><label for="gotra">गोत्र (Gotra)</label><input type="text" id="gotra"></div>
                     <div class="form-group"><label for="complexion">रंग (Complexion)</label><input type="text" id="complexion" value="Fair"></div>
                     <div class="form-group"><label for="blood-group">ब्लड ग्रुप (Blood Group)</label><input type="text" id="blood-group"></div>
                     <div class="form-group"><label for="education">उच्च शिक्षा (Higher Education)</label><input type="text" id="education" required></div>
@@ -263,7 +333,7 @@
 
             <div class="button-group">
                 <button type="submit" id="generate-btn"><i class="fas fa-magic"></i> बायोडाटा जनरेट करें</button>
-                <button id="download-btn"><i class="fas fa-download"></i> प्रिंट/डाउनलोड करें (PDF)</button>
+                <button id="download-btn"><i class="fas fa-download"></i> PDF डाउनलोड करें</button>
             </div>
         </div>
 
