@@ -106,7 +106,7 @@
             width: 100%;
             height: calc(100% - 8px);
         }
-        /* Specific Preview Styles (For visual preview only) */
+        /* Specific Preview Styles (For visual preview only) - keep these fixed for preview */
         .template-card.hindu .preview-box::before { background: #d8572a; }
         .template-card.hindu .preview-box::after { background: #fff8e1; }
         .template-card.muslim-green .preview-box::before { background: #004D40; }
@@ -174,18 +174,21 @@
         #download-btn {
             background-color: #2196F3;
             color: white;
-            display: none; /* Key: Initially hidden, shown only after generation */
+            display: none; 
         }
 
         /* Biodata Output Styles */
         #biodata-output {
             display: none; 
             margin-top: 40px;
-            padding: 0;
-            border: 1px solid #ddd;
+            padding: 20px; /* Added padding for the inner content */
+            border: 5mm solid var(--template-accent); /* 5mm thick border */
             background: var(--template-bg); 
             position: relative;
             overflow: hidden;
+            box-sizing: border-box; /* Ensure padding/border are included in total width/height */
+            min-height: 297mm; /* A4 height approx for better preview */
+            page-break-after: always; /* For printing multiple biodatas */
         }
 
         .biodata-header {
@@ -207,12 +210,14 @@
         .biodata-header img.ganesha-icon {
             height: 50px;
             margin-bottom: 10px;
+            object-fit: contain; /* Ensure image fits */
         }
         
         /* Main Content Grid */
         .biodata-content {
             display: flex;
-            padding: 30px;
+            padding: 15px 0; /* Adjusted padding */
+            align-items: flex-start; /* Align items to the top */
         }
 
         .details-section {
@@ -232,6 +237,7 @@
         .detail-row {
             display: flex;
             margin-bottom: 10px;
+            line-height: 1.4;
         }
 
         .detail-row span:first-child {
@@ -245,17 +251,18 @@
             width: 200px;
             min-width: 200px;
             text-align: center;
+            position: relative;
         }
 
         #biodata-photo {
             width: 180px;
             height: 220px;
-            border: 4px solid var(--template-accent); 
+            border: 4px solid var(--template-accent); /* Solid border for photo */
             border-radius: 50%;
             object-fit: cover;
             margin-top: 10px;
+            background-color: #f0f0f0; /* Placeholder background */
         }
-
     </style>
 </head>
 <body>
@@ -263,30 +270,53 @@
     <div class="container">
         
         <div class="customization-panel">
-            <label>टेम्पलेट चुनें:</label>
-            <div class="template-preview-container">
-                <div class="template-card hindu" data-template="hindu-beige" data-accent="#d8572a" data-bg="#fff8e1">
-                    <div class="preview-box"></div>
-                    <span>Hindu</span>
-                </div>
-                <div class="template-card muslim-green" data-template="muslim-green" data-accent="#004D40" data-bg="#e8f5e9">
-                    <div class="preview-box"></div>
-                    <span>Muslim (Green)</span>
-                </div>
-                <div class="template-card muslim-blue" data-template="muslim-blue" data-accent="#1565C0" data-bg="#e3f2fd">
-                    <div class="preview-box"></div>
-                    <span>Muslim (Blue)</span>
+            <div>
+                <label>टेम्पलेट चुनें:</label>
+                <div class="template-preview-container">
+                    <div class="template-card hindu" data-template="hindu-beige" data-accent="#d8572a" data-bg="#fff8e1">
+                        <div class="preview-box"></div>
+                        <span>Hindu</span>
+                    </div>
+                    <div class="template-card muslim-green" data-template="muslim-green" data-accent="#004D40" data-bg="#e8f5e9">
+                        <div class="preview-box"></div>
+                        <span>Muslim (Green)</span>
+                    </div>
+                    <div class="template-card muslim-blue" data-template="muslim-blue" data-accent="#1565C0" data-bg="#e3f2fd">
+                        <div class="preview-box"></div>
+                        <span>Muslim (Blue)</span>
+                    </div>
                 </div>
             </div>
             
-            <div style="margin-left: auto;">
-                <label for="accent-color-select">रंग चुनें:</label>
+            <div>
+                <label for="accent-color-select">Accent रंग चुनें:</label>
                 <select id="accent-color-select">
                     <option value="#d8572a">Saffron/Orange (Default)</option>
                     <option value="#004D40">Teal Green</option>
                     <option value="#2196F3">Blue</option>
                     <option value="#6A1B9A">Purple</option>
                     <option value="#8BC34A">Light Green</option>
+                    <option value="#C62828">Dark Red</option>
+                    <option value="#FF6F00">Amber Orange</option>
+                    <option value="#4CAF50">Emerald Green</option>
+                    <option value="#8E24AA">Deep Purple</option>
+                    <option value="#FBC02D">Mustard Yellow</option>
+                </select>
+            </div>
+
+            <div>
+                <label for="background-color-select">पृष्ठभूमि रंग चुनें:</label>
+                <select id="background-color-select">
+                    <option value="#fff8e1">Light Beige (Default)</option>
+                    <option value="#e8f5e9">Pale Green</option>
+                    <option value="#e3f2fd">Light Blue</option>
+                    <option value="#fffde7">Cream</option>
+                    <option value="#ffebee">Light Pink</option>
+                    <option value="#f3e5f5">Lavender</option>
+                    <option value="#fbe9e7">Light Coral</option>
+                    <option value="#f0f4c3">Pale Yellow</option>
+                    <option value="#e0f2f7">Sky Blue</option>
+                    <option value="#e0e0e0">Light Grey</option>
                 </select>
             </div>
         </div>
@@ -338,7 +368,7 @@
 
         <div id="biodata-output">
             <div class="biodata-header">
-                <img id="ganesha-icon" src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/Lord_Ganesha.svg/100px-Lord_Ganesha.svg.png" class="ganesha-icon" alt="Ganesha">
+                <img id="ganesha-icon" src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/Lord_Ganesha.svg/100px-Lord_Ganesha.svg.png" class="ganesha-icon" alt="Lord Ganesha Symbol">
                 <h2 id="biodata-mantra">॥ श्री गणेशाय नमः ॥</h2>
                 <h3 style="margin-top: 10px; color: var(--text-color);">BIODATA</h3>
             </div>
