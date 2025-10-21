@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const biodataPhoto = document.getElementById('biodata-photo');
     const templateCards = document.querySelectorAll('.template-card');
     const accentColorSelect = document.getElementById('accent-color-select');
+    const backgroundColorSelect = document.getElementById('background-color-select'); // New: Background color select
     const ganeshaIcon = document.getElementById('ganesha-icon');
     const biodataMantra = document.getElementById('biodata-mantra');
     const rootStyles = document.documentElement.style;
@@ -30,7 +31,8 @@ document.addEventListener('DOMContentLoaded', () => {
             selectedCard.classList.add('selected');
             rootStyles.setProperty('--template-bg', selectedCard.dataset.bg);
             rootStyles.setProperty('--template-accent', selectedCard.dataset.accent);
-            accentColorSelect.value = selectedCard.dataset.accent; 
+            accentColorSelect.value = selectedCard.dataset.accent; // Sync accent dropdown
+            backgroundColorSelect.value = selectedCard.dataset.bg; // Sync background dropdown
         }
 
 
@@ -58,9 +60,14 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Event listener for accent color dropdown (Only updates accent, not template logic)
+    // Event listener for accent color dropdown
     accentColorSelect.addEventListener('change', (e) => {
         rootStyles.setProperty('--template-accent', e.target.value);
+    });
+
+    // New: Event listener for background color dropdown
+    backgroundColorSelect.addEventListener('change', (e) => {
+        rootStyles.setProperty('--template-bg', e.target.value);
     });
 
     // Apply default template on load
@@ -168,7 +175,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Show output and Download button
         outputDiv.style.display = 'block';
-        downloadBtn.style.display = 'inline-block'; // <<<--- This line ensures the button is visible
+        downloadBtn.style.display = 'inline-block'; 
         
         // Hide input fields
         document.querySelector('.input-form').style.display = 'none'; 
@@ -180,10 +187,10 @@ document.addEventListener('DOMContentLoaded', () => {
     downloadBtn.addEventListener('click', () => {
         const element = document.getElementById('biodata-output');
         const opt = {
-            margin:       10,
+            margin:       10, // Margin in mm
             filename:     'Marriage_Biodata.pdf',
             image:        { type: 'jpeg', quality: 0.98 },
-            html2canvas:  { scale: 2, useCORS: true }, // useCORS is critical for Ganesha image and photo
+            html2canvas:  { scale: 2, useCORS: true, logging: true }, // Added logging for debug
             jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
         };
 
