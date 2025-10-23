@@ -187,7 +187,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // जनरेट बटन को छिपाएँ
         generateBtn.style.display = 'none'; 
         
-        // डाउनलोड बटन को दिखाएँ
+        // डाउनलोड बटन को दिखाएँ (यह वह फिक्स है जो बटन को ज़बरदस्ती दिखाएगा)
         downloadBtn.style.display = 'inline-block'; 
     });
 
@@ -198,10 +198,10 @@ document.addEventListener('DOMContentLoaded', () => {
         
         const element = document.getElementById('biodata-output');
         const opt = {
-            margin:       10, 
+            margin:       10, // Margin in mm
             filename:     'Marriage_Biodata.pdf',
             image:        { type: 'jpeg', quality: 0.98 },
-            html2canvas:  { scale: 2, useCORS: true, logging: true }, 
+            html2canvas:  { scale: 2, useCORS: true, logging: true }, // useCORS is crucial for uploaded images
             jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
         };
 
