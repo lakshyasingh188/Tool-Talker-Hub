@@ -99,6 +99,7 @@ body {
 #download-btn {
     background-color: #2196F3;
     color: white;
+    /* यह डिफ़ॉल्ट रूप से छिपा रहेगा */
     display: none; 
 }
 
