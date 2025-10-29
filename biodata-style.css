@@ -94,20 +94,22 @@ body {
     background-color: var(--primary-color);
     color: white;
     margin-right: 15px;
+    /* जनरेट बटन छिपाया गया क्योंकि अब रियल-टाइम अपडेट होगा */
+    display: none; 
 }
 
 #download-btn {
     background-color: #2196F3;
     color: white;
-    /* यह डिफ़ॉल्ट रूप से छिपा रहेगा */
-    display: none; 
+    /* यह अब डिफ़ॉल्ट रूप से दिखेगा क्योंकि जनरेट बटन हटा दिया गया है */
+    /* आप इसे JS से दिखाएँगे, लेकिन CSS में display: block कर सकते हैं यदि आप चाहें */
 }
 
 /* =======================================
-   Biodata Output Styles
-   ======================================= */
+    Biodata Output Styles (Changed for Real-Time)
+    ======================================= */
 #biodata-output {
-    display: none; 
+    display: block; /* <--- मुख्य बदलाव: यह सुनिश्चित करता है कि प्रीव्यू लोड होते ही दिखता है */
     margin-top: 40px;
     padding: 20px;
     border: 5mm solid var(--template-accent); 
