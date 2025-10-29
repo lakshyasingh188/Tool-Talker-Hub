@@ -1,9 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
     // Buttons and Outputs
     const form = document.getElementById('biodata-form');
-    const generateBtn = document.getElementById('generate-btn'); // यह अब इस्तेमाल नहीं होगा
+    const generateBtn = document.getElementById('generate-btn'); // अब यह इस्तेमाल नहीं होगा (hidden in CSS)
     const downloadBtn = document.getElementById('download-btn');
-    const outputDiv = document.getElementById('biodata-output');
     const biodataPhoto = document.getElementById('biodata-photo');
     
     // Customization Elements
@@ -70,7 +69,6 @@ document.addEventListener('DOMContentLoaded', () => {
             try {
                 const dt = new Date(dobValue);
                 if (!isNaN(dt)) {
-                    // सुनिश्चित करें कि यह उपयोगकर्ता के स्थानीय समय क्षेत्र के बजाय एक सामान्य प्रारूप का उपयोग करता है
                     formattedDOB = dt.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' });
                     formattedTime = dt.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
                 }
@@ -124,10 +122,7 @@ document.addEventListener('DOMContentLoaded', () => {
         `;
         document.getElementById('contact-details-output').innerHTML = contactDetailsHTML;
         
-        // Output is permanently visible via CSS
-        // Hide Generate button, show Download button 
-        generateBtn.style.display = 'none'; 
-        downloadBtn.style.display = 'inline-block'; 
+        // The Download button is always visible now as per CSS/HTML
     }
 
 
@@ -171,16 +166,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     accentColorSelect.addEventListener('change', (e) => {
         rootStyles.setProperty('--template-accent', e.target.value);
+        renderBiodataPreview(); // Re-render to update the look
     });
 
     backgroundColorSelect.addEventListener('change', (e) => {
         rootStyles.setProperty('--template-bg', e.target.value);
+        renderBiodataPreview(); // Re-render to update the look
     });
     
     // --- B. Event Listeners for Real-Time Input Update ---
     allInputFields.forEach(field => {
-        // 'input' event for immediate update on every keystroke
-        // 'change' event for select boxes and file/date inputs
         field.addEventListener('input', renderBiodataPreview);
         field.addEventListener('change', renderBiodataPreview);
     });
@@ -200,9 +195,11 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // --- D. DOWNLOAD FUNCTIONALITY with html2pdf.js ---
-    // The generate button is no longer needed/hidden
     downloadBtn.addEventListener('click', () => {
-        // Temporarily hide the download button to prevent it from appearing in the PDF
+        // PDF जनरेट करने से पहले नवीनतम प्रीव्यू रेंडर करें
+        renderBiodataPreview(); 
+        
+        // डाउनलोड बटन को अस्थायी रूप से छिपाएँ ताकि वह PDF में न दिखे
         downloadBtn.style.display = 'none';
         
         const element = document.getElementById('biodata-output');
@@ -216,10 +213,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Use html2pdf to generate and save the PDF
         html2pdf().set(opt).from(element).save().then(() => {
-            // Re-show the download button after the PDF is saved
+            // PDF सेव होने के बाद डाउनलोड बटन को फिर से दिखाएँ
             downloadBtn.style.display = 'inline-block';
         }).catch(error => {
-            // Re-show button even if error occurs
+            // Error होने पर भी बटन को फिर से दिखाएँ
             downloadBtn.style.display = 'inline-block';
             console.error("PDF generation failed:", error);
             alert("PDF जनरेट करने में कोई समस्या आई है। (यदि आपने फोटो अपलोड की है, तो उसे हटाकर फिर से प्रयास करें क्योंकि यह CORS की समस्या हो सकती है।)"); 
