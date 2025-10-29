@@ -94,22 +94,20 @@ body {
     background-color: var(--primary-color);
     color: white;
     margin-right: 15px;
-    /* जनरेट बटन छिपाया गया क्योंकि अब रियल-टाइम अपडेट होगा */
+    /* जनरेट बटन छिपाया गया */
     display: none; 
 }
 
 #download-btn {
     background-color: #2196F3;
     color: white;
-    /* यह अब डिफ़ॉल्ट रूप से दिखेगा क्योंकि जनरेट बटन हटा दिया गया है */
-    /* आप इसे JS से दिखाएँगे, लेकिन CSS में display: block कर सकते हैं यदि आप चाहें */
 }
 
 /* =======================================
-    Biodata Output Styles (Changed for Real-Time)
+    Biodata Output Styles (Real-Time Preview)
     ======================================= */
 #biodata-output {
-    display: block; /* <--- मुख्य बदलाव: यह सुनिश्चित करता है कि प्रीव्यू लोड होते ही दिखता है */
+    display: block; /* <--- सुनिश्चित करता है कि प्रीव्यू दिखता रहे */
     margin-top: 40px;
     padding: 20px;
     border: 5mm solid var(--template-accent); 
@@ -120,7 +118,7 @@ body {
     min-height: 297mm;
 }
 
-/* TOP COLOR BAR (Replaces Ganesha Icon) */
+/* TOP COLOR BAR */
 .top-color-bar {
     height: 10px;
     background-color: var(--template-accent);
