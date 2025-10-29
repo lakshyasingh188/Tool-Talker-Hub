@@ -126,7 +126,8 @@ body {
 /* CV Border Style */
 .bordered-cv {
     /* Main CV border for screen view */
-    border: 3px solid black; 
+    /* *** BRANDING CHANGE: Changed 'black' to use the theme's primary color *** */
+    border: 3px solid var(--primary-color); 
     box-shadow: none; 
 }
 
@@ -290,6 +291,7 @@ body {
     min-height: 297mm; /* Maintain A4 size even with less content */
     box-shadow: none; 
     /* IMPORTANT FIX for Border to show in PDF */
+    /* This border is explicitly set to black for PDF printing standard */
     border: 3px solid #000 !important; /* <--- FIXED: Ensure border is always present */
     /* Ensure content visibility */
     overflow: hidden !important; 
