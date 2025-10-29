@@ -1,15 +1,22 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // Buttons and Outputs
     const form = document.getElementById('biodata-form');
-    const generateBtn = document.getElementById('generate-btn');
+    const generateBtn = document.getElementById('generate-btn'); // यह अब इस्तेमाल नहीं होगा
     const downloadBtn = document.getElementById('download-btn');
     const outputDiv = document.getElementById('biodata-output');
     const biodataPhoto = document.getElementById('biodata-photo');
+    
+    // Customization Elements
     const templateCards = document.querySelectorAll('.template-card');
     const accentColorSelect = document.getElementById('accent-color-select');
     const backgroundColorSelect = document.getElementById('background-color-select'); 
     const biodataMantra = document.getElementById('biodata-mantra');
+    
+    // Style and Logic
     const rootStyles = document.documentElement.style;
     const hinduSpecificFields = document.querySelectorAll('.hindu-specific');
+    // सभी इनपुट फील्ड्स को ट्रैक करने के लिए
+    const allInputFields = form.querySelectorAll('input, select, textarea');
 
     let currentTemplate = 'hindu-beige'; 
 
@@ -17,6 +24,112 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Default photo placeholder 
     biodataPhoto.src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="180" height="220" viewBox="0 0 180 220"><rect width="180" height="220" fill="#cccccc"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Arial" font-size="14" fill="#666666">Profile Photo</text></svg>';
+
+    // Helper function to create a detail row ONLY if the value is not empty
+    const createDetailRow = (label, value) => {
+        const trimmedValue = value ? value.trim() : '';
+        if (trimmedValue) {
+            return `<div class="detail-row"><span>${label}</span><span>: ${trimmedValue.replace(/\n/g, '<br>')}</span></div>`;
+        }
+        return '';
+    };
+
+    // Helper to get all current data from form
+    const getFormData = () => ({
+        fullName: document.getElementById('full-name').value,
+        dob: document.getElementById('dob').value,
+        height: document.getElementById('height').value,
+        placeOfBirth: document.getElementById('place-of-birth').value,
+        religious: document.getElementById('religious').value,
+        caste: document.getElementById('caste').value,
+        rashi: document.getElementById('rashi').value,
+        nakshatra: document.getElementById('nakshatra').value,
+        manglik: document.getElementById('manglik').value,
+        gotra: document.getElementById('gotra').value,
+        complexion: document.getElementById('complexion').value,
+        bloodGroup: document.getElementById('blood-group').value,
+        education: document.getElementById('education').value,
+        job: document.getElementById('job').value,
+        fatherName: document.getElementById('father-name').value,
+        motherName: document.getElementById('mother-name').value,
+        siblings: document.getElementById('siblings').value,
+        address: document.getElementById('address').value,
+        contactNo: document.getElementById('contact-no').value,
+    });
+
+    // Main function to render/update the biodata preview
+    function renderBiodataPreview() {
+        const data = getFormData();
+        
+        // --- Date of Birth Formatting ---
+        let dobRow = '';
+        const dobValue = data.dob.trim();
+        if (dobValue) {
+            let formattedDOB = dobValue;
+            let formattedTime = "";
+            try {
+                const dt = new Date(dobValue);
+                if (!isNaN(dt)) {
+                    // सुनिश्चित करें कि यह उपयोगकर्ता के स्थानीय समय क्षेत्र के बजाय एक सामान्य प्रारूप का उपयोग करता है
+                    formattedDOB = dt.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' });
+                    formattedTime = dt.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
+                }
+            } catch (e) {
+                // Formatting fails
+            }
+            dobRow = `<div class="detail-row"><span>Date of Birth & Time</span><span>: ${formattedDOB}${formattedTime ? `, ${formattedTime}` : ''}</span></div>`;
+        }
+        
+        // --- Personal Details Output ---
+        let personalDetailsHTML = `
+            ${createDetailRow('Full Name', data.fullName)}
+            ${dobRow}
+            ${createDetailRow('Height', data.height)}
+            ${createDetailRow('Place of Birth', data.placeOfBirth)}
+            ${createDetailRow('Religious', data.religious)}
+            ${createDetailRow('Caste/Community', data.caste)}
+        `;
+        
+        // Add Hindu-specific details only if the template is 'hindu-beige'
+        if (currentTemplate === 'hindu-beige') {
+             personalDetailsHTML += `
+                ${createDetailRow('Rashi', data.rashi)}
+                ${createDetailRow('Nakshatra', data.nakshatra)}
+                ${createDetailRow('Manglik', data.manglik)}
+                ${createDetailRow('Gotra', data.gotra)}
+            `;
+        }
+
+        personalDetailsHTML += `
+            ${createDetailRow('Complexion', data.complexion)}
+            ${createDetailRow('Blood Group', data.bloodGroup)}
+            ${createDetailRow('Higher Education', data.education)}
+            ${createDetailRow('Job/Occupation', data.job)}
+        `;
+
+        document.getElementById('personal-details-output').innerHTML = personalDetailsHTML;
+
+        // --- Family Details Output ---
+        const familyDetailsHTML = `
+            ${createDetailRow("Father's Name", data.fatherName)}
+            ${createDetailRow("Mother's Name", data.motherName)}
+            ${createDetailRow('Siblings (Brother/Sister)', data.siblings)}
+        `;
+        document.getElementById('family-details-output').innerHTML = familyDetailsHTML;
+
+        // --- Contact Details Output ---
+        const contactDetailsHTML = `
+            ${createDetailRow('Current Address', data.address)}
+            ${createDetailRow('Contact No.', data.contactNo)}
+        `;
+        document.getElementById('contact-details-output').innerHTML = contactDetailsHTML;
+        
+        // Output is permanently visible via CSS
+        // Hide Generate button, show Download button 
+        generateBtn.style.display = 'none'; 
+        downloadBtn.style.display = 'inline-block'; 
+    }
+
 
     // Function to apply template styles and logic
     function applyTemplate(template) {
@@ -44,29 +157,35 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             biodataMantra.textContent = '॥ BIODATA ॥';
         }
+        
+        // Re-render preview to apply conditional fields (Rashi, Gotra, etc.)
+        renderBiodataPreview();
     }
 
-    // Event listeners for template cards (Preview Click)
+    // --- A. Event Listeners for Customization (Templates and Colors) ---
     templateCards.forEach(card => {
         card.addEventListener('click', () => {
             applyTemplate(card.dataset.template);
         });
     });
 
-    // Event listener for accent color dropdown
     accentColorSelect.addEventListener('change', (e) => {
         rootStyles.setProperty('--template-accent', e.target.value);
     });
 
-    // Event listener for background color dropdown
     backgroundColorSelect.addEventListener('change', (e) => {
         rootStyles.setProperty('--template-bg', e.target.value);
     });
+    
+    // --- B. Event Listeners for Real-Time Input Update ---
+    allInputFields.forEach(field => {
+        // 'input' event for immediate update on every keystroke
+        // 'change' event for select boxes and file/date inputs
+        field.addEventListener('input', renderBiodataPreview);
+        field.addEventListener('change', renderBiodataPreview);
+    });
 
-    // Apply default template on load
-    applyTemplate(currentTemplate);
-
-    // --- 1. HANDLE IMAGE UPLOAD ---
+    // --- C. Handle Image Upload ---
     document.getElementById('biodata-image').addEventListener('change', function(event) {
         const file = event.target.files[0];
         if (file) {
@@ -80,118 +199,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // --- 2. GENERATE BIODATA ---
-    generateBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        
-        const data = {
-            fullName: document.getElementById('full-name').value,
-            dob: document.getElementById('dob').value,
-            height: document.getElementById('height').value,
-            placeOfBirth: document.getElementById('place-of-birth').value,
-            religious: document.getElementById('religious').value,
-            caste: document.getElementById('caste').value,
-            rashi: document.getElementById('rashi').value,
-            nakshatra: document.getElementById('nakshatra').value,
-            manglik: document.getElementById('manglik').value,
-            gotra: document.getElementById('gotra').value,
-            complexion: document.getElementById('complexion').value,
-            bloodGroup: document.getElementById('blood-group').value,
-            education: document.getElementById('education').value,
-            job: document.getElementById('job').value,
-            fatherName: document.getElementById('father-name').value,
-            motherName: document.getElementById('mother-name').value,
-            siblings: document.getElementById('siblings').value,
-            address: document.getElementById('address').value,
-            contactNo: document.getElementById('contact-no').value,
-        };
-
-        // Helper function to create a detail row ONLY if the value is not empty
-        const createDetailRow = (label, value) => {
-            const trimmedValue = value.trim();
-            if (trimmedValue) {
-                return `<div class="detail-row"><span>${label}</span><span>: ${trimmedValue.replace(/\n/g, '<br>')}</span></div>`;
-            }
-            return '';
-        };
-
-        // Format Date and Time (Only if DOB is present)
-        let dobRow = '';
-        const dobValue = data.dob.trim();
-        if (dobValue) {
-            let formattedDOB = dobValue;
-            let formattedTime = "";
-            try {
-                const dt = new Date(dobValue);
-                if (!isNaN(dt)) {
-                    formattedDOB = dt.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' });
-                    formattedTime = dt.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
-                }
-            } catch (e) {
-                // Keep raw value if formatting fails
-            }
-            dobRow = `<div class="detail-row"><span>Date of Birth & Time</span><span>: ${formattedDOB}${formattedTime ? `, ${formattedTime}` : ''}</span></div>`;
-        }
-        
-        // --- Personal Details Output ---
-        let personalDetailsHTML = `
-            ${createDetailRow('Full Name', data.fullName)}
-            ${dobRow}
-            ${createDetailRow('Height', data.height)}
-            ${createDetailRow('Place of Birth', data.placeOfBirth)}
-            ${createDetailRow('Religious', data.religious)}
-            ${createDetailRow('Caste/Community', data.caste)}
-        `;
-        
-        if (currentTemplate === 'hindu-beige') {
-             personalDetailsHTML += `
-                ${createDetailRow('Rashi', data.rashi)}
-                ${createDetailRow('Nakshatra', data.nakshatra)}
-                ${createDetailRow('Manglik', data.manglik)}
-                ${createDetailRow('Gotra', data.gotra)}
-             `;
-        }
-
-        personalDetailsHTML += `
-            ${createDetailRow('Complexion', data.complexion)}
-            ${createDetailRow('Blood Group', data.bloodGroup)}
-            ${createDetailRow('Higher Education', data.education)}
-            ${createDetailRow('Job/Occupation', data.job)}
-        `;
-
-        document.getElementById('personal-details-output').innerHTML = personalDetailsHTML;
-
-        // --- Family Details Output ---
-        const familyDetailsHTML = `
-            ${createDetailRow("Father's Name", data.fatherName)}
-            ${createDetailRow("Mother's Name", data.motherName)}
-            ${createDetailRow('Siblings (Brother/Sister)', data.siblings)}
-        `;
-        document.getElementById('family-details-output').innerHTML = familyDetailsHTML;
-
-        // --- Contact Details Output ---
-        const contactDetailsHTML = `
-            ${createDetailRow('Current Address', data.address)}
-            ${createDetailRow('Contact No.', data.contactNo)}
-        `;
-        document.getElementById('contact-details-output').innerHTML = contactDetailsHTML;
-
-        // Show output (Biodata)
-        outputDiv.style.display = 'block';
-        
-        // Hide input fields and customization panel
-        document.querySelector('.input-form').style.display = 'none'; 
-        document.querySelector('.customization-panel').style.display = 'none'; 
-        
-        // **** DOWNLOAD BUTTON FIX: Show only the download button ****
-        // जनरेट बटन को छिपाएँ
-        generateBtn.style.display = 'none'; 
-        
-        // डाउनलोड बटन को दिखाएँ (यह वह फिक्स है जो बटन को ज़बरदस्ती दिखाएगा)
-        downloadBtn.style.display = 'inline-block'; 
-    });
-
-    // --- 3. DOWNLOAD FUNCTIONALITY with html2pdf.js ---
+    // --- D. DOWNLOAD FUNCTIONALITY with html2pdf.js ---
+    // The generate button is no longer needed/hidden
     downloadBtn.addEventListener('click', () => {
         // Temporarily hide the download button to prevent it from appearing in the PDF
         downloadBtn.style.display = 'none';
@@ -216,4 +225,8 @@ document.addEventListener('DOMContentLoaded', () => {
             alert("PDF जनरेट करने में कोई समस्या आई है। (यदि आपने फोटो अपलोड की है, तो उसे हटाकर फिर से प्रयास करें क्योंकि यह CORS की समस्या हो सकती है।)"); 
         });
     });
+
+    // Apply default template and render initial preview on load
+    applyTemplate(currentTemplate);
+    renderBiodataPreview();
 });
