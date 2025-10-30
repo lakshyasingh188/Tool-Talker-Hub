@@ -84,8 +84,6 @@ document.addEventListener('DOMContentLoaded', () => {
     generateBtn.addEventListener('click', (e) => {
         e.preventDefault();
         
-        // ... (Data fetching logic remains the same) ...
-
         const data = {
             fullName: document.getElementById('full-name').value,
             dob: document.getElementById('dob').value,
@@ -188,7 +186,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- 3. DOWNLOAD FUNCTIONALITY with html2pdf.js FIX ---
     downloadBtn.addEventListener('click', () => {
-        // Temporarily hide the download button to prevent it from appearing in the PDF
         downloadBtn.style.display = 'none';
         
         const element = document.getElementById('biodata-output');
@@ -213,10 +210,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Use html2pdf to generate and save the PDF
         html2pdf().set(opt).from(element).save().then(() => {
-            // Re-show the download button after the PDF is saved
             downloadBtn.style.display = 'inline-block';
         }).catch(error => {
-            // Re-show button even if error occurs
             downloadBtn.style.display = 'inline-block';
             console.error("PDF generation failed:", error);
             alert("PDF जनरेट करने में कोई समस्या आई है। कृपया सुनिश्चित करें कि आपने हार्ड रीलोड (Ctrl+F5) किया है और फोटो की क्वालिटी बहुत अधिक नहीं है।"); 
