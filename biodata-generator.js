@@ -96,7 +96,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // --- 2. REAL-TIME BIODATA GENERATOR FUNCTION (Unchanged) ---
+    // --- 2. REAL-TIME BIODATA GENERATOR FUNCTION ---
     const updateBiodata = () => {
         // Collect data from form
         const data = {
@@ -124,13 +124,15 @@ document.addEventListener('DOMContentLoaded', () => {
         // Helper function to create a detail row ONLY if the value is not empty
         const createDetailRow = (label, value) => {
             const trimmedValue = (value || '').trim();
-            if (trimmedValue && trimmedValue !== 'Select') {
+            // Check for empty string, null, undefined, or the default 'Select'
+            if (trimmedValue && trimmedValue !== 'Select') { 
                 if (label === 'Contact No.') {
                     return `<div class="detail-row"><span>${label}</span><span>: <a href="tel:${trimmedValue}" style="text-decoration:none; color:inherit;">${trimmedValue}</a></span></div>`;
                 }
+                // Replace newlines with <br> for textarea content
                 return `<div class="detail-row"><span>${label}</span><span>: ${trimmedValue.replace(/\n/g, '<br>')}</span></div>`;
             }
-            return '';
+            return ''; // Return empty string if value is missing/empty
         };
 
         // Format Date and Time
@@ -205,14 +207,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- 3. GENERATE BIODATA BUTTON LOGIC (Finalize View) ---
     generateBtn.addEventListener('click', (e) => {
-        e.preventDefault();
+        // IMPORTANT: Prevent default form submission which might reload the page
+        e.preventDefault(); 
         
         updateBiodata(); 
         
-        // Hide input area
+        // Hide input area and show the download option
         inputFormDiv.style.display = 'none'; 
-        
-        // Hide generate button and SHOW download button
         generateBtn.style.display = 'none';
         downloadBtn.style.display = 'inline-block';
         
@@ -231,7 +232,6 @@ document.addEventListener('DOMContentLoaded', () => {
             margin: 10, // Margin in mm
             filename: 'Marriage_Biodata.pdf',
             image: { type: 'jpeg', quality: 0.98 },
-            // Use scale 3 for higher resolution PDF from the scaled down preview
             html2canvas: { scale: 3, useCORS: true, logging: true }, 
             jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } // Set PDF format to A4
         };
