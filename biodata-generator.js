@@ -11,7 +11,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const rootStyles = document.documentElement.style;
     const hinduSpecificFields = document.querySelectorAll('.hindu-specific');
     
-    // इनपुट एरिया को सही ढंग से सिलेक्ट करना महत्वपूर्ण है
     const inputAreaDiv = document.querySelector('.input-area'); 
     const containerDiv = document.querySelector('.container');
 
@@ -19,6 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- 0. INITIAL SETUP & TEMPLATE LOGIC ---
 
+    // यह Placeholder SVG डेटा-URI है, जिसे डिप्लॉयमेंट से कोई समस्या नहीं होगी
     const defaultPlaceholderSVG = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="180" height="220" viewBox="0 0 180 220"><rect width="180" height="220" fill="#e0e0e0"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Arial" font-size="14" fill="#666666">Profile Photo</text></svg>';
     biodataPhoto.src = defaultPlaceholderSVG;
     outputDiv.style.display = 'block';
@@ -69,21 +69,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
     applyTemplate(currentTemplate);
 
-    // --- 1. HANDLE IMAGE UPLOAD ---
+    // --- 1. HANDLE IMAGE UPLOAD (Using FileReader for Base64 Data-URI) ---
+    // यह तरीका डिप्लॉयमेंट के बाद CORS समस्याओं को टालता है क्योंकि यह छवि को Base64 स्ट्रिंग में बदल देता है।
     document.getElementById('biodata-image').addEventListener('change', function(event) {
         const file = event.target.files[0];
         if (file) {
             const reader = new FileReader();
             reader.onload = function(e) {
-                biodataPhoto.src = e.target.result;
+                // Photo source is set to the Base64 data-URI
+                biodataPhoto.src = e.target.result; 
             };
-            reader.readAsDataURL(file);
+            reader.readAsDataURL(file); // Reads the file as a data URL (Base64)
         } else {
             biodataPhoto.src = defaultPlaceholderSVG;
         }
     });
 
-    // --- 2. REAL-TIME BIODATA GENERATOR FUNCTION (Used by all input changes) ---
+    // --- 2. REAL-TIME BIODATA GENERATOR FUNCTION (Unchanged Logic) ---
     const updateBiodata = () => {
         const data = {
             fullName: document.getElementById('full-name').value,
@@ -133,7 +135,6 @@ document.addEventListener('DOMContentLoaded', () => {
             dobRow = `<div class="detail-row"><span>Date of Birth & Time</span><span>: ${formattedDOB}${formattedTime ? `, ${formattedTime}` : ''}</span></div>`;
         }
 
-        // --- Personal Details Output ---
         let personalDetailsHTML = `
             ${createDetailRow('Full Name', data.fullName)}
             ${dobRow}
@@ -143,7 +144,6 @@ document.addEventListener('DOMContentLoaded', () => {
             ${createDetailRow('Caste/Community', data.caste)}
         `;
 
-        // Check the current display style in the DOM to know if these fields should be included in the output
         if (document.querySelector('.hindu-specific').style.display !== 'none') {
              personalDetailsHTML += `
                  ${createDetailRow('Rashi', data.rashi)}
@@ -162,7 +162,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         document.getElementById('personal-details-output').innerHTML = personalDetailsHTML;
 
-        // --- Family Details Output ---
         const familyDetailsHTML = `
             ${createDetailRow("Father's Name", data.fatherName)}
             ${createDetailRow("Mother's Name", data.motherName)}
@@ -170,7 +169,6 @@ document.addEventListener('DOMContentLoaded', () => {
         `;
         document.getElementById('family-details-output').innerHTML = familyDetailsHTML;
 
-        // --- Contact Details Output ---
         const contactDetailsHTML = `
             ${createDetailRow('Current Address', data.address)}
             ${createDetailRow('Contact No.', data.contactNo)}
@@ -178,7 +176,6 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('contact-details-output').innerHTML = contactDetailsHTML;
     };
 
-    // Event listener for all form elements to trigger real-time update
     const formInputs = form.querySelectorAll('input, select, textarea');
     formInputs.forEach(input => {
         input.addEventListener('input', updateBiodata);
@@ -187,26 +184,23 @@ document.addEventListener('DOMContentLoaded', () => {
     
     updateBiodata(); 
 
-    // --- 3. GENERATE BIODATA BUTTON LOGIC (Finalize View) ---
+    // --- 3. GENERATE BIODATA BUTTON LOGIC (FIXED) ---
     generateBtn.addEventListener('click', (e) => {
         e.preventDefault(); 
         
-        // 1. Ensure the preview is fully updated with latest data
         updateBiodata(); 
         
-        // 2. Hide the input area
+        // Hide the input area and show the download option
         inputAreaDiv.style.display = 'none'; 
-        
-        // 3. Hide the generate button and SHOW the download button
         generateBtn.style.display = 'none';
         downloadBtn.style.display = 'inline-block';
         
-        // 4. Center the A4 output for better final viewing
+        // Center the A4 output
         containerDiv.style.justifyContent = 'center';
         containerDiv.style.maxWidth = '900px'; 
     });
 
-    // --- 4. DOWNLOAD FUNCTIONALITY with html2pdf.js (FIXED) ---
+    // --- 4. DOWNLOAD FUNCTIONALITY with html2pdf.js (FIXED FOR DEPLOYMENT) ---
     downloadBtn.addEventListener('click', () => {
         // Temporarily hide the download button
         downloadBtn.style.display = 'none';
@@ -216,18 +210,23 @@ document.addEventListener('DOMContentLoaded', () => {
             margin: 10, 
             filename: 'Marriage_Biodata.pdf',
             image: { type: 'jpeg', quality: 0.98 },
-            html2canvas: { scale: 3, useCORS: true, logging: true }, 
+            html2canvas: { 
+                scale: 3, 
+                useCORS: true, // डिप्लॉयमेंट के लिए CORS को सक्षम करें
+                allowTaint: false, // Taint को डिसेबल करें
+                logging: true 
+            }, 
             jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } 
         };
 
         // Use html2pdf to generate and save the PDF
         html2pdf().set(opt).from(element).save().then(() => {
-            // Re-show the download button after the PDF is saved
+            // Re-show the download button
             downloadBtn.style.display = 'inline-block';
         }).catch(error => {
             downloadBtn.style.display = 'inline-block';
             console.error("PDF generation failed:", error);
-            alert("PDF जनरेट करने में कोई समस्या आई है। कृपया कंसोल (Console) जाँचें।");
+            alert("PDF जनरेट करने में कोई समस्या आई है। कंसोल जाँचें।");
         });
     });
 });
