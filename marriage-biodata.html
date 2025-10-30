@@ -4,147 +4,219 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Marriage Biodata Maker</title>
-    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    
-    <link rel="stylesheet" href="biodata-style.css"> 
+    <link rel="stylesheet" href="biodata-style.css">
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-
+    
 </head>
 <body>
 
     <div class="container">
         
-        <div class="customization-panel">
-            <div>
-                <label>टेम्पलेट चुनें:</label>
-                <div class="template-preview-container">
-                    <div class="template-card hindu" data-template="hindu-beige" data-accent="#d8572a" data-bg="#fff8e1">
-                        <div class="preview-box"></div>
-                        <span>Hindu</span>
-                    </div>
-                    <div class="template-card muslim-green" data-template="muslim-green" data-accent="#004D40" data-bg="#e8f5e9">
-                        <div class="preview-box"></div>
-                        <span>Muslim (Green)</span>
-                    </div>
-                    <div class="template-card muslim-blue" data-template="muslim-blue" data-accent="#1565C0" data-bg="#e3f2fd">
-                        <div class="preview-box"></div>
-                        <span>Muslim (Blue)</span>
-                    </div>
-                </div>
-            </div>
+        <div class="input-area">
             
-            <div>
-                <label for="accent-color-select">Accent रंग (Border/Text) चुनें:</label>
-                <select id="accent-color-select">
-                    <option value="#d8572a">Saffron/Orange (Default)</option>
-                    <option value="#C62828">Dark Red (Maroon)</option>
-                    <option value="#004D40">Teal Green</option>
-                    <option value="#2196F3">Blue</option>
-                    <option value="#6A1B9A">Purple</option>
-                    <option value="#8BC34A">Light Green</option>
-                    <option value="#FF6F00">Amber Orange</option>
-                    <option value="#4CAF50">Emerald Green</option>
-                    <option value="#8E24AA">Deep Purple</option>
-                    <option value="#FBC02D">Mustard Yellow</option>
-                </select>
+            <div class="customization-panel">
+                <h3>थीम अनुकूलन (Theme Customization)</h3>
+                
+                <div class="template-section">
+                    <label>टेम्पलेट चुनें:</label>
+                    <div class="template-preview-container">
+                        
+                        <div class="template-card hindu hindu-beige" data-template="hindu-beige" data-accent="#d8572a" data-bg="#fff8e1">
+                            <div class="preview-box"></div>
+                            <span>Hindu</span>
+                        </div>
+                        
+                        <div class="template-card muslim muslim-green" data-template="muslim-green" data-accent="#004D40" data-bg="#e8f5e9">
+                            <div class="preview-box"></div>
+                            <span>Muslim (Green)</span>
+                        </div>
+                        
+                        <div class="template-card muslim muslim-blue" data-template="muslim-blue" data-accent="#1565C0" data-bg="#e3f2fd">
+                            <div class="preview-box"></div>
+                            <span>Muslim (Blue)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="color-selectors">
+                    <div class="form-group-inline">
+                        <label for="accent-color-select">Accent रंग (Border/Text):</label>
+                        <select id="accent-color-select">
+                            <option value="#d8572a">Saffron/Orange (Default)</option>
+                            <option value="#004D40">Deep Green</option>
+                            <option value="#1565C0">Dark Blue</option>
+                            <option value="#880e4f">Maroon/Purple</option>
+                        </select>
+                    </div>
+                    <div class="form-group-inline">
+                        <label for="background-color-select">पृष्ठभूमि रंग चुनें:</label>
+                        <select id="background-color-select">
+                            <option value="#fff8e1">Light Beige (Default)</option>
+                            <option value="#e8f5e9">Light Green</option>
+                            <option value="#e3f2fd">Light Blue</option>
+                            <option value="#ffffff">Pure White</option>
+                        </select>
+                    </div>
+                </div>
             </div>
 
-            <div>
-                <label for="background-color-select">पृष्ठभूमि रंग चुनें:</label>
-                <select id="background-color-select">
-                    <option value="#fff8e1">Light Beige (Default)</option>
-                    <option value="#fffde7">Cream (हल्का पीला)</option>
-                    <option value="#f0f4c3">Pale Yellow (पीला)</option>
-                    <option value="#f8bbd0">Light Pink (गुलाबी)</option>
-                    <option value="#ffebee">Light Red/Coral (हल्का लाल)</option>
-                    <option value="#e8f5e9">Pale Green</option>
-                    <option value="#e3f2fd">Light Blue</option>
-                    <option value="#f3e5f5">Lavender</option>
-                    <option value="#e0f2f7">Sky Blue</option>
-                    <option value="#e0e0e0">Light Grey</option>
-                </select>
-            </div>
-        </div>
+            <form id="biodata-form" class="input-form">
+                <h1>मैरिज बायोडाटा जानकारी 💍</h1>
 
-        <div class="input-form">
-            <h1>मैरिज बायोडाटा जानकारी 💍</h1>
-            
-            <form id="biodata-form">
-                
-                <h3>व्यक्तिगत विवरण (Personal Details)</h3>
-                <div class="form-section">
-                    <div class="form-group"><label for="full-name">पूरा नाम (Full Name)</label><input type="text" id="full-name"></div>
-                    <div class="form-group"><label for="dob">जन्म तिथि और समय (Date of Birth & Time)</label><input type="datetime-local" id="dob"></div>
-                    <div class="form-group"><label for="height">कद (Height) (e.g., 160 cm / 5'3")</label><input type="text" id="height"></div>
-                    <div class="form-group"><label for="place-of-birth">जन्म स्थान (Place of Birth)</label><input type="text" id="place-of-birth"></div>
-                    <div class="form-group"><label for="religious">धर्म (Religious)</label><input type="text" id="religious"></div>
-                    <div class="form-group"><label for="caste">जाति/समुदाय (Caste/Community)</label><input type="text" id="caste"></div>
-                    <div class="form-group hindu-specific"><label for="rashi">राशि (Rashi)</label><input type="text" id="rashi"></div>
-                    <div class="form-group hindu-specific"><label for="nakshatra">नक्षत्र (Nakshatra)</label><input type="text" id="nakshatra"></div>
-                    <div class="form-group hindu-specific"><label for="manglik">मांगलिक (Manglik)</label><select id="manglik"><option value="">Select</option><option value="No">No</option><option value="Yes">Yes</option></select></div>
-                    <div class="form-group hindu-specific"><label for="gotra">गोत्र (Gotra)</label><input type="text" id="gotra"></div>
-                    <div class="form-group"><label for="complexion">रंग (Complexion)</label><input type="text" id="complexion"></div>
-                    <div class="form-group"><label for="blood-group">ब्लड ग्रुप (Blood Group)</label><input type="text" id="blood-group"></div>
-                    <div class="form-group"><label for="education">उच्च शिक्षा (Higher Education)</label><input type="text" id="education"></div>
-                    <div class="form-group"><label for="job">जॉब/व्यवसाय (Job/Occupation)</label><input type="text" id="job"></div>
-                </div>
-                
-                <h3>पारिवारिक विवरण (Family Details)</h3>
-                <div class="form-section">
-                    <div class="form-group"><label for="father-name">पिता का नाम (Father's Name)</label><input type="text" id="father-name"></div>
-                    <div class="form-group"><label for="mother-name">माता का नाम (Mother's Name)</label><input type="text" id="mother-name"></div>
-                    <div class="form-group"><label for="siblings">भाई-बहन (e.g., 2 Sister, 1 Brother)</label><input type="text" id="siblings"></div>
-                </div>
+                <section>
+                    <h2>व्यक्तिगत विवरण (Personal Details)</h2>
+                    <div class="form-section">
+                        <div class="form-group">
+                            <label for="full-name">पूरा नाम (Full Name)</label>
+                            <input type="text" id="full-name" placeholder="Name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="dob">जन्म तिथि और समय (Date of Birth & Time)</label>
+                            <input type="datetime-local" id="dob" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="height">कद (Height) (e.g., 160 cm / 5' 3")</label>
+                            <input type="text" id="height" placeholder="e.g., 5' 8''">
+                        </div>
+                        <div class="form-group">
+                            <label for="place-of-birth">जन्म स्थान (Place of Birth)</label>
+                            <input type="text" id="place-of-birth" placeholder="City/Village">
+                        </div>
+                        <div class="form-group">
+                            <label for="religious">धर्म (Religious)</label>
+                            <input type="text" id="religious" value="Hindu" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="caste">जाति/समुदाय (Caste/Community)</label>
+                            <input type="text" id="caste" placeholder="Caste Name">
+                        </div>
+                    </div>
 
-                <h3>संपर्क और अन्य जानकारी (Contact & Other)</h3>
-                <div class="form-section full-width">
-                    <div class="form-group"><label for="address">वर्तमान पता (Current Address)</label><textarea id="address"></textarea></div>
-                    <div class="form-group"><label for="contact-no">संपर्क नंबर (Contact No.)</label><input type="text" id="contact-no"></div>
-                    <div class="form-group" id="photo-input-group"><label for="biodata-image">फोटो अपलोड करें (Upload Photo)</label><input type="file" id="biodata-image" accept="image/*"></div>
-                </div>
+                    <div class="form-section hindu-specific">
+                        <div class="form-group">
+                            <label for="rashi">राशि (Rashi)</label>
+                            <input type="text" id="rashi" placeholder="e.g., Mesh, Kanya">
+                        </div>
+                        <div class="form-group">
+                            <label for="nakshatra">नक्षत्र (Nakshatra)</label>
+                            <input type="text" id="nakshatra" placeholder="e.g., Ashwini">
+                        </div>
+                        <div class="form-group">
+                            <label for="manglik">मांगलिक (Manglik)</label>
+                            <select id="manglik">
+                                <option>Select</option>
+                                <option>Yes</option>
+                                <option>No</option>
+                                <option>Partial</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="gotra">गोत्र (Gotra)</label>
+                            <input type="text" id="gotra" placeholder="Gotra Name">
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <div class="form-group">
+                            <label for="complexion">रंग (Complexion)</label>
+                            <input type="text" id="complexion" placeholder="e.g., Fair, Wheatish">
+                        </div>
+                        <div class="form-group">
+                            <label for="blood-group">रक्त ग्रुप (Blood Group)</label>
+                            <input type="text" id="blood-group" placeholder="e.g., O+">
+                        </div>
+                        <div class="form-group">
+                            <label for="education">उच्च शिक्षा (Higher Education)</label>
+                            <input type="text" id="education" placeholder="e.g., B.Tech, M.A.">
+                        </div>
+                        <div class="form-group">
+                            <label for="job">व्यवसाय/काम (Job/Occupation)</label>
+                            <input type="text" id="job" placeholder="e.g., Software Engineer, Teacher">
+                        </div>
+                        <div class="form-group full-width">
+                            <label for="biodata-image">प्रोफ़ाइल फोटो अपलोड करें</label>
+                            <input type="file" id="biodata-image" accept="image/*">
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>पारिवारिक विवरण (Family Details)</h2>
+                    <div class="form-section">
+                        <div class="form-group">
+                            <label for="father-name">पिता का नाम (Father's Name)</label>
+                            <input type="text" id="father-name" placeholder="Father's Name">
+                        </div>
+                        <div class="form-group">
+                            <label for="mother-name">माता का नाम (Mother's Name)</label>
+                            <input type="text" id="mother-name" placeholder="Mother's Name">
+                        </div>
+                    </div>
+                    <div class="form-section full-width">
+                        <div class="form-group">
+                            <label for="siblings">भाई-बहन (Siblings) (e.g., 1 Brother, 2 Married Sisters)</label>
+                            <textarea id="siblings" rows="2" placeholder="Mention status and number"></textarea>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>संपर्क और पता (Contact & Address)</h2>
+                    <div class="form-section full-width">
+                        <div class="form-group">
+                            <label for="address">वर्तमान पता (Current Address)</label>
+                            <textarea id="address" rows="3" placeholder="Full Address"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="contact-no">संपर्क नंबर (Contact No.)</label>
+                            <input type="text" id="contact-no" placeholder="Mobile Number">
+                        </div>
+                    </div>
+                </section>
                 
+                <div class="button-group">
+                    <button type="submit" id="generate-btn">बायोडाटा जनरेट करें (Finalize View)</button>
+                    <button type="button" id="download-btn">⬇️ PDF डाउनलोड करें</button>
+                </div>
             </form>
-
-            <div class="button-group">
-                <button type="submit" id="generate-btn"><i class="fas fa-magic"></i> बायोडाटा जनरेट करें</button>
-                <button id="download-btn"><i class="fas fa-download"></i> PDF डाउनलोड करें</button>
-            </div>
         </div>
+
 
         <div id="biodata-output">
             <div class="top-color-bar"></div>
 
-            <div class="biodata-header">
-                <h2 id="biodata-mantra">॥ BIODATA ॥</h2>
-            </div>
-            
+            <header class="biodata-header">
+                <h2 id="biodata-mantra">॥ श्री गणेशाय नमः ॥</h2>
+                <h1>*** MARRIAGE BIODATA ***</h1>
+            </header>
+
             <div class="biodata-content">
+                
                 <div class="details-section">
-                    <h3>Personal Details</h3>
+                    
+                    <h3>व्यक्तिगत विवरण (Personal Details)</h3>
                     <div id="personal-details-output">
                         </div>
+
+                    <h3>पारिवारिक विवरण (Family Details)</h3>
+                    <div id="family-details-output">
+                        </div>
+
+                    <h3>संपर्क और अन्य विवरण (Contact & Other Details)</h3>
+                    <div id="contact-details-output">
+                        </div>
                 </div>
-                
+
                 <div class="photo-section">
                     <img id="biodata-photo" src="" alt="Profile Photo">
                 </div>
             </div>
             
-            <div class="biodata-content" style="padding-top: 0;">
-                <div class="details-section" style="padding-right: 0;">
-                    <h3>Family Details</h3>
-                    <div id="family-details-output">
-                        </div>
-                    <h3>Contact & Other Details</h3>
-                    <div id="contact-details-output">
-                        </div>
-                </div>
-            </div>
         </div>
     </div>
-
+    
     <script src="biodata-generator.js"></script>
+
 </body>
 </html>
