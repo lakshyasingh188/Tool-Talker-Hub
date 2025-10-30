@@ -48,9 +48,11 @@ document.addEventListener('DOMContentLoaded', () => {
         // Set Mantra and decide on field visibility
         if (template === 'hindu-beige') {
             biodataMantra.textContent = '॥ श्री गणेशाय नमः ॥';
+            // Show Hindu specific fields in the form
             hinduSpecificFields.forEach(field => field.style.display = 'block');
         } else if (template.startsWith('muslim')) {
             biodataMantra.textContent = 'بِسْمِ ٱللَّٰهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ';
+            // Hide Hindu specific fields in the form
             hinduSpecificFields.forEach(field => field.style.display = 'none');
         } else {
             biodataMantra.textContent = '॥ BIODATA ॥';
@@ -124,9 +126,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Helper function to create a detail row ONLY if the value is not empty
         const createDetailRow = (label, value) => {
-            const trimmedValue = value.trim();
+            const trimmedValue = (value || '').trim();
             // Also check for 'Select' value from dropdowns
             if (trimmedValue && trimmedValue !== 'Select') {
+                // If it's a contact number, allow click to call on devices that support it
+                if (label === 'Contact No.') {
+                    return `<div class="detail-row"><span>${label}</span><span>: <a href="tel:${trimmedValue}" style="text-decoration:none; color:inherit;">${trimmedValue}</a></span></div>`;
+                }
                 return `<div class="detail-row"><span>${label}</span><span>: ${trimmedValue.replace(/\n/g, '<br>')}</span></div>`;
             }
             return '';
@@ -140,8 +146,9 @@ document.addEventListener('DOMContentLoaded', () => {
             let formattedTime = "";
             try {
                 const dt = new Date(dobValue);
-                if (!isNaN(dt)) {
+                if (!isNaN(dt.getTime())) { // Check if date is valid
                     formattedDOB = dt.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' });
+                    // Use 12-hour format for time
                     formattedTime = dt.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
                 }
             } catch (e) {
@@ -160,7 +167,8 @@ document.addEventListener('DOMContentLoaded', () => {
             ${createDetailRow('Caste/Community', data.caste)}
         `;
 
-        if (currentTemplate === 'hindu-beige' || document.querySelector('.template-card.selected').dataset.template === 'hindu-beige') {
+        // Only include Hindu fields if the current template is Hindu
+        if (currentTemplate === 'hindu-beige') {
              personalDetailsHTML += `
                  ${createDetailRow('Rashi', data.rashi)}
                  ${createDetailRow('Nakshatra', data.nakshatra)}
@@ -198,7 +206,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const formInputs = form.querySelectorAll('input, select, textarea');
     formInputs.forEach(input => {
         input.addEventListener('input', updateBiodata);
-        input.addEventListener('change', updateBiodata); // For select/file inputs
+        input.addEventListener('change', updateBiodata); 
     });
     
     // Initial call to populate the preview
@@ -211,14 +219,17 @@ document.addEventListener('DOMContentLoaded', () => {
         // Ensure data is current
         updateBiodata(); 
         
-        // Hide input area and show download button
+        // Hide input area and customization panel
         inputFormDiv.style.display = 'none';
         customizationPanel.style.display = 'none';
+        
+        // Hide generate button and show download button
         generateBtn.style.display = 'none';
         downloadBtn.style.display = 'inline-block';
         
         // Adjust the container to center the A4 output for final review
         document.querySelector('.container').style.justifyContent = 'center';
+        document.querySelector('.container').style.maxWidth = '900px'; // Adjust container size for a centered A4 view
     });
 
     // --- 4. DOWNLOAD FUNCTIONALITY with html2pdf.js ---
@@ -231,7 +242,7 @@ document.addEventListener('DOMContentLoaded', () => {
             margin: 10, // Margin in mm
             filename: 'Marriage_Biodata.pdf',
             image: { type: 'jpeg', quality: 0.98 },
-            // Set scale to 3 for higher resolution PDF from the scaled down preview
+            // Use scale 3 for higher resolution PDF
             html2canvas: { scale: 3, useCORS: true, logging: true }, 
             jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
         };
@@ -244,7 +255,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Re-show button even if error occurs
             downloadBtn.style.display = 'inline-block';
             console.error("PDF generation failed:", error);
-            alert("PDF जनरेट करने में कोई समस्या आई है। (यदि आपने फोटो अपलोड की है, तो उसे हटाकर फिर से प्रयास करें क्योंकि यह CORS की समस्या हो सकती है।)");
+            alert("PDF जनरेट करने में कोई समस्या आई है। (यदि आपने फोटो अपलोड की है, तो फोटो को हटाने या किसी अन्य फ़ाइल फॉर्मेट का उपयोग करने का प्रयास करें।)");
         });
     });
 });
