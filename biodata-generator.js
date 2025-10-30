@@ -17,31 +17,32 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- 0. INITIAL SETUP & TEMPLATE LOGIC ---
 
-    // Default photo placeholder (Updated to match CSS)
-    biodataPhoto.src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="180" height="220" viewBox="0 0 180 220"><rect width="180" height="220" fill="#e0e0e0"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Arial" font-size="14" fill="#666666">Profile Photo</text></svg>';
-    outputDiv.style.display = 'block'; // Start by showing the preview area
+    // Default photo placeholder 
+    const defaultPlaceholderSVG = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="180" height="220" viewBox="0 0 180 220"><rect width="180" height="220" fill="#e0e0e0"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Arial" font-size="14" fill="#666666">Profile Photo</text></svg>';
+    biodataPhoto.src = defaultPlaceholderSVG;
+    
+    // Set up the display for side-by-side work
+    outputDiv.style.display = 'block';
 
     // Function to apply template styles and logic
-    function applyTemplate(template, forceAccent = null, forceBg = null) {
+    function applyTemplate(template) {
         currentTemplate = template;
 
-        // Reset all template cards
         templateCards.forEach(card => card.classList.remove('selected'));
 
         let selectedCard = document.querySelector(`.template-card[data-template="${template}"]`);
         if (selectedCard) {
             selectedCard.classList.add('selected');
             
-            // Set colors based on template or forced values
-            const accent = forceAccent || selectedCard.dataset.accent;
-            const bg = forceBg || selectedCard.dataset.bg;
+            const accent = selectedCard.dataset.accent;
+            const bg = selectedCard.dataset.bg;
             
             rootStyles.setProperty('--template-bg', bg);
             rootStyles.setProperty('--template-accent', accent);
             
-            // Update dropdowns only if not explicitly setting colors
-            if (!forceAccent) accentColorSelect.value = accent;
-            if (!forceBg) backgroundColorSelect.value = bg;
+            // Update dropdowns
+            accentColorSelect.value = accent;
+            backgroundColorSelect.value = bg;
         }
 
         // Set Mantra and decide on field visibility
@@ -53,31 +54,30 @@ document.addEventListener('DOMContentLoaded', () => {
             hinduSpecificFields.forEach(field => field.style.display = 'none');
         } else {
             biodataMantra.textContent = '॥ BIODATA ॥';
-            hinduSpecificFields.forEach(field => field.style.display = 'block'); // Default to showing if unknown
+            hinduSpecificFields.forEach(field => field.style.display = 'block');
         }
         
-        // Re-generate biodata preview after changing template
+        // Update the preview immediately
         updateBiodata();
     }
 
     // Event listeners for template cards (Preview Click)
     templateCards.forEach(card => {
         card.addEventListener('click', () => {
-            // Preserve current accent/bg if already customised via dropdowns
-            const currentAccent = accentColorSelect.value;
-            const currentBg = backgroundColorSelect.value;
-            applyTemplate(card.dataset.template, currentAccent, currentBg);
+            applyTemplate(card.dataset.template);
         });
     });
 
     // Event listener for accent color dropdown
     accentColorSelect.addEventListener('change', (e) => {
         rootStyles.setProperty('--template-accent', e.target.value);
+        updateBiodata(); // Update colors in preview
     });
 
     // Event listener for background color dropdown
     backgroundColorSelect.addEventListener('change', (e) => {
         rootStyles.setProperty('--template-bg', e.target.value);
+        updateBiodata(); // Update colors in preview
     });
 
     // Apply default template on load
@@ -93,8 +93,8 @@ document.addEventListener('DOMContentLoaded', () => {
             };
             reader.readAsDataURL(file);
         } else {
-            // If file is cleared, revert to placeholder
-            biodataPhoto.src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="180" height="220" viewBox="0 0 180 220"><rect width="180" height="220" fill="#e0e0e0"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Arial" font-size="14" fill="#666666">Profile Photo</text></svg>';
+            // Revert to placeholder
+            biodataPhoto.src = defaultPlaceholderSVG;
         }
     });
 
@@ -125,7 +125,8 @@ document.addEventListener('DOMContentLoaded', () => {
         // Helper function to create a detail row ONLY if the value is not empty
         const createDetailRow = (label, value) => {
             const trimmedValue = value.trim();
-            if (trimmedValue) {
+            // Also check for 'Select' value from dropdowns
+            if (trimmedValue && trimmedValue !== 'Select') {
                 return `<div class="detail-row"><span>${label}</span><span>: ${trimmedValue.replace(/\n/g, '<br>')}</span></div>`;
             }
             return '';
@@ -159,7 +160,7 @@ document.addEventListener('DOMContentLoaded', () => {
             ${createDetailRow('Caste/Community', data.caste)}
         `;
 
-        if (currentTemplate === 'hindu-beige') {
+        if (currentTemplate === 'hindu-beige' || document.querySelector('.template-card.selected').dataset.template === 'hindu-beige') {
              personalDetailsHTML += `
                  ${createDetailRow('Rashi', data.rashi)}
                  ${createDetailRow('Nakshatra', data.nakshatra)}
@@ -203,17 +204,21 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initial call to populate the preview
     updateBiodata(); 
 
-    // --- 3. GENERATE BIODATA BUTTON LOGIC ---
+    // --- 3. GENERATE BIODATA BUTTON LOGIC (Finalize View) ---
     generateBtn.addEventListener('click', (e) => {
         e.preventDefault();
+        
+        // Ensure data is current
+        updateBiodata(); 
+        
         // Hide input area and show download button
         inputFormDiv.style.display = 'none';
         customizationPanel.style.display = 'none';
         generateBtn.style.display = 'none';
         downloadBtn.style.display = 'inline-block';
         
-        // Ensure the final data is rendered
-        updateBiodata();
+        // Adjust the container to center the A4 output for final review
+        document.querySelector('.container').style.justifyContent = 'center';
     });
 
     // --- 4. DOWNLOAD FUNCTIONALITY with html2pdf.js ---
@@ -226,7 +231,8 @@ document.addEventListener('DOMContentLoaded', () => {
             margin: 10, // Margin in mm
             filename: 'Marriage_Biodata.pdf',
             image: { type: 'jpeg', quality: 0.98 },
-            html2canvas: { scale: 2, useCORS: true, logging: true }, // useCORS is crucial for uploaded images
+            // Set scale to 3 for higher resolution PDF from the scaled down preview
+            html2canvas: { scale: 3, useCORS: true, logging: true }, 
             jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
         };
 
@@ -241,5 +247,4 @@ document.addEventListener('DOMContentLoaded', () => {
             alert("PDF जनरेट करने में कोई समस्या आई है। (यदि आपने फोटो अपलोड की है, तो उसे हटाकर फिर से प्रयास करें क्योंकि यह CORS की समस्या हो सकती है।)");
         });
     });
-});
 });
