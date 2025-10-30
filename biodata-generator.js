@@ -10,42 +10,34 @@ document.addEventListener('DOMContentLoaded', () => {
     const biodataMantra = document.getElementById('biodata-mantra');
     const rootStyles = document.documentElement.style;
     const hinduSpecificFields = document.querySelectorAll('.hindu-specific');
-    const inputFormDiv = document.querySelector('.input-area'); 
-    const customizationPanel = document.querySelector('.customization-panel');
+    
+    // इनपुट एरिया को सही ढंग से सिलेक्ट करना महत्वपूर्ण है
+    const inputAreaDiv = document.querySelector('.input-area'); 
+    const containerDiv = document.querySelector('.container');
 
     let currentTemplate = 'hindu-beige';
 
     // --- 0. INITIAL SETUP & TEMPLATE LOGIC ---
 
-    // Default photo placeholder 
     const defaultPlaceholderSVG = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="180" height="220" viewBox="0 0 180 220"><rect width="180" height="220" fill="#e0e0e0"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Arial" font-size="14" fill="#666666">Profile Photo</text></svg>';
     biodataPhoto.src = defaultPlaceholderSVG;
-    
-    // Set up the display for side-by-side work
     outputDiv.style.display = 'block';
 
-    // Function to apply template styles and logic
     function applyTemplate(template) {
         currentTemplate = template;
-
         templateCards.forEach(card => card.classList.remove('selected'));
-
         let selectedCard = document.querySelector(`.template-card[data-template="${template}"]`);
+        
         if (selectedCard) {
             selectedCard.classList.add('selected');
-            
             const accent = selectedCard.dataset.accent;
             const bg = selectedCard.dataset.bg;
-            
             rootStyles.setProperty('--template-bg', bg);
             rootStyles.setProperty('--template-accent', accent);
-            
-            // Update dropdowns
             accentColorSelect.value = accent;
             backgroundColorSelect.value = bg;
         }
 
-        // Set Mantra and decide on field visibility
         if (template === 'hindu-beige') {
             biodataMantra.textContent = '॥ श्री गणेशाय नमः ॥';
             hinduSpecificFields.forEach(field => field.style.display = 'grid'); 
@@ -56,30 +48,25 @@ document.addEventListener('DOMContentLoaded', () => {
             biodataMantra.textContent = '॥ BIODATA ॥';
             hinduSpecificFields.forEach(field => field.style.display = 'grid');
         }
-        
         updateBiodata();
     }
 
-    // Event listeners for template cards (Preview Click)
     templateCards.forEach(card => {
         card.addEventListener('click', () => {
             applyTemplate(card.dataset.template);
         });
     });
 
-    // Event listener for accent color dropdown
     accentColorSelect.addEventListener('change', (e) => {
         rootStyles.setProperty('--template-accent', e.target.value);
         updateBiodata(); 
     });
 
-    // Event listener for background color dropdown
     backgroundColorSelect.addEventListener('change', (e) => {
         rootStyles.setProperty('--template-bg', e.target.value);
         updateBiodata(); 
     });
 
-    // Apply default template on load
     applyTemplate(currentTemplate);
 
     // --- 1. HANDLE IMAGE UPLOAD ---
@@ -96,9 +83,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // --- 2. REAL-TIME BIODATA GENERATOR FUNCTION ---
+    // --- 2. REAL-TIME BIODATA GENERATOR FUNCTION (Used by all input changes) ---
     const updateBiodata = () => {
-        // Collect data from form
         const data = {
             fullName: document.getElementById('full-name').value,
             dob: document.getElementById('dob').value,
@@ -121,21 +107,17 @@ document.addEventListener('DOMContentLoaded', () => {
             contactNo: document.getElementById('contact-no').value,
         };
 
-        // Helper function to create a detail row ONLY if the value is not empty
         const createDetailRow = (label, value) => {
             const trimmedValue = (value || '').trim();
-            // Check for empty string, null, undefined, or the default 'Select'
             if (trimmedValue && trimmedValue !== 'Select') { 
                 if (label === 'Contact No.') {
                     return `<div class="detail-row"><span>${label}</span><span>: <a href="tel:${trimmedValue}" style="text-decoration:none; color:inherit;">${trimmedValue}</a></span></div>`;
                 }
-                // Replace newlines with <br> for textarea content
                 return `<div class="detail-row"><span>${label}</span><span>: ${trimmedValue.replace(/\n/g, '<br>')}</span></div>`;
             }
-            return ''; // Return empty string if value is missing/empty
+            return '';
         };
 
-        // Format Date and Time
         let dobRow = '';
         const dobValue = data.dob.trim();
         if (dobValue) {
@@ -161,6 +143,7 @@ document.addEventListener('DOMContentLoaded', () => {
             ${createDetailRow('Caste/Community', data.caste)}
         `;
 
+        // Check the current display style in the DOM to know if these fields should be included in the output
         if (document.querySelector('.hindu-specific').style.display !== 'none') {
              personalDetailsHTML += `
                  ${createDetailRow('Rashi', data.rashi)}
@@ -202,38 +185,39 @@ document.addEventListener('DOMContentLoaded', () => {
         input.addEventListener('change', updateBiodata); 
     });
     
-    // Initial call to populate the preview
     updateBiodata(); 
 
     // --- 3. GENERATE BIODATA BUTTON LOGIC (Finalize View) ---
     generateBtn.addEventListener('click', (e) => {
-        // IMPORTANT: Prevent default form submission which might reload the page
         e.preventDefault(); 
         
+        // 1. Ensure the preview is fully updated with latest data
         updateBiodata(); 
         
-        // Hide input area and show the download option
-        inputFormDiv.style.display = 'none'; 
+        // 2. Hide the input area
+        inputAreaDiv.style.display = 'none'; 
+        
+        // 3. Hide the generate button and SHOW the download button
         generateBtn.style.display = 'none';
         downloadBtn.style.display = 'inline-block';
         
-        // Center the A4 output for better final viewing
-        document.querySelector('.container').style.justifyContent = 'center';
-        document.querySelector('.container').style.maxWidth = '900px'; 
+        // 4. Center the A4 output for better final viewing
+        containerDiv.style.justifyContent = 'center';
+        containerDiv.style.maxWidth = '900px'; 
     });
 
     // --- 4. DOWNLOAD FUNCTIONALITY with html2pdf.js (FIXED) ---
     downloadBtn.addEventListener('click', () => {
-        // Temporarily hide the download button to prevent it from appearing in the PDF
+        // Temporarily hide the download button
         downloadBtn.style.display = 'none';
         
         const element = document.getElementById('biodata-output');
         const opt = {
-            margin: 10, // Margin in mm
+            margin: 10, 
             filename: 'Marriage_Biodata.pdf',
             image: { type: 'jpeg', quality: 0.98 },
             html2canvas: { scale: 3, useCORS: true, logging: true }, 
-            jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } // Set PDF format to A4
+            jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } 
         };
 
         // Use html2pdf to generate and save the PDF
@@ -241,10 +225,9 @@ document.addEventListener('DOMContentLoaded', () => {
             // Re-show the download button after the PDF is saved
             downloadBtn.style.display = 'inline-block';
         }).catch(error => {
-            // Re-show button even if error occurs
             downloadBtn.style.display = 'inline-block';
             console.error("PDF generation failed:", error);
-            alert("PDF जनरेट करने में कोई समस्या आई है।");
+            alert("PDF जनरेट करने में कोई समस्या आई है। कृपया कंसोल (Console) जाँचें।");
         });
     });
 });
