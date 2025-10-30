@@ -22,7 +22,6 @@ document.addEventListener('DOMContentLoaded', () => {
     function applyTemplate(template) {
         currentTemplate = template;
 
-        // Reset all template cards
         templateCards.forEach(card => card.classList.remove('selected'));
 
         let selectedCard = document.querySelector(`.template-card[data-template="${template}"]`);
@@ -34,7 +33,6 @@ document.addEventListener('DOMContentLoaded', () => {
             backgroundColorSelect.value = selectedCard.dataset.bg; 
         }
 
-        // Set Mantra and decide on field visibility
         if (template === 'hindu-beige') {
             biodataMantra.textContent = '॥ श्री गणेशाय नमः ॥';
             hinduSpecificFields.forEach(field => field.style.display = 'block');
@@ -46,24 +44,20 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Event listeners for template cards (Preview Click)
     templateCards.forEach(card => {
         card.addEventListener('click', () => {
             applyTemplate(card.dataset.template);
         });
     });
 
-    // Event listener for accent color dropdown
     accentColorSelect.addEventListener('change', (e) => {
         rootStyles.setProperty('--template-accent', e.target.value);
     });
 
-    // Event listener for background color dropdown
     backgroundColorSelect.addEventListener('change', (e) => {
         rootStyles.setProperty('--template-bg', e.target.value);
     });
 
-    // Apply default template on load
     applyTemplate(currentTemplate);
 
     // --- 1. HANDLE IMAGE UPLOAD ---
@@ -191,12 +185,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const element = document.getElementById('biodata-output');
         
         const opt = {
-            // मार्जिन 0 mm सेट करें ताकि CSS में दिए गए A4 साइज़ को ही माने
+            // A4 साइज़ को बाध्य करने के लिए मार्जिन 0 mm सेट करें
             margin:       0, 
             filename:     'Marriage_Biodata.pdf',
             image:        { type: 'jpeg', quality: 0.98 },
             html2canvas:  { 
-                // स्केल 2.5 या 3 रखें ताकि PDF की क्वालिटी अच्छी हो
+                // हाई क्वालिटी और सही स्केलिंग के लिए
                 scale: 2.5, 
                 useCORS: true, 
                 logging: true 
