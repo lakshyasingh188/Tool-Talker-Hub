@@ -1,10 +1,10 @@
 /* Common Styles */
 :root {
-    --primary-color: #004D40;
-    --secondary-color: #f4f4f9;
+    --primary-color: #004D40; /* For form buttons/highlights */
+    --secondary-color: #f4f4f9; /* Body background */
     --text-color: #333;
-    --template-bg: #fff8e1; /* Default background */
-    --template-accent: #d8572a; /* Default accent/border color */
+    --template-bg: #fff8e1; /* Default A4 background (Light Beige) */
+    --template-accent: #d8572a; /* Default A4 accent/border color (Saffron/Orange) */
 }
 
 body {
@@ -20,50 +20,103 @@ body {
     margin: auto;
     background: white;
     padding: 30px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
+    box-shadow: 0 0 25px rgba(0, 0, 0, 0.15);
+    border-radius: 12px;
     display: flex; 
     flex-wrap: wrap; 
     gap: 30px; 
     align-items: flex-start; /* Aligns content to the top */
 }
 
-/* --- Customization Panel --- */
-.customization-panel {
-    background: #f0f0f0;
-    padding: 15px;
-    border-radius: 8px;
-    margin-bottom: 20px;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    align-items: center;
-    width: 100%; 
+/* --- Input and Customization Area --- */
+.input-area {
+    flex: 1; 
+    min-width: 550px; 
 }
 
-.customization-panel label {
-    font-weight: bold;
+.customization-panel {
+    background: #e0f2f1; /* Lighter background for customization */
+    border: 1px solid #b2dfdb;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 30px;
 }
+
+.customization-panel h3 {
+    color: var(--primary-color);
+    margin-top: 0;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 10px;
+}
+
+.template-section, .color-selectors {
+    margin-bottom: 15px;
+}
+
+.form-group-inline {
+    display: inline-block;
+    margin-right: 20px;
+}
+.form-group-inline label {
+    font-weight: bold;
+    color: #444;
+}
+
+/* Template Cards */
+.template-preview-container { 
+    display: flex; 
+    gap: 15px; 
+    margin-top: 10px; 
+}
+.template-card { 
+    border: 2px solid #ccc; 
+    border-radius: 8px; 
+    padding: 10px; 
+    cursor: pointer; 
+    transition: all 0.2s; 
+    width: 100px; 
+    text-align: center; 
+    font-size: 0.8em; 
+}
+.template-card.selected { 
+    border-color: var(--primary-color); 
+    box-shadow: 0 0 8px var(--primary-color); 
+    background-color: #c8e6c9; /* Light green highlight */
+}
+.template-card .preview-box { width: 80px; height: 60px; border: 1px solid #aaa; margin: 0 auto 5px auto; border-radius: 4px; overflow: hidden; position: relative; }
+.template-card .preview-box::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 8px; }
+.template-card .preview-box::after { content: ''; position: absolute; top: 8px; left: 0; width: 100%; height: calc(100% - 8px); }
+
+/* Template Colors for Previews */
+.template-card.hindu-beige .preview-box::before { background: #d8572a; }
+.template-card.hindu-beige .preview-box::after { background: #fff8e1; }
+.template-card.muslim-green .preview-box::before { background: #004D40; }
+.template-card.muslim-green .preview-box::after { background: #e8f5e9; }
+.template-card.muslim-blue .preview-box::before { background: #1565C0; }
+.template-card.muslim-blue .preview-box::after { background: #e3f2fd; }
 
 /* Form Styles */
-.input-form {
-    flex: 1; /* Allows the form to take up available space */
-    min-width: 500px; 
-}
-
 .input-form h1 {
     color: var(--primary-color);
     text-align: center;
     border-bottom: 2px solid #eee;
     padding-bottom: 10px;
     margin-bottom: 30px;
+    font-size: 1.8em;
+}
+.input-form h2 {
+    color: #4CAF50; /* Section title color */
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 5px;
+    margin-top: 25px;
+    font-size: 1.2em;
 }
 
 .form-section {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 20px;
-    margin-bottom: 20px;
+    gap: 15px;
+    margin-bottom: 15px;
 }
 
 .form-section.full-width {
@@ -72,32 +125,50 @@ body {
 
 .form-group label {
     display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
+    margin-bottom: 4px;
+    font-weight: 600;
     font-size: 0.9em;
+    color: #555;
 }
 
 .form-group input, .form-group select, .form-group textarea {
     width: 100%;
-    padding: 10px;
+    padding: 10px 12px;
     border: 1px solid #ccc;
-    border-radius: 5px;
+    border-radius: 6px;
     box-sizing: border-box;
+    transition: border-color 0.3s;
+}
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+    border-color: var(--primary-color);
+    outline: none;
 }
 
+/* Hindu specific fields will be shown/hidden by JS, maintaining grid on 'show' */
+.hindu-specific {
+    display: grid; 
+}
+
+
+/* Buttons */
 .button-group {
     text-align: center;
     margin-top: 30px;
 }
 
 .button-group button {
-    padding: 12px 25px;
+    padding: 12px 30px;
     border: none;
-    border-radius: 5px;
+    border-radius: 8px;
     cursor: pointer;
-    font-size: 1em;
+    font-size: 1.05em;
     font-weight: bold;
-    transition: background-color 0.3s;
+    transition: background-color 0.3s, transform 0.1s;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+.button-group button:active {
+    transform: translateY(1px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 #generate-btn {
@@ -109,11 +180,12 @@ body {
 #download-btn {
     background-color: #2196F3;
     color: white;
-    display: none; /* Hidden by default, shown after generate */
+    display: none; /* Hidden by default */
 }
 
+
 /* =======================================
-    Biodata Output Styles (A4 Preview)
+    A4 Biodata Output Presentation
     ======================================= */
 #biodata-output {
     flex-shrink: 0; 
@@ -121,40 +193,41 @@ body {
     width: 210mm; 
     min-height: 297mm; 
     
-    padding: 25mm 20mm; /* Adjusted padding to better resemble a printed page */
+    padding: 25mm 20mm; 
     border: 5mm solid var(--template-accent);
     background: var(--template-bg);
-    position: relative;
-    overflow: hidden;
     box-sizing: border-box;
-    box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    box-shadow: 0 0 15px rgba(0,0,0,0.3);
     display: block; 
     
     margin: 0; /* Important for side-by-side alignment */
 }
 
-/* TOP COLOR BAR */
 .top-color-bar {
     height: 10px;
     background-color: var(--template-accent);
-    /* Adjust margin to cover the full width of the A4 paper content area */
-    margin: -25mm -20mm 20px -20mm; 
+    margin: -25mm -20mm 25px -20mm; /* Cover full width of A4 top */
 }
 
 .biodata-header {
     text-align: center;
     padding: 10px 0 20px 0;
-    background: transparent;
-    position: relative;
 }
 
 .biodata-header h2 {
     margin: 0;
-    font-size: 2.2em; 
+    font-size: 1.5em; /* Mantra size */
     color: var(--template-accent);
-    letter-spacing: 2px;
     font-family: 'Georgia', serif;
-    font-weight: 700;
+}
+.biodata-header h1 {
+    font-size: 2.2em; /* Main title size */
+    margin: 5px 0 0 0;
+    color: #333;
+    letter-spacing: 2px;
+    border-bottom: 3px double #ccc;
+    display: inline-block;
+    padding-bottom: 5px;
 }
 
 .biodata-content {
@@ -170,24 +243,29 @@ body {
 
 .details-section h3 {
     color: var(--template-accent);
-    font-size: 1.4em; 
-    border-bottom: 3px solid var(--template-accent);
+    font-size: 1.3em; 
+    border-bottom: 2px solid var(--template-accent);
     padding-bottom: 5px;
+    margin-top: 20px;
+    margin-bottom: 15px;
+    font-weight: 700;
+}
+.details-section h3:first-child {
     margin-top: 0;
-    margin-bottom: 20px;
 }
 
 .detail-row {
     display: flex;
-    margin-bottom: 8px;
+    margin-bottom: 6px;
     line-height: 1.4;
     font-size: 0.95em; 
 }
 
 .detail-row span:first-child {
     font-weight: bold;
-    width: 180px; 
-    min-width: 180px;
+    width: 170px; 
+    min-width: 170px;
+    color: #555;
 }
 
 /* Photo Section */
@@ -195,29 +273,14 @@ body {
     width: 200px; 
     min-width: 200px;
     text-align: center;
-    position: relative;
 }
 
 #biodata-photo {
     width: 180px; 
     height: 220px; 
-    border: 4px solid var(--template-accent);
-    border-radius: 50%;
+    border: 5px solid var(--template-accent);
+    border-radius: 8px; /* Square photo for better A4 presentation */
     object-fit: cover;
     margin-top: 10px;
     background-color: #f0f0f0;
 }
-
-/* Customization Panel Styles (Template Card CSS) */
-.template-preview-container { display: flex; gap: 15px; margin-top: 10px; flex-wrap: wrap; justify-content: flex-start; }
-.template-card { border: 2px solid #ccc; border-radius: 8px; padding: 10px; cursor: pointer; transition: all 0.2s; width: 120px; text-align: center; font-size: 0.85em; position: relative; }
-.template-card.selected { border-color: var(--primary-color); box-shadow: 0 0 5px var(--primary-color); background-color: #e6f7ff; }
-.template-card .preview-box { width: 80px; height: 60px; border: 1px solid #aaa; margin: 0 auto 5px auto; border-radius: 4px; overflow: hidden; position: relative; }
-.template-card .preview-box::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 8px; }
-.template-card .preview-box::after { content: ''; position: absolute; top: 8px; left: 0; width: 100%; height: calc(100% - 8px); }
-.template-card.hindu .preview-box::before { background: #d8572a; }
-.template-card.hindu .preview-box::after { background: #fff8e1; }
-.template-card.muslim-green .preview-box::before { background: #004D40; }
-.template-card.muslim-green .preview-box::after { background: #e8f5e9; }
-.template-card.muslim-blue .preview-box::before { background: #1565C0; }
-.template-card.muslim-blue .preview-box::after { background: #e3f2fd; }
