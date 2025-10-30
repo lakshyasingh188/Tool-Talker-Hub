@@ -16,15 +16,16 @@ body {
 }
 
 .container {
-    max-width: 1300px; /* Increased max-width for side-by-side view */
+    max-width: 1400px; /* Increased max-width for comfortable side-by-side view */
     margin: auto;
     background: white;
     padding: 30px;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
-    display: flex; /* Enable flexbox for main content */
-    flex-wrap: wrap; /* Allow wrapping on smaller screens */
-    gap: 30px; /* Space between input and output */
+    display: flex; 
+    flex-wrap: wrap; 
+    gap: 30px; 
+    align-items: flex-start; /* Aligns content to the top */
 }
 
 /* --- Customization Panel --- */
@@ -37,7 +38,7 @@ body {
     flex-wrap: wrap;
     gap: 20px;
     align-items: center;
-    width: 100%; /* Full width within container */
+    width: 100%; 
 }
 
 .customization-panel label {
@@ -46,8 +47,8 @@ body {
 
 /* Form Styles */
 .input-form {
-    flex: 1; /* Take up remaining space */
-    min-width: 450px; /* Minimum width for the form */
+    flex: 1; /* Allows the form to take up available space */
+    min-width: 500px; 
 }
 
 .input-form h1 {
@@ -108,33 +109,37 @@ body {
 #download-btn {
     background-color: #2196F3;
     color: white;
-    /* जनरेट करने से पहले यह छिपा रहेगा */
-    display: none;
+    display: none; 
 }
 
 /* =======================================
-    Biodata Output Styles
+    Biodata Output Styles (A4 Preview)
     ======================================= */
 #biodata-output {
-    flex-shrink: 0; /* Prevents it from shrinking */
-    width: 400px; /* Fixed width for the PDF preview */
-    margin-top: 0px; /* Removed margin-top to align with input form */
-    padding: 20px;
+    flex-shrink: 0; 
+    /* A4 Size (210mm x 297mm) */
+    width: 210mm; 
+    min-height: 297mm; 
+    
+    padding: 25mm 20mm; /* Adjusted padding to better resemble a printed page */
     border: 5mm solid var(--template-accent);
     background: var(--template-bg);
     position: relative;
     overflow: hidden;
     box-sizing: border-box;
-    /* min-height: 297mm; */ /* Removed this to prevent excessive height in preview */
     box-shadow: 0 0 10px rgba(0,0,0,0.2);
-    display: block; /* Always show in preview mode */
+    display: block; 
+    
+    /* Center the A4 output on final view */
+    margin: 0 auto; 
 }
 
-/* TOP COLOR BAR (Replaces Ganesha Icon) */
+/* TOP COLOR BAR */
 .top-color-bar {
     height: 10px;
     background-color: var(--template-accent);
-    margin: -20px -20px 20px -20px;
+    /* Adjust margin to cover the full width of the A4 paper content area */
+    margin: -25mm -20mm 20px -20mm; 
 }
 
 .biodata-header {
@@ -146,7 +151,7 @@ body {
 
 .biodata-header h2 {
     margin: 0;
-    font-size: 1.8em; /* Adjusted font size for smaller preview */
+    font-size: 2.2em; /* Restored original font size */
     color: var(--template-accent);
     letter-spacing: 2px;
     font-family: 'Georgia', serif;
@@ -161,51 +166,50 @@ body {
 
 .details-section {
     flex-grow: 1;
-    padding-right: 15px; /* Reduced padding for compact preview */
+    padding-right: 30px; /* Restored original padding */
 }
 
 .details-section h3 {
     color: var(--template-accent);
-    font-size: 1.2em; /* Adjusted font size for smaller preview */
+    font-size: 1.4em; /* Restored original font size */
     border-bottom: 3px solid var(--template-accent);
     padding-bottom: 5px;
     margin-top: 0;
-    margin-bottom: 15px; /* Adjusted margin */
+    margin-bottom: 20px;
 }
 
 .detail-row {
     display: flex;
-    margin-bottom: 5px; /* Adjusted margin */
+    margin-bottom: 8px;
     line-height: 1.4;
-    font-size: 0.85em; /* Adjusted font size for smaller preview */
+    font-size: 0.95em; /* Restored original font size */
 }
 
 .detail-row span:first-child {
     font-weight: bold;
-    width: 120px; /* Adjusted width for alignment in preview */
-    min-width: 120px;
+    width: 180px; /* Restored original width */
+    min-width: 180px;
 }
 
 /* Photo Section */
 .photo-section {
-    width: 150px; /* Adjusted width for smaller preview */
-    min-width: 150px;
+    width: 200px; /* Restored original width */
+    min-width: 200px;
     text-align: center;
     position: relative;
 }
 
 #biodata-photo {
-    width: 140px; /* Adjusted size */
-    height: 170px; /* Adjusted size */
+    width: 180px; /* Restored original size */
+    height: 220px; /* Restored original size */
     border: 4px solid var(--template-accent);
     border-radius: 50%;
     object-fit: cover;
-    margin-top: 5px;
+    margin-top: 10px;
     background-color: #f0f0f0;
 }
 
 /* Customization Panel Styles (Template Card CSS) */
-/* (This section is fine, no changes needed, but included for completeness) */
 .template-preview-container { display: flex; gap: 15px; margin-top: 10px; flex-wrap: wrap; justify-content: flex-start; }
 .template-card { border: 2px solid #ccc; border-radius: 8px; padding: 10px; cursor: pointer; transition: all 0.2s; width: 120px; text-align: center; font-size: 0.85em; position: relative; }
 .template-card.selected { border-color: var(--primary-color); box-shadow: 0 0 5px var(--primary-color); background-color: #e6f7ff; }
