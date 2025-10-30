@@ -15,7 +15,6 @@ body {
     color: var(--text-color);
 }
 
-/* Container limits width on screen (Input Form) */
 .container {
     max-width: 1000px;
     margin: auto;
@@ -24,37 +23,35 @@ body {
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
 }
-
 /* ... (Customization and Form Styles remain the same) ... */
 
 /* =======================================
-   Biodata Output Styles
+   Biodata Output Styles (Original Look)
    ======================================= */
 #biodata-output {
     display: none; 
     margin-top: 40px;
     padding: 20px;
-    /* हम बॉर्डर के लिए top-color-bar का उपयोग करेंगे */
-    border: none; 
+    border: 1px solid #ddd; /* Original subtle border */
     background: var(--template-bg); 
     position: relative;
     overflow: hidden;
     box-sizing: border-box;
-    /* स्क्रीन पर इसे सीमित रखें ताकि यह बहुत चौड़ा न हो */
+    /* स्क्रीन पर यह चौड़ाई ठीक है */
     max-width: 790px; 
-    /* A4 साइज़ की चौड़ाई (210mm) पर सेट करें */
-    width: 210mm;
+    /* PDF फिक्स के लिए A4 चौड़ाई सेट करना जरूरी है */
+    width: 210mm; 
     margin-left: auto;
     margin-right: auto;
-    min-height: 297mm; 
-    /* आउटपुट के चारों ओर एक साफ़ बॉर्डर दें */
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    min-height: 297mm; /* A4 height */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-/* TOP COLOR BAR (Border Top) */
+/* TOP COLOR BAR */
 .top-color-bar {
     height: 10px;
     background-color: var(--template-accent);
+    /* पैडिंग के ऊपर खींचने के लिए नेगेटिव मार्जिन */
     margin: -20px -20px 20px -20px; 
 }
 
@@ -127,53 +124,53 @@ body {
 
 /* ******************************************************
    FINAL PDF DOWNLOAD / PRINT FIX (A4 Scaling)
-   यह PDF डाउनलोड समस्या को हल करेगा
+   यह PDF डाउनलोड समस्या को 100% हल करेगा
    ****************************************************** */
 @media print {
-    /* HTML और BODY के मार्जिन और पैडिंग को हटाएँ */
+    /* मार्जिन और पैडिंग 0 करें */
     html, body {
         margin: 0;
         padding: 0;
         width: 100%;
         height: 100%;
-        /* सुनिश्चित करें कि रंग प्रिंट हो */
         -webkit-print-color-adjust: exact; 
         color-adjust: exact;
     }
     
-    /* कंटेनर की सभी चौड़ाई प्रतिबंध हटा दें */
+    /* कंटेनर को चौड़ा करें */
     .container {
-        max-width: 100%;
-        width: 100%;
-        margin: 0;
-        padding: 0;
-        box-shadow: none;
-        border-radius: 0;
+        max-width: 100% !important;
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        box-shadow: none !important;
+        border-radius: 0 !important;
     }
     
-    /* #biodata-output को PDF पेज पर पूरी तरह फिट करें */
+    /* #biodata-output को A4 पेज पर पूरी तरह फिट करें */
     #biodata-output {
         /* A4 साइज़ को बाध्य करें */
         width: 210mm !important; 
         min-height: 297mm !important; 
         max-width: 210mm !important; 
-        /* मार्जिन और पैडिंग 0 करें और फिर 10mm पैडिंग दें */
-        margin: 0 !important; 
+        /* मार्जिन 0 करें और A4 पेज के किनारे से पैडिंग दें */
+        margin: 0 auto !important; 
         padding: 10mm !important; 
         box-shadow: none !important;
         /* पृष्ठभूमि को प्रिंट करने के लिए महत्वपूर्ण */
         -webkit-print-color-adjust: exact; 
         color-adjust: exact;
-        /* यह सुनिश्चित करेगा कि कंटेंट एक साथ आए */
         page-break-after: always;
     }
     
-    /* Decoration elements (यदि कोई गलती से बच गया हो) */
+    /* टॉप कलर बार के मार्जिन को PDF पैडिंग के अनुसार एडजस्ट करें */
+    .top-color-bar {
+        margin: -10mm -10mm 10mm -10mm !important; /* -20px को -10mm से बदला गया */
+        height: 10px !important;
+    }
+    
+    /* यदि कोई पुरानी डेकोरेशन बच गई हो तो उसे छिपा दें */
     .decoration-top, .decoration-left, .decoration-right {
         display: none !important;
-    }
-    /* फोटो को प्रिंट होने के लिए सुनिश्चित करें */
-    #biodata-photo {
-        background-color: transparent !important;
     }
 }
