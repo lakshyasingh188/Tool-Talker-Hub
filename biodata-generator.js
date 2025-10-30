@@ -84,6 +84,8 @@ document.addEventListener('DOMContentLoaded', () => {
     generateBtn.addEventListener('click', (e) => {
         e.preventDefault();
         
+        // ... (Data fetching logic remains the same) ...
+
         const data = {
             fullName: document.getElementById('full-name').value,
             dob: document.getElementById('dob').value,
@@ -106,7 +108,6 @@ document.addEventListener('DOMContentLoaded', () => {
             contactNo: document.getElementById('contact-no').value,
         };
 
-        // Helper function to create a detail row ONLY if the value is not empty
         const createDetailRow = (label, value) => {
             const trimmedValue = value.trim();
             if (trimmedValue) {
@@ -115,7 +116,6 @@ document.addEventListener('DOMContentLoaded', () => {
             return '';
         };
 
-        // Format Date and Time (Only if DOB is present)
         let dobRow = '';
         const dobValue = data.dob.trim();
         if (dobValue) {
@@ -127,9 +127,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     formattedDOB = dt.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' });
                     formattedTime = dt.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
                 }
-            } catch (e) {
-                // Keep raw value if formatting fails
-            }
+            } catch (e) {}
             dobRow = `<div class="detail-row"><span>Date of Birth & Time</span><span>: ${formattedDOB}${formattedTime ? `, ${formattedTime}` : ''}</span></div>`;
         }
         
@@ -183,23 +181,34 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelector('.input-form').style.display = 'none'; 
         document.querySelector('.customization-panel').style.display = 'none'; 
         
-        // **** DOWNLOAD BUTTON FIX: Show only the download button ****
+        // Show download button
         generateBtn.style.display = 'none'; 
         downloadBtn.style.display = 'inline-block'; 
     });
 
-    // --- 3. DOWNLOAD FUNCTIONALITY with html2pdf.js ---
+    // --- 3. DOWNLOAD FUNCTIONALITY with html2pdf.js FIX ---
     downloadBtn.addEventListener('click', () => {
         // Temporarily hide the download button to prevent it from appearing in the PDF
         downloadBtn.style.display = 'none';
         
         const element = document.getElementById('biodata-output');
+        
         const opt = {
-            margin:       0, // मार्जिन 0 कर दें ताकि डेकोरेशन फुल-पेज में आए
+            // मार्जिन 0 mm सेट करें ताकि CSS में दिए गए A4 साइज़ को ही माने
+            margin:       0, 
             filename:     'Marriage_Biodata.pdf',
             image:        { type: 'jpeg', quality: 0.98 },
-            html2canvas:  { scale: 2, useCORS: true, logging: true }, 
-            jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            html2canvas:  { 
+                // स्केल 2.5 या 3 रखें ताकि PDF की क्वालिटी अच्छी हो
+                scale: 2.5, 
+                useCORS: true, 
+                logging: true 
+            }, 
+            jsPDF:        { 
+                unit: 'mm', 
+                format: 'a4', 
+                orientation: 'portrait' 
+            }
         };
 
         // Use html2pdf to generate and save the PDF
@@ -210,7 +219,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Re-show button even if error occurs
             downloadBtn.style.display = 'inline-block';
             console.error("PDF generation failed:", error);
-            alert("PDF जनरेट करने में कोई समस्या आई है। (यदि आपने फोटो अपलोड की है, तो उसे हटाकर फिर से प्रयास करें क्योंकि यह CORS की समस्या हो सकती है।)"); 
+            alert("PDF जनरेट करने में कोई समस्या आई है। कृपया सुनिश्चित करें कि आपने हार्ड रीलोड (Ctrl+F5) किया है और फोटो की क्वालिटी बहुत अधिक नहीं है।"); 
         });
     });
 });
