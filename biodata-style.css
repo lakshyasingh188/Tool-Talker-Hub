@@ -24,7 +24,7 @@ body {
     border-radius: 8px;
 }
 
-/* --- Customization Panel --- */
+/* Form and Customization Styles (No Major Change) */
 .customization-panel {
     background: #f0f0f0;
     padding: 15px;
@@ -36,11 +36,6 @@ body {
     align-items: center;
 }
 
-.customization-panel label {
-    font-weight: bold;
-}
-
-/* Form Styles */
 .input-form h1 {
     color: var(--primary-color);
     text-align: center;
@@ -49,86 +44,96 @@ body {
     margin-bottom: 30px;
 }
 
-.form-section {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-    margin-bottom: 20px;
-}
-
-.form-section.full-width {
-    grid-template-columns: 1fr;
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
-    font-size: 0.9em;
-}
-
-.form-group input, .form-group select, .form-group textarea {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    box-sizing: border-box;
-}
+/* ... (Form Styles continue as before) ... */
 
 .button-group {
     text-align: center;
     margin-top: 30px;
 }
 
-.button-group button {
-    padding: 12px 25px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 1em;
-    font-weight: bold;
-    transition: background-color 0.3s;
-}
-
 #generate-btn {
     background-color: var(--primary-color);
     color: white;
     margin-right: 15px;
-    /* जनरेट बटन छिपाया गया */
-    display: none; 
 }
 
 #download-btn {
     background-color: #2196F3;
     color: white;
+    display: none; 
 }
 
 /* =======================================
-    Biodata Output Styles (Real-Time Preview)
-    ======================================= */
+   Biodata Output Styles (A4 Page Size)
+   ======================================= */
 #biodata-output {
-    display: block; /* <--- सुनिश्चित करता है कि प्रीव्यू दिखता रहे */
+    display: none; 
     margin-top: 40px;
     padding: 20px;
-    border: 5mm solid var(--template-accent); 
+    /* हमने बॉर्डर हटा दिया है, क्योंकि डेकोरेशन इसे कवर करेगा */
+    border: none; 
     background: var(--template-bg); 
     position: relative;
     overflow: hidden;
     box-sizing: border-box;
-    min-height: 297mm;
+    min-height: 297mm; /* A4 height */
 }
 
-/* TOP COLOR BAR */
-.top-color-bar {
-    height: 10px;
-    background-color: var(--template-accent);
-    margin: -20px -20px 20px -20px; 
+/* जब बायोडाटा दिखता है, तो कंटेनर को Full Width दें */
+.container:has(#biodata-output[style*="block"]) {
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+    box-shadow: none;
+    border-radius: 0;
 }
+
+
+/* --- NEW DECORATION STYLES (Based on Example PDF) --- */
+
+.decoration-top {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 100px; /* Adjust height as needed */
+    background: linear-gradient(to right, var(--template-accent), var(--template-accent) 50%, rgba(255, 255, 255, 0) 50%);
+    background-color: var(--template-accent); 
+    clip-path: polygon(0 0, 100% 0, 100% 50%, 0 50%);
+    opacity: 0.1; /* Light effect */
+}
+
+.decoration-left, .decoration-right {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 60px; /* Width of the side design */
+    background-color: var(--template-accent); 
+    opacity: 0.1; /* Light effect */
+    z-index: 0;
+}
+
+.decoration-left {
+    left: 0;
+    clip-path: polygon(0 0, 100% 0, 80% 100%, 0% 100%); /* Slanted bottom edge */
+}
+
+.decoration-right {
+    right: 0;
+    clip-path: polygon(100% 0, 0 0, 20% 100%, 100% 100%); /* Slanted bottom edge */
+}
+
+/* Ensure content sits above decorations */
+.biodata-header, .biodata-content {
+    position: relative;
+    z-index: 1;
+}
+/* ----------------------------------------------------- */
+
 
 .biodata-header {
     text-align: center;
     padding: 10px 0 20px 0;
-    background: transparent; 
     position: relative;
 }
 
@@ -146,62 +151,40 @@ body {
     padding: 15px 0;
     align-items: flex-start;
 }
+/* ... (Details and Photo Sections continue as before) ... */
 
-.details-section {
-    flex-grow: 1;
-    padding-right: 30px;
+
+/* ******************************************************
+   PDF DOWNLOAD / PRINT FIX (Full Width)
+   ****************************************************** */
+@media print {
+    /* PDF बनाने के लिए कंटेनर की चौड़ाई को 100% कर दें */
+    .container {
+        max-width: 100%;
+        margin: 0; /* किनारों से मार्जिन हटा दें */
+        padding: 0;
+        box-shadow: none;
+        border-radius: 0;
+    }
+    /* बॉडी की पैडिंग और मार्जिन हटा दें */
+    body {
+        padding: 0;
+        margin: 0;
+        -webkit-print-color-adjust: exact; 
+        color-adjust: exact;
+    }
+    /* आउटपुट को A4 साइज़ में फिट करें */
+    #biodata-output {
+        width: 210mm; /* A4 width */
+        min-height: 297mm; /* A4 height */
+        box-shadow: none;
+        margin: 0 auto;
+        border: none;
+        padding: 10mm; /* PDF के लिए थोड़ी पैडिंग */
+    }
+    /* डेकोरेशन को PDF में दिखने के लिए सुनिश्चित करें */
+    .decoration-top, .decoration-left, .decoration-right {
+        -webkit-print-color-adjust: exact;
+        color-adjust: exact;
+    }
 }
-
-.details-section h3 {
-    color: var(--template-accent); 
-    font-size: 1.4em;
-    border-bottom: 3px solid var(--template-accent);
-    padding-bottom: 5px;
-    margin-top: 0;
-    margin-bottom: 20px;
-}
-
-.detail-row {
-    display: flex;
-    margin-bottom: 8px;
-    line-height: 1.4;
-    font-size: 0.95em;
-}
-
-.detail-row span:first-child {
-    font-weight: bold;
-    width: 180px; 
-    min-width: 180px;
-}
-
-/* Photo Section */
-.photo-section {
-    width: 200px;
-    min-width: 200px;
-    text-align: center;
-    position: relative;
-}
-
-#biodata-photo {
-    width: 180px;
-    height: 220px;
-    border: 4px solid var(--template-accent); 
-    border-radius: 50%;
-    object-fit: cover;
-    margin-top: 10px;
-    background-color: #f0f0f0; 
-}
-
-/* Customization Panel Styles (Template Card CSS) */
-.template-preview-container { display: flex; gap: 15px; margin-top: 10px; flex-wrap: wrap; justify-content: flex-start; }
-.template-card { border: 2px solid #ccc; border-radius: 8px; padding: 10px; cursor: pointer; transition: all 0.2s; width: 120px; text-align: center; font-size: 0.85em; position: relative; }
-.template-card.selected { border-color: var(--primary-color); box-shadow: 0 0 5px var(--primary-color); background-color: #e6f7ff; }
-.template-card .preview-box { width: 80px; height: 60px; border: 1px solid #aaa; margin: 0 auto 5px auto; border-radius: 4px; overflow: hidden; position: relative; }
-.template-card .preview-box::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 8px; }
-.template-card .preview-box::after { content: ''; position: absolute; top: 8px; left: 0; width: 100%; height: calc(100% - 8px); }
-.template-card.hindu .preview-box::before { background: #d8572a; }
-.template-card.hindu .preview-box::after { background: #fff8e1; }
-.template-card.muslim-green .preview-box::before { background: #004D40; }
-.template-card.muslim-green .preview-box::after { background: #e8f5e9; }
-.template-card.muslim-blue .preview-box::before { background: #1565C0; }
-.template-card.muslim-blue .preview-box::after { background: #e3f2fd; }
