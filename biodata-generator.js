@@ -4,13 +4,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const downloadBtn = document.getElementById('download-btn');
     const outputDiv = document.getElementById('biodata-output');
     const biodataPhoto = document.getElementById('biodata-photo');
-    const templateCards = document.querySelectorAll('.template-card'); // Correct selector
+    const templateCards = document.querySelectorAll('.template-card'); 
     const accentColorSelect = document.getElementById('accent-color-select');
     const backgroundColorSelect = document.getElementById('background-color-select');
     const biodataMantra = document.getElementById('biodata-mantra');
     const rootStyles = document.documentElement.style;
     const hinduSpecificFields = document.querySelectorAll('.hindu-specific');
-    const inputFormDiv = document.querySelector('.input-form');
+    const inputFormDiv = document.querySelector('.input-area'); 
     const customizationPanel = document.querySelector('.customization-panel');
 
     let currentTemplate = 'hindu-beige';
@@ -48,18 +48,15 @@ document.addEventListener('DOMContentLoaded', () => {
         // Set Mantra and decide on field visibility
         if (template === 'hindu-beige') {
             biodataMantra.textContent = '॥ श्री गणेशाय नमः ॥';
-            // Show Hindu specific fields in the form
-            hinduSpecificFields.forEach(field => field.style.display = 'block');
+            hinduSpecificFields.forEach(field => field.style.display = 'grid'); 
         } else if (template.startsWith('muslim')) {
             biodataMantra.textContent = 'بِسْمِ ٱللَّٰهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ';
-            // Hide Hindu specific fields in the form
-            hinduSpecificFields.forEach(field => field.style.display = 'none');
+            hinduSpecificFields.forEach(field => field.style.display = 'none'); 
         } else {
             biodataMantra.textContent = '॥ BIODATA ॥';
-            hinduSpecificFields.forEach(field => field.style.display = 'block');
+            hinduSpecificFields.forEach(field => field.style.display = 'grid');
         }
         
-        // Update the preview immediately
         updateBiodata();
     }
 
@@ -73,13 +70,13 @@ document.addEventListener('DOMContentLoaded', () => {
     // Event listener for accent color dropdown
     accentColorSelect.addEventListener('change', (e) => {
         rootStyles.setProperty('--template-accent', e.target.value);
-        updateBiodata(); // Update colors in preview
+        updateBiodata(); 
     });
 
     // Event listener for background color dropdown
     backgroundColorSelect.addEventListener('change', (e) => {
         rootStyles.setProperty('--template-bg', e.target.value);
-        updateBiodata(); // Update colors in preview
+        updateBiodata(); 
     });
 
     // Apply default template on load
@@ -95,13 +92,13 @@ document.addEventListener('DOMContentLoaded', () => {
             };
             reader.readAsDataURL(file);
         } else {
-            // Revert to placeholder
             biodataPhoto.src = defaultPlaceholderSVG;
         }
     });
 
-    // --- 2. REAL-TIME BIODATA GENERATOR FUNCTION ---
+    // --- 2. REAL-TIME BIODATA GENERATOR FUNCTION (Unchanged) ---
     const updateBiodata = () => {
+        // Collect data from form
         const data = {
             fullName: document.getElementById('full-name').value,
             dob: document.getElementById('dob').value,
@@ -136,7 +133,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return '';
         };
 
-        // Format Date and Time (Only if DOB is present)
+        // Format Date and Time
         let dobRow = '';
         const dobValue = data.dob.trim();
         if (dobValue) {
@@ -148,9 +145,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     formattedDOB = dt.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' });
                     formattedTime = dt.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
                 }
-            } catch (e) {
-                // Keep raw value if formatting fails
-            }
+            } catch (e) { /* silent fail */ }
             dobRow = `<div class="detail-row"><span>Date of Birth & Time</span><span>: ${formattedDOB}${formattedTime ? `, ${formattedTime}` : ''}</span></div>`;
         }
 
@@ -164,7 +159,7 @@ document.addEventListener('DOMContentLoaded', () => {
             ${createDetailRow('Caste/Community', data.caste)}
         `;
 
-        if (currentTemplate === 'hindu-beige') {
+        if (document.querySelector('.hindu-specific').style.display !== 'none') {
              personalDetailsHTML += `
                  ${createDetailRow('Rashi', data.rashi)}
                  ${createDetailRow('Nakshatra', data.nakshatra)}
@@ -212,34 +207,33 @@ document.addEventListener('DOMContentLoaded', () => {
     generateBtn.addEventListener('click', (e) => {
         e.preventDefault();
         
-        // Ensure data is current
         updateBiodata(); 
         
-        // Hide input area and customization panel
-        inputFormDiv.style.display = 'none';
-        customizationPanel.style.display = 'none';
+        // Hide input area
+        inputFormDiv.style.display = 'none'; 
         
-        // Hide generate button and show download button
+        // Hide generate button and SHOW download button
         generateBtn.style.display = 'none';
         downloadBtn.style.display = 'inline-block';
         
-        // Adjust the container to center the A4 output for final review
+        // Center the A4 output for better final viewing
         document.querySelector('.container').style.justifyContent = 'center';
         document.querySelector('.container').style.maxWidth = '900px'; 
     });
 
-    // --- 4. DOWNLOAD FUNCTIONALITY with html2pdf.js ---
+    // --- 4. DOWNLOAD FUNCTIONALITY with html2pdf.js (FIXED) ---
     downloadBtn.addEventListener('click', () => {
         // Temporarily hide the download button to prevent it from appearing in the PDF
         downloadBtn.style.display = 'none';
         
         const element = document.getElementById('biodata-output');
         const opt = {
-            margin: 10, 
+            margin: 10, // Margin in mm
             filename: 'Marriage_Biodata.pdf',
             image: { type: 'jpeg', quality: 0.98 },
+            // Use scale 3 for higher resolution PDF from the scaled down preview
             html2canvas: { scale: 3, useCORS: true, logging: true }, 
-            jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } // Set PDF format to A4
         };
 
         // Use html2pdf to generate and save the PDF
@@ -247,6 +241,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Re-show the download button after the PDF is saved
             downloadBtn.style.display = 'inline-block';
         }).catch(error => {
+            // Re-show button even if error occurs
             downloadBtn.style.display = 'inline-block';
             console.error("PDF generation failed:", error);
             alert("PDF जनरेट करने में कोई समस्या आई है।");
