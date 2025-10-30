@@ -109,7 +109,7 @@ body {
 #download-btn {
     background-color: #2196F3;
     color: white;
-    display: none; 
+    display: none; /* Hidden by default */
 }
 
 /* =======================================
@@ -130,8 +130,7 @@ body {
     box-shadow: 0 0 10px rgba(0,0,0,0.2);
     display: block; 
     
-    /* Center the A4 output on final view */
-    margin: 0 auto; 
+    margin: 0; /* Important for side-by-side alignment */
 }
 
 /* TOP COLOR BAR */
@@ -151,7 +150,7 @@ body {
 
 .biodata-header h2 {
     margin: 0;
-    font-size: 2.2em; /* Restored original font size */
+    font-size: 2.2em; 
     color: var(--template-accent);
     letter-spacing: 2px;
     font-family: 'Georgia', serif;
@@ -166,12 +165,12 @@ body {
 
 .details-section {
     flex-grow: 1;
-    padding-right: 30px; /* Restored original padding */
+    padding-right: 30px; 
 }
 
 .details-section h3 {
     color: var(--template-accent);
-    font-size: 1.4em; /* Restored original font size */
+    font-size: 1.4em; 
     border-bottom: 3px solid var(--template-accent);
     padding-bottom: 5px;
     margin-top: 0;
@@ -182,26 +181,26 @@ body {
     display: flex;
     margin-bottom: 8px;
     line-height: 1.4;
-    font-size: 0.95em; /* Restored original font size */
+    font-size: 0.95em; 
 }
 
 .detail-row span:first-child {
     font-weight: bold;
-    width: 180px; /* Restored original width */
+    width: 180px; 
     min-width: 180px;
 }
 
 /* Photo Section */
 .photo-section {
-    width: 200px; /* Restored original width */
+    width: 200px; 
     min-width: 200px;
     text-align: center;
     position: relative;
 }
 
 #biodata-photo {
-    width: 180px; /* Restored original size */
-    height: 220px; /* Restored original size */
+    width: 180px; 
+    height: 220px; 
     border: 4px solid var(--template-accent);
     border-radius: 50%;
     object-fit: cover;
