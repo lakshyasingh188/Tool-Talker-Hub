@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const downloadBtn = document.getElementById('download-btn');
     const outputDiv = document.getElementById('biodata-output');
     const biodataPhoto = document.getElementById('biodata-photo');
-    const templateCards = document.querySelectorAll('.template-card');
+    const templateCards = document.querySelectorAll('.template-card'); // Correct selector
     const accentColorSelect = document.getElementById('accent-color-select');
     const backgroundColorSelect = document.getElementById('background-color-select');
     const biodataMantra = document.getElementById('biodata-mantra');
@@ -127,9 +127,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Helper function to create a detail row ONLY if the value is not empty
         const createDetailRow = (label, value) => {
             const trimmedValue = (value || '').trim();
-            // Also check for 'Select' value from dropdowns
             if (trimmedValue && trimmedValue !== 'Select') {
-                // If it's a contact number, allow click to call on devices that support it
                 if (label === 'Contact No.') {
                     return `<div class="detail-row"><span>${label}</span><span>: <a href="tel:${trimmedValue}" style="text-decoration:none; color:inherit;">${trimmedValue}</a></span></div>`;
                 }
@@ -146,9 +144,8 @@ document.addEventListener('DOMContentLoaded', () => {
             let formattedTime = "";
             try {
                 const dt = new Date(dobValue);
-                if (!isNaN(dt.getTime())) { // Check if date is valid
+                if (!isNaN(dt.getTime())) { 
                     formattedDOB = dt.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' });
-                    // Use 12-hour format for time
                     formattedTime = dt.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
                 }
             } catch (e) {
@@ -167,7 +164,6 @@ document.addEventListener('DOMContentLoaded', () => {
             ${createDetailRow('Caste/Community', data.caste)}
         `;
 
-        // Only include Hindu fields if the current template is Hindu
         if (currentTemplate === 'hindu-beige') {
              personalDetailsHTML += `
                  ${createDetailRow('Rashi', data.rashi)}
@@ -229,7 +225,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // Adjust the container to center the A4 output for final review
         document.querySelector('.container').style.justifyContent = 'center';
-        document.querySelector('.container').style.maxWidth = '900px'; // Adjust container size for a centered A4 view
+        document.querySelector('.container').style.maxWidth = '900px'; 
     });
 
     // --- 4. DOWNLOAD FUNCTIONALITY with html2pdf.js ---
@@ -239,10 +235,9 @@ document.addEventListener('DOMContentLoaded', () => {
         
         const element = document.getElementById('biodata-output');
         const opt = {
-            margin: 10, // Margin in mm
+            margin: 10, 
             filename: 'Marriage_Biodata.pdf',
             image: { type: 'jpeg', quality: 0.98 },
-            // Use scale 3 for higher resolution PDF
             html2canvas: { scale: 3, useCORS: true, logging: true }, 
             jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
         };
@@ -252,10 +247,9 @@ document.addEventListener('DOMContentLoaded', () => {
             // Re-show the download button after the PDF is saved
             downloadBtn.style.display = 'inline-block';
         }).catch(error => {
-            // Re-show button even if error occurs
             downloadBtn.style.display = 'inline-block';
             console.error("PDF generation failed:", error);
-            alert("PDF जनरेट करने में कोई समस्या आई है। (यदि आपने फोटो अपलोड की है, तो फोटो को हटाने या किसी अन्य फ़ाइल फॉर्मेट का उपयोग करने का प्रयास करें।)");
+            alert("PDF जनरेट करने में कोई समस्या आई है।");
         });
     });
 });
