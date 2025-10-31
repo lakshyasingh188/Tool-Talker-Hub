@@ -11,7 +11,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const rootStyles = document.documentElement.style;
     const hinduSpecificFields = document.querySelectorAll('.hindu-specific');
     
-    // In your HTML/CSS, this is the main container holding the form and customization
     const inputAreaDiv = document.querySelector('.input-area'); 
     const containerDiv = document.querySelector('.container');
 
@@ -40,9 +39,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (template === 'hindu-beige') {
             biodataMantra.textContent = '॥ श्री गणेशाय नमः ॥';
+            // Show Hindu fields
             hinduSpecificFields.forEach(field => field.style.display = 'grid'); 
         } else if (template.startsWith('muslim')) {
             biodataMantra.textContent = 'بِسْمِ ٱللَّٰهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ';
+            // Hide Hindu fields
             hinduSpecificFields.forEach(field => field.style.display = 'none'); 
         } else {
             biodataMantra.textContent = '॥ BIODATA ॥';
@@ -70,7 +71,6 @@ document.addEventListener('DOMContentLoaded', () => {
     applyTemplate(currentTemplate);
 
     // --- 1. HANDLE IMAGE UPLOAD ---
-    // Reads the image file and sets the src as Base64 data-URI to avoid deployment issues
     document.getElementById('biodata-image').addEventListener('change', function(event) {
         const file = event.target.files[0];
         if (file) {
@@ -84,7 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // --- 2. REAL-TIME BIODATA GENERATOR FUNCTION (Core function to read inputs and update preview) ---
+    // --- 2. REAL-TIME BIODATA GENERATOR FUNCTION (Core logic) ---
     const updateBiodata = () => {
         // Collect data from form
         const data = {
@@ -112,7 +112,6 @@ document.addEventListener('DOMContentLoaded', () => {
         // Helper function to create a detail row ONLY if the value is not empty
         const createDetailRow = (label, value) => {
             const trimmedValue = (value || '').trim();
-            // Check for empty string, null, undefined, or the default 'Select'
             if (trimmedValue && trimmedValue !== 'Select') { 
                 if (label === 'Contact No.') {
                     return `<div class="detail-row"><span>${label}</span><span>: <a href="tel:${trimmedValue}" style="text-decoration:none; color:inherit;">${trimmedValue}</a></span></div>`;
@@ -132,7 +131,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 const dt = new Date(dobValue);
                 if (!isNaN(dt.getTime())) { 
                     formattedDOB = dt.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' });
-                    formattedTime = dt.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
+                    // Extract only time if datetime-local format includes it
+                    const timePart = dobValue.split('T')[1];
+                    if (timePart) {
+                        formattedTime = dt.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
+                    } else {
+                        formattedTime = ""; // If only date is provided
+                    }
                 }
             } catch (e) { /* silent fail */ }
             dobRow = `<div class="detail-row"><span>Date of Birth & Time</span><span>: ${formattedDOB}${formattedTime ? `, ${formattedTime}` : ''}</span></div>`;
@@ -182,30 +187,33 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('contact-details-output').innerHTML = contactDetailsHTML;
     };
 
-    // Event listener for all form elements to trigger real-time update
+    // <=========================================================================>
+    //                  !!! REAL-TIME UPDATE FIX IS HERE !!!
+    // <=========================================================================>
     const formInputs = form.querySelectorAll('input, select, textarea');
     formInputs.forEach(input => {
+        // Ensures update happens as soon as a key is pressed (input event)
         input.addEventListener('input', updateBiodata);
+        // Ensures update happens for select/file/date changes (change event)
         input.addEventListener('change', updateBiodata); 
     });
+    // <=========================================================================>
     
     updateBiodata(); // Initial call
 
-    // --- 3. GENERATE BIODATA BUTTON LOGIC (FIXED) ---
+    // --- 3. GENERATE BIODATA BUTTON LOGIC (Finalize View) ---
     generateBtn.addEventListener('click', (e) => {
         e.preventDefault(); 
         
-        // 1. Final Update before view change
+        // Final Update before view change
         updateBiodata(); 
         
-        // 2. Hide the input area
+        // Hide the input area and show the download option
         inputAreaDiv.style.display = 'none'; 
-        
-        // 3. Hide the generate button and SHOW the download button
         generateBtn.style.display = 'none';
         downloadBtn.style.display = 'inline-block';
         
-        // 4. Center the A4 output
+        // Center the A4 output
         containerDiv.style.justifyContent = 'center';
         containerDiv.style.maxWidth = '900px'; 
     });
