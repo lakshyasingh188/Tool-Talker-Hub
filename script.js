@@ -32,7 +32,8 @@ function changeThemeColor(colorCode) {
 function adjustCVHeight() {
     const cvOutput = document.getElementById('cv-output-area');
     
-    // Check if the current template is a two-column layout
+    // Check if the current template is a two-column layout (Template 1, 4, 6, 8, 9)
+    // We check for the presence of the two-column grid style on screen
     const isTwoColumn = window.getComputedStyle(cvOutput.querySelector('.cv-grid')).gridTemplateColumns.includes('%');
 
     if (isTwoColumn) {
@@ -52,7 +53,7 @@ function adjustCVHeight() {
         // Set Left column's min-height to equal the Right column's height 
         leftCol.style.minHeight = `${rightHeight}px`; 
     } else {
-        // For single column templates, reset styles for normal flow
+        // For single column templates (Template 2, 3, 5, 7, 10), reset styles for normal flow
         cvOutput.style.height = 'auto';
         const leftCol = cvOutput.querySelector('.left-column');
         if (leftCol) leftCol.style.minHeight = 'auto';
@@ -294,64 +295,116 @@ const debouncedUpdateCV = debounce(updateCV, 300);
 
 /**
  * PDF Generation Function.
- * FIX: Used 'mm' unit and stronger html2canvas settings to prevent cutting and enforce A4 size.
+ * FIX: Adds logic to handle single-column templates by moving left-column content to right-column temporarily.
  */
 function prepareAndDownloadPDF() {
-    // Update CV with the latest data before generating
     updateCV(); 
 
-    // Target the CV output area (#cv-output-area) 
     const element = document.getElementById('cv-output-area');
     const name = document.getElementById('nameInput').value.trim() || 'My_Resume';
-    
     const downloadBtn = document.getElementById('downloadBtn');
+    
     downloadBtn.innerText = "Generating PDF...";
     downloadBtn.disabled = true;
 
+    // --- CRITICAL FIX FOR SINGLE COLUMN TEMPLATES (2, 3, 5, 7, 10) ---
+    let leftColumnContent = null;
+    const isSingleColumn = ['template-style-2', 'template-style-3', 'template-style-5', 'template-style-7', 'template-style-10'].some(cls => element.classList.contains(cls));
+    
+    if (isSingleColumn) {
+        const leftColumn = element.querySelector('.left-column');
+        const rightColumn = element.querySelector('.right-column');
+        
+        // 1. Clone the content of the left column
+        leftColumnContent = leftColumn.cloneNode(true);
+        
+        // 2. Create a temporary container for the left column content
+        const tempContainer = document.createElement('div');
+        tempContainer.id = 'temp-left-content';
+        
+        // For Template 3 (Executive Strip) and Template 10 (Orange Highlight), the top bar content is already handled/hidden by CSS.
+        // We only move the "Skills" and "Languages" for these templates to keep them visible in the single column body.
+        if (element.classList.contains('template-style-3') || element.classList.contains('template-style-10')) {
+             tempContainer.appendChild(leftColumnContent.querySelector('.skills-section'));
+             tempContainer.appendChild(leftColumnContent.querySelector('.extra-section'));
+        } 
+        // For other single column templates (2, 5, 7), move Contact, Skills, and Languages.
+        else {
+            tempContainer.appendChild(leftColumnContent.querySelector('.contact-section'));
+            tempContainer.appendChild(leftColumnContent.querySelector('.skills-section'));
+            tempContainer.appendChild(leftColumnContent.querySelector('.extra-section'));
+        }
+
+        // 3. Prepend the temporary content to the right column
+        rightColumn.prepend(tempContainer);
+        
+        // 4. Add a separator line after the contact/skills section for better readability in single column PDF
+        tempContainer.style.marginBottom = '20px';
+        tempContainer.style.borderBottom = '1px solid #ddd';
+        tempContainer.style.paddingBottom = '15px';
+        
+        // Also ensure headers are visible by copying h3 styles (only for T2, T5, T7)
+        if (element.classList.contains('template-style-2') || element.classList.contains('template-style-5') || element.classList.contains('template-style-7')) {
+             tempContainer.querySelectorAll('h3').forEach(h3 => {
+                 h3.style.color = '#000';
+                 h3.style.borderBottom = '2px solid var(--primary-color)';
+                 h3.style.marginTop = '15px';
+             });
+        }
+    }
+    // --- END OF CRITICAL FIX ---
+
+
     // PDF Settings (FIXED to ensure full A4 and no cutting)
     const opt = {
-        // Set margin to 10mm 
         margin: [10, 10, 10, 10], 
         filename: `${name.replace(/\s/g, '_')}_CV.pdf`, 
         image: { type: 'jpeg', quality: 0.98 },
         html2canvas: { 
-            scale: 2,     // Scale 2 for high quality
+            scale: 2,     
             useCORS: true, 
             scrollY: 0,
             allowTaint: true,
-            // Explicitly set width matching A4 aspect ratio for better PDF rendering
             width: 794,       
         },
-        // A4 size, in millimeter unit (This is key for accurate A4)
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }, 
-        // Page break mode: Ensure sections don't cut in the middle
         pagebreak: { mode: 'avoid-all' }
     };
 
-    // Add CSS class before download (defined in style.css)
+    // Add CSS class before download (style.css mein defined hai: .pdf-downloading)
     element.classList.add('pdf-downloading');
 
     // Generate and Download
     html2pdf().from(element).set(opt).save().finally(function() {
-        // Remove CSS class after download
+        // --- CLEANUP AFTER PDF GENERATION ---
+        
+        // 1. Remove CSS class after download
         element.classList.remove('pdf-downloading');
         
-        // Restore button state
+        // 2. Remove the temporary content if it was added
+        if (isSingleColumn) {
+            const tempContainer = element.querySelector('#temp-left-content');
+            if (tempContainer) {
+                tempContainer.remove();
+            }
+        }
+        
+        // 3. Restore button state
         downloadBtn.innerText = "📥 Download PDF";
         downloadBtn.disabled = false;
         alert('Your CV has been downloaded!');
+        
+        // 4. Re-run updateCV to ensure screen view is correct after cleanup
+        updateCV();
     });
 }
 
 
 /*
 ====================================
- 4. TEMPLATE SELECTION LOGIC
+ 4. TEMPLATE SELECTION LOGIC (Working Fine)
 ====================================
 */
-
-// Store the currently selected template and color globally/in localStorage if needed, 
-// but for simplicity, we'll rely on the class/color picker.
 
 /**
  * Shows the Template Selection Screen and hides the Builder.
@@ -359,8 +412,8 @@ function prepareAndDownloadPDF() {
 function showTemplateSelector() {
     document.getElementById('template-selector-screen').style.display = 'flex';
     document.getElementById('main-builder-area').style.display = 'none';
-    // Optionally show the 'Back to Builder' button if user has already selected a template
-    if (document.getElementById('cv-output-area').className.includes('template-style')) {
+    
+    if (document.getElementById('cv-output-area').className.includes('template-style-')) {
         document.getElementById('back-to-builder-btn').style.display = 'block';
     }
 }
@@ -372,7 +425,7 @@ function showBuilder() {
     document.getElementById('template-selector-screen').style.display = 'none';
     document.getElementById('main-builder-area').style.display = 'flex';
     document.getElementById('back-to-builder-btn').style.display = 'none';
-    // Ensure the CV updates when showing the builder
+    
     updateCV();
 }
 
@@ -402,21 +455,20 @@ function selectTemplate(templateClass, themeColor) {
     changeThemeColor(themeColor);
     
     // 4. Switch to the Builder View
-    showBuilder();
+    showBuilder(); 
+    
+    // 5. Update CV with the new style and color
+    updateCV();
 }
 
 
-// Override initial DOMContentLoaded: show template selector first
+// FIX: Initial DOMContentLoaded logic to ensure the Template Selector screen is shown first.
 document.addEventListener('DOMContentLoaded', () => {
-    // Hide builder and show selector on load
-    document.getElementById('main-builder-area').style.display = 'none';
-    document.getElementById('template-selector-screen').style.display = 'flex';
-    
-    // Initialize with default template-style-1 and maroon color
+    // Initialize with default template
     selectTemplate('template-style-1', '#A52A2A');
     
-    // After initialization, forcefully show the template selector screen
-    document.getElementById('template-selector-screen').style.display = 'flex';
-    document.getElementById('main-builder-area').style.display = 'none';
-    document.getElementById('back-to-builder-btn').style.display = 'none'; // Ensure back button is hidden initially
+    // FORCEFULLY SHOW THE TEMPLATE SELECTOR SCREEN ON PAGE LOAD
+    showTemplateSelector(); 
+    
+    updateCV();
 });
