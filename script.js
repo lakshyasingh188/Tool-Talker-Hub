@@ -252,7 +252,7 @@ function updateCV() {
     // 9. Declaration (Updated Static Content)
     const declarationOutput = document.getElementById('cv-declaration-output');
     if (declarationOutput) {
-         // NEW DECLARATION TEXT
+           // NEW DECLARATION TEXT
         declarationOutput.innerHTML = `<p id="cv-summary-para2">I hereby declare that all the information mentioned above is true and correct to the best of my knowledge and belief. I take full responsibility for the accuracy of the details provided. I assure you that I will carry out my duties with full sincerity, honesty, and commitment if given an opportunity to be a part of your esteemed organization. I am confident that my abilities and enthusiasm will be valuable in contributing to the company’s growth and success.</p>`;
     }
 
@@ -263,9 +263,6 @@ function updateCV() {
 
 // Debounced version of updateCV (300ms delay to prevent jumping while typing/selecting)
 const debouncedUpdateCV = debounce(updateCV, 300);
-
-// Update CV once on page load
-document.addEventListener('DOMContentLoaded', updateCV);
 
 /**
  * PDF Generation Function.
@@ -290,12 +287,12 @@ function prepareAndDownloadPDF() {
         filename: `${name.replace(/\s/g, '_')}_CV.pdf`, 
         image: { type: 'jpeg', quality: 0.98 },
         html2canvas: { 
-            scale: 2,           // Scale 2 for high quality
+            scale: 2,     // Scale 2 for high quality
             useCORS: true, 
             scrollY: 0,
             allowTaint: true,
             // Explicitly set width matching A4 aspect ratio for better PDF rendering
-            width: 794,         
+            width: 794,       
         },
         // A4 size, in millimeter unit (This is key for accurate A4)
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }, 
@@ -317,3 +314,78 @@ function prepareAndDownloadPDF() {
         alert('Your CV has been downloaded!');
     });
 }
+
+
+/*
+====================================
+ 4. TEMPLATE SELECTION LOGIC
+====================================
+*/
+
+/**
+ * Shows the Template Selection Screen and hides the Builder.
+ */
+function showTemplateSelector() {
+    document.getElementById('template-selector-screen').style.display = 'flex';
+    document.getElementById('main-builder-area').style.display = 'none';
+    // Optionally show the 'Back to Builder' button if user has already selected a template
+    if (document.getElementById('cv-output-area').className.includes('template-style')) {
+        document.getElementById('back-to-builder-btn').style.display = 'block';
+    }
+}
+
+/**
+ * Shows the Builder Area (Input Form and CV Preview) and hides the Template Selector.
+ */
+function showBuilder() {
+    document.getElementById('template-selector-screen').style.display = 'none';
+    document.getElementById('main-builder-area').style.display = 'flex';
+    document.getElementById('back-to-builder-btn').style.display = 'none';
+    // Ensure the CV updates when showing the builder
+    updateCV();
+}
+
+
+/**
+ * Selects a template, updates the CV, and switches to the builder view.
+ * @param {string} templateClass - The new class name for the CV (e.g., 'template-style-2').
+ * @param {string} themeColor - The primary color for this template.
+ */
+function selectTemplate(templateClass, themeColor) {
+    const cvOutput = document.getElementById('cv-output-area');
+    const colorPicker = document.getElementById('colorPicker');
+    
+    // 1. Remove all existing template classes
+    const currentClasses = Array.from(cvOutput.classList);
+    currentClasses.forEach(className => {
+        if (className.startsWith('template-style-')) {
+            cvOutput.classList.remove(className);
+        }
+    });
+
+    // 2. Add the new template class
+    cvOutput.classList.add(templateClass);
+    
+    // 3. Update the Theme Color picker and apply the new color
+    colorPicker.value = themeColor;
+    changeThemeColor(themeColor);
+    
+    // 4. Switch to the Builder View
+    showBuilder();
+}
+
+
+// Override initial DOMContentLoaded: show template selector first
+document.addEventListener('DOMContentLoaded', () => {
+    // Hide builder and show selector on load
+    document.getElementById('main-builder-area').style.display = 'none';
+    document.getElementById('template-selector-screen').style.display = 'flex';
+    
+    // We call selectTemplate once to initialize the CV area with default settings/colors
+    // This will ultimately call showBuilder()
+    selectTemplate('template-style-1', '#A52A2A');
+    
+    // But we override it to show the template selector screen first
+    document.getElementById('template-selector-screen').style.display = 'flex';
+    document.getElementById('main-builder-area').style.display = 'none';
+});
