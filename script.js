@@ -19,6 +19,11 @@ function debounce(func, delay) {
  */
 function changeThemeColor(colorCode) {
     document.documentElement.style.setProperty('--primary-color', colorCode);
+    // Also update the button's background color
+    const downloadBtn = document.getElementById('downloadBtn');
+    if (downloadBtn) {
+        downloadBtn.style.backgroundColor = colorCode;
+    }
 }
 
 /**
@@ -26,21 +31,32 @@ function changeThemeColor(colorCode) {
  */
 function adjustCVHeight() {
     const cvOutput = document.getElementById('cv-output-area');
-    const leftCol = cvOutput.querySelector('.left-column');
-    const rightCol = cvOutput.querySelector('.right-column');
     
-    // Measures the height of both columns
-    const leftHeight = leftCol.scrollHeight;
-    const rightHeight = rightCol.scrollHeight;
-    
-    // Sets the height of the CV output as the maximum height
-    const newHeight = Math.max(leftHeight, rightHeight);
-    
-    // Set CV container height (50px buffer for padding)
-    cvOutput.style.height = `${newHeight + 50}px`; 
-    
-    // Set Left column's min-height to equal the Right column's height 
-    leftCol.style.minHeight = `${rightHeight}px`; 
+    // Check if the current template is a two-column layout
+    const isTwoColumn = window.getComputedStyle(cvOutput.querySelector('.cv-grid')).gridTemplateColumns.includes('%');
+
+    if (isTwoColumn) {
+        const leftCol = cvOutput.querySelector('.left-column');
+        const rightCol = cvOutput.querySelector('.right-column');
+        
+        // Measures the height of both columns
+        const leftHeight = leftCol.scrollHeight;
+        const rightHeight = rightCol.scrollHeight;
+        
+        // Sets the height of the CV output as the maximum height
+        const newHeight = Math.max(leftHeight, rightHeight);
+        
+        // Set CV container height (50px buffer for padding)
+        cvOutput.style.height = `${newHeight + 50}px`; 
+        
+        // Set Left column's min-height to equal the Right column's height 
+        leftCol.style.minHeight = `${rightHeight}px`; 
+    } else {
+        // For single column templates, reset styles for normal flow
+        cvOutput.style.height = 'auto';
+        const leftCol = cvOutput.querySelector('.left-column');
+        if (leftCol) leftCol.style.minHeight = 'auto';
+    }
 }
 
 
@@ -166,13 +182,25 @@ function updateCV() {
     if (workHistoryInput) {
         workHistoryContainer.style.display = 'block';
         
-        workHistoryOutput.innerHTML = `
-            <div class="job-item">
-                <ul class="job-tasks">
-                    ${workHistoryInput.split('\n').map(line => line.trim()).filter(line => line.length > 0).map(line => `<li>${line}</li>`).join('')}
-                </ul>
-            </div>
-        `;
+        // Split input by new line to create list items
+        const jobLines = workHistoryInput.split('\n')
+            .map(line => line.trim())
+            .filter(line => line.length > 0);
+            
+        let jobHTML = '<div class="job-item"><ul class="job-tasks">';
+        
+        // Simple heuristic: Treat the first non-empty line as the main job title/summary
+        // All subsequent lines are bullet points
+        jobLines.forEach((line, index) => {
+            if (index === 0) {
+                 jobHTML = `<div class="job-item"><p><strong>${line}</strong></p><ul class="job-tasks">`;
+            } else {
+                jobHTML += `<li>${line}</li>`;
+            }
+        });
+
+        jobHTML += '</ul></div>';
+        workHistoryOutput.innerHTML = jobHTML;
         
     } else {
         workHistoryContainer.style.display = 'none';
@@ -322,6 +350,9 @@ function prepareAndDownloadPDF() {
 ====================================
 */
 
+// Store the currently selected template and color globally/in localStorage if needed, 
+// but for simplicity, we'll rely on the class/color picker.
+
 /**
  * Shows the Template Selection Screen and hides the Builder.
  */
@@ -381,11 +412,11 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('main-builder-area').style.display = 'none';
     document.getElementById('template-selector-screen').style.display = 'flex';
     
-    // We call selectTemplate once to initialize the CV area with default settings/colors
-    // This will ultimately call showBuilder()
+    // Initialize with default template-style-1 and maroon color
     selectTemplate('template-style-1', '#A52A2A');
     
-    // But we override it to show the template selector screen first
+    // After initialization, forcefully show the template selector screen
     document.getElementById('template-selector-screen').style.display = 'flex';
     document.getElementById('main-builder-area').style.display = 'none';
+    document.getElementById('back-to-builder-btn').style.display = 'none'; // Ensure back button is hidden initially
 });
