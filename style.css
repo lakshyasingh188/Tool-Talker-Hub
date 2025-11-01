@@ -290,8 +290,7 @@ body {
     min-height: 297mm; /* Maintain A4 size even with less content */
     box-shadow: none; 
     /* IMPORTANT FIX for Border to show in PDF */
-    /* This border is explicitly set to black for PDF printing standard */
-    border: 3px solid #000 !important; /* <--- FIXED: Ensure border is always present */
+    border: 3px solid #000 !important; 
     /* Ensure content visibility */
     overflow: hidden !important; 
 }
@@ -302,7 +301,7 @@ body {
     min-height: 297mm; 
 }
 
-/* Minimize unnecessary vertical gaps for PDF output */
+/* Minimise vertical gaps for PDF output */
 .cv-paper.pdf-downloading .right-column {
     padding-top: 10mm; 
     padding-bottom: 10mm;
@@ -311,7 +310,6 @@ body {
     padding-right: 10mm;
 }
 .cv-paper.pdf-downloading .right-column h3 {
-    /* This rule applies to Career Objective AND Professional Summary */
     margin-top: 10px !important; 
     margin-bottom: 10px;
 }
@@ -320,6 +318,29 @@ body {
 .cv-paper.pdf-downloading ul,
 .cv-paper.pdf-downloading .edu-item {
     margin-bottom: 5px !important; 
+}
+
+/* FIX FOR SINGLE COLUMN TEMPLATES (Template 2, 3, 5, 7, 10) */
+/* When downloading a single column template, we must ensure ALL content is visible in the right-column context. */
+
+.pdf-downloading.template-style-2 .left-column,
+.pdf-downloading.template-style-3 .left-column,
+.pdf-downloading.template-style-5 .left-column,
+.pdf-downloading.template-style-7 .left-column,
+.pdf-downloading.template-style-10 .left-column {
+    /* Set left column to display: none in PDF as its content is dynamically moved/copied to right-column by script */
+    display: none !important; 
+    height: 0 !important; 
+    overflow: hidden !important; 
+}
+
+/* Ensure the right column takes full width for single column PDFs */
+.pdf-downloading.template-style-2 .cv-grid,
+.pdf-downloading.template-style-3 .cv-grid,
+.pdf-downloading.template-style-5 .cv-grid,
+.pdf-downloading.template-style-7 .cv-grid,
+.pdf-downloading.template-style-10 .cv-grid {
+    grid-template-columns: 100% !important;
 }
 
 /* Print Media Styling (when user prints from browser) */
@@ -356,6 +377,22 @@ body {
     /* Ensure specific sections avoid page breaks */
     .summary-section, .work-history-section, .education-section, .filler-content {
         page-break-inside: avoid;
+    }
+    
+    /* Fix for Print Preview (Browser Print) */
+    .template-style-2 .left-column,
+    .template-style-3 .left-column,
+    .template-style-5 .left-column,
+    .template-style-7 .left-column,
+    .template-style-10 .left-column {
+        display: none !important;
+    }
+    .template-style-2 .cv-grid,
+    .template-style-3 .cv-grid,
+    .template-style-5 .cv-grid,
+    .template-style-7 .cv-grid,
+    .template-style-10 .cv-grid {
+        grid-template-columns: 100% !important;
     }
 }
 
