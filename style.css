@@ -119,14 +119,13 @@ body {
 
 /*
 ====================================
- 2. CV Layout and Styling (Text Wrapping Fixes)
+ 2. CV Layout and Styling (Default Template 1)
 ====================================
 */
 
 /* CV Border Style */
 .bordered-cv {
     /* Main CV border for screen view */
-    /* *** BRANDING CHANGE: Changed 'black' to use the theme's primary color *** */
     border: 3px solid var(--primary-color); 
     box-shadow: none; 
 }
@@ -358,4 +357,443 @@ body {
     .summary-section, .work-history-section, .education-section, .filler-content {
         page-break-inside: avoid;
     }
+}
+
+
+/*
+====================================
+ 4. TEMPLATE SELECTION SCREEN STYLES
+====================================
+*/
+.template-card {
+    width: 200px;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.template-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+}
+
+.template-preview {
+    width: 100%;
+    height: 250px;
+    background-color: #f9f9f9;
+    /* Simulate a preview look - replace with actual small CV rendering if possible */
+    font-size: 0.8em;
+    padding: 10px;
+    box-sizing: border-box;
+    border-bottom: 1px solid #ddd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-weight: bold;
+}
+
+.choose-template-btn {
+    width: 100%;
+    padding: 10px;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    margin: 0;
+    border-radius: 0 0 8px 8px;
+}
+.choose-template-btn:hover {
+    background-color: #8B0000;
+}
+
+
+/*
+====================================
+ 5. CV TEMPLATE STYLES (10 DESIGNS)
+====================================
+*/
+
+/* TEMPLATE 1: Your Current Two-Column Maroon (Existing styles in section 2 handle this) */
+
+
+/* TEMPLATE 2: Minimalist Single-Column */
+.template-style-2 .cv-grid {
+    grid-template-columns: 100%; /* Single Column */
+    padding: 30px;
+}
+.template-style-2 .left-column, .template-style-2 .right-column {
+    background-color: #fff;
+    color: var(--text-color);
+    padding: 0;
+    border-bottom: 1px solid #eee;
+}
+.template-style-2 .left-column {
+    order: 2; /* Move contact/skills below summary/work history */
+    margin-top: 20px;
+}
+.template-style-2 .right-column {
+    order: 1;
+}
+.template-style-2 .profile-image, .template-style-2 .profile-section h2 {
+    display: none; /* Hide image/name from left column */
+}
+.template-style-2 h2#cv-name {
+    color: var(--primary-color);
+    font-size: 2.5em;
+    text-align: center;
+    border-bottom: 2px solid var(--primary-color);
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+.template-style-2 .right-column h3 {
+    border-left: 5px solid var(--primary-color);
+    border-bottom: none;
+    padding-left: 10px;
+    font-size: 1.2em;
+    margin-bottom: 10px;
+    margin-top: 20px;
+}
+.template-style-2 .left-column h3 {
+    color: var(--primary-color);
+    border-bottom: 2px solid var(--primary-color);
+}
+.template-style-2 .contact-section p {
+    justify-content: space-between;
+}
+
+
+/* TEMPLATE 3: Executive Black (Header Strip) */
+.template-style-3 {
+    border: 5px solid #000;
+}
+.template-style-3 .cv-grid {
+    grid-template-columns: 100%;
+}
+.template-style-3 .left-column {
+    order: 1; /* Keep contact/skills at top */
+    background-color: #000;
+    color: #fff;
+    padding: 15px 40px;
+    flex-direction: row; /* Horizontal layout for top section */
+    justify-content: space-between;
+    align-items: center;
+}
+.template-style-3 .name-display {
+    font-size: 2em;
+    color: #fff;
+    border-bottom: none;
+    margin: 0;
+}
+.template-style-3 .contact-section {
+    display: flex;
+    gap: 15px;
+    font-size: 0.9em;
+}
+.template-style-3 .contact-section h3, .template-style-3 .skills-section, .template-style-3 .extra-section, .template-style-3 .profile-image {
+    display: none; /* Hide these sections from the header strip */
+}
+.template-style-3 .right-column {
+    order: 2;
+    padding: 30px 40px;
+}
+.template-style-3 .right-column h3 {
+    color: #000;
+    border-bottom: 2px solid var(--primary-color);
+}
+
+
+/* TEMPLATE 4: Modern Teal (Full Left Color Block) */
+.template-style-4 {
+    font-family: 'Verdana', sans-serif;
+}
+.template-style-4 .left-column {
+    background-color: var(--primary-color); /* Teal color */
+    padding: 30px 20px;
+}
+.template-style-4 .right-column {
+    padding: 30px;
+}
+.template-style-4 .right-column h3 {
+    color: #000;
+    font-size: 1.3em;
+    border-bottom: 3px solid var(--primary-color);
+    padding-bottom: 2px;
+}
+.template-style-4 .contact-section i {
+    color: #fff; /* Icons white in Teal bar */
+}
+.template-style-4 .profile-image {
+    border: 5px solid #fff;
+}
+
+
+/* TEMPLATE 5: Creative Purple (Top/Bottom Accent Bars) */
+.template-style-5 .cv-grid {
+    grid-template-columns: 100%;
+}
+.template-style-5 .profile-section {
+    order: 1;
+    padding: 30px;
+}
+.template-style-5 .name-display {
+    font-size: 2em;
+    text-align: center;
+    width: 100%;
+    color: var(--primary-color);
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 3px solid var(--primary-color);
+}
+.template-style-5 .profile-image {
+    margin: 0 auto 10px auto;
+    border: 3px solid var(--primary-color);
+}
+.template-style-5 .left-column {
+    order: 3;
+    background-color: var(--primary-color); /* Purple */
+    color: #fff;
+    padding: 15px 30px;
+}
+.template-style-5 .left-column h3 {
+    border-bottom: 2px solid #ccc;
+}
+.template-style-5 .right-column {
+    order: 2;
+    padding: 30px;
+}
+.template-style-5 .right-column h3 {
+    border-left: 5px solid var(--primary-color);
+    padding-left: 10px;
+    border-bottom: none;
+    font-size: 1.3em;
+}
+
+
+/* TEMPLATE 6: Bold Red (Colored Right Column Headers) */
+.template-style-6 .right-column h3 {
+    background-color: var(--primary-color); /* Red accent */
+    color: #fff;
+    padding: 5px 10px;
+    border-bottom: none;
+    margin-bottom: 15px;
+    border-radius: 3px;
+    font-size: 1.4em;
+}
+.template-style-6 .edu-title {
+    color: #000;
+}
+.template-style-6 .left-column {
+    background-color: #f5f5f5; /* Light grey left column */
+    color: #333;
+}
+.template-style-6 .left-column h3 {
+    color: var(--primary-color);
+    border-bottom: 2px solid var(--primary-color);
+}
+.template-style-6 .name-display {
+    color: var(--primary-color);
+    border-bottom: 2px solid #ccc;
+    padding-bottom: 5px;
+}
+.template-style-6 .contact-section i {
+    color: var(--primary-color);
+}
+
+
+/* TEMPLATE 7: Professional Grey (Simple Line Separators) */
+.template-style-7 .cv-grid {
+    grid-template-columns: 100%;
+    padding: 30px 50px;
+}
+.template-style-7 .left-column, .template-style-7 .right-column {
+    background-color: #fff;
+    padding: 0;
+    color: #333;
+    width: 100%;
+}
+.template-style-7 .profile-section {
+    border-bottom: 3px solid var(--primary-color);
+    padding-bottom: 10px;
+}
+.template-style-7 .name-display {
+    font-size: 2.2em;
+    color: #000;
+    text-align: center;
+    padding-bottom: 0;
+    margin-bottom: 5px;
+}
+.template-style-7 .contact-section p {
+    justify-content: center;
+}
+.template-style-7 .right-column h3 {
+    border-bottom: 2px solid var(--primary-color); /* Grey accent */
+    margin-top: 30px;
+    font-size: 1.4em;
+    color: #000;
+}
+.template-style-7 .left-column h3 {
+    display: none; /* Hide titles on left column */
+}
+.template-style-7 .skills-section, .template-style-7 .extra-section {
+    padding-bottom: 20px;
+    border-bottom: 1px solid #ddd;
+    margin-top: 10px;
+}
+
+
+/* TEMPLATE 8: Clean Light Blue (Icon Bar) */
+.template-style-8 .cv-grid {
+    grid-template-columns: 30% 70%;
+}
+.template-style-8 .left-column {
+    background-color: var(--primary-color); /* Light Blue */
+}
+.template-style-8 .right-column {
+    padding-left: 30px;
+}
+.template-style-8 .right-column h3 {
+    border-left: 5px solid var(--primary-color);
+    padding-left: 10px;
+    border-bottom: none;
+    font-size: 1.3em;
+}
+.template-style-8 .contact-section i {
+    color: #fff;
+    font-size: 1.2em;
+}
+.template-style-8 .profile-image {
+    border: 3px solid #fff;
+}
+
+
+/* TEMPLATE 9: Green Tech (Boxed Sections) */
+.template-style-9 .right-column h3 {
+    border-bottom: 1px dashed var(--primary-color);
+    padding-bottom: 5px;
+    margin-bottom: 10px;
+    color: var(--primary-color);
+    background-color: #E8F5E9; /* Light green background */
+    padding: 10px;
+    border-radius: 5px;
+}
+.template-style-9 .left-column {
+    background-color: #388E3C; /* Dark Green */
+}
+.template-style-9 .edu-item {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-bottom: 15px;
+}
+.template-style-9 .contact-section i {
+    color: #fff;
+}
+
+
+/* TEMPLATE 10: Orange Highlight (Horizontal Name Strip) */
+.template-style-10 .cv-grid {
+    grid-template-columns: 100%;
+}
+.template-style-10 .profile-section {
+    background-color: var(--primary-color); /* Orange */
+    padding: 20px 40px;
+    text-align: center;
+    color: #fff;
+}
+.template-style-10 .name-display {
+    font-size: 2.5em;
+    color: #fff;
+    margin-bottom: 0;
+}
+.template-style-10 .left-column {
+    order: 2; /* Move contact/skills to bottom */
+    background-color: #f9f9f9;
+    color: #333;
+    padding: 20px 40px;
+}
+.template-style-10 .right-column {
+    order: 1;
+    padding: 20px 40px;
+}
+.template-style-10 .right-column h3 {
+    border-bottom: 3px double var(--primary-color);
+}
+.template-style-10 .contact-section {
+    display: flex;
+    justify-content: space-around;
+    border-top: 1px solid #ccc;
+    padding-top: 10px;
+}
+.template-style-10 .contact-section h3 {
+    display: none;
+}
+.template-style-10 .contact-section i {
+    color: var(--primary-color);
+}
+.template-style-10 .left-column h3 {
+    color: var(--primary-color);
+    border-bottom: 2px solid var(--primary-color);
+}
+.template-style-10 .profile-image {
+    display: none;
+}
+
+
+/* --- PREVIEW STYLES (Used only for the small Template Card previews) --- */
+.template-style-1-preview {
+    background-color: #f9f9f9;
+    color: #333;
+    border-left: 30px solid #A52A2A;
+}
+.template-style-2-preview {
+    background-color: #fff;
+    color: #1565C0;
+    border-top: 5px solid #1565C0;
+}
+.template-style-3-preview {
+    background-color: #fff;
+    color: #000;
+    border-top: 30px solid #000;
+}
+.template-style-4-preview {
+    background-color: #f9f9f9;
+    color: #333;
+    border-left: 40px solid #004D40;
+}
+.template-style-5-preview {
+    background-color: #f9f9f9;
+    color: #6A1B9A;
+    border-bottom: 5px solid #6A1B9A;
+    border-top: 5px solid #6A1B9A;
+}
+.template-style-6-preview {
+    background-color: #f5f5f5;
+    color: #D84315;
+    border-top: 5px solid #D84315;
+}
+.template-style-7-preview {
+    background-color: #fff;
+    color: #424242;
+    border: 1px solid #424242;
+}
+.template-style-8-preview {
+    background-color: #f9f9f9;
+    color: #039BE5;
+    border-left: 20px solid #039BE5;
+    border-right: 20px solid #039BE5;
+}
+.template-style-9-preview {
+    background-color: #E8F5E9;
+    color: #388E3C;
+    border: 2px solid #388E3C;
+}
+.template-style-10-preview {
+    background-color: #fff;
+    color: #FF7043;
+    border-top: 50px solid #FF7043;
 }
